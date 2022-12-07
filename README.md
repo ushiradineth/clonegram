@@ -1,0 +1,1 @@
+A website which replicates Instagram, made to learn NextJS and TypeScript
