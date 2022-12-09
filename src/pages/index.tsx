@@ -2,12 +2,12 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
-import Loading from "./loading";
+import Spinner from "../components/Spinner";
 
 const Index: NextPage = () => {
   const { data: session, status } = useSession();
   if (status == "loading") {
-    return <Loading />;
+    return <Spinner />;
   }
 
   return (
@@ -23,9 +23,7 @@ const Index: NextPage = () => {
             Clone<span className="text-[hsl(280,100%,70%)]">gram</span>
           </h1>
           <div className="flex flex-col items-center gap-2">
-            <p className="text-sm text-white sm:text-2xl">
-              Made with NextJS, TypeScript, tRPC, Zod and TailwindCSS
-            </p>
+            <p className="text-sm text-white sm:text-2xl">Made with NextJS, TypeScript, tRPC, Zod and TailwindCSS</p>
             <Auth />
           </div>
         </div>
@@ -40,7 +38,7 @@ const Auth: React.FC = () => {
   //redirecting to home if authenticated
   const { data: session, status } = useSession();
   if (status == "loading") {
-    return <Loading />;
+    return <Spinner />;
   }
 
   const router = useRouter();
@@ -48,12 +46,7 @@ const Auth: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        onClick={() =>
-          signIn("google", { callbackUrl: "http://localhost:3000/home" })
-        }
-      >
+      <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("google", { callbackUrl: "http://localhost:3000/home" })}>
         Sign in
       </button>
     </div>
