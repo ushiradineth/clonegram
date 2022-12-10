@@ -1,25 +1,23 @@
 import { useState, useEffect } from "react";
-import { AiOutlineHome, AiFillHome, AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import { MdOutlineExplore, MdExplore } from "react-icons/md";
-import { BiSearchAlt2 } from "react-icons/Bi";
+import { AiOutlineHome, AiFillHome, AiOutlineHeart, AiFillHeart, AiOutlineUserSwitch } from "react-icons/ai";
+import { MdOutlineExplore, MdExplore, MdLogout } from "react-icons/md";
+import { BiSearchAlt2, BiMessageAltError } from "react-icons/Bi";
+import { IoMdSettings } from "react-icons/io";
+import { HiMenu, HiOutlineMenu } from "react-icons/hi";
+import { RxBookmark, RxTimer } from "react-icons/rx";
 import { RiMessage3Line, RiMessage3Fill, RiAddBoxLine, RiAddBoxFill } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 import { FaSearch } from "react-icons/fa";
-import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import NavBarItem from "./NavBarItem";
+import MoreItem from "./MoreItem";
 
 const NavBar: React.FC = () => {
   //redirecting to index if not authenticated
   const { data: session, status } = useSession();
-
-  const router = useRouter();
-  if (status == "unauthenticated") {
-    router.push("/");
-  }
-
   const [card, setCard] = useState(false);
   const [vertical, setVertical] = useState(false);
+  const [more, setMore] = useState(false);
 
   useEffect(() => {
     if (document.body.clientWidth >= 1150) {
@@ -30,11 +28,12 @@ const NavBar: React.FC = () => {
       setVertical(false);
     } else {
       setCard(false);
+      setMore(false);
       setVertical(true);
     }
   }, []);
 
-  var onresize = function () {
+  const onResize = () => {
     if (document.body.clientWidth >= 1150) {
       setCard(true);
       setVertical(false);
@@ -43,11 +42,14 @@ const NavBar: React.FC = () => {
       setVertical(false);
     } else {
       setCard(false);
+      setMore(false);
       setVertical(true);
     }
   };
 
-  window.addEventListener("resize", onresize);
+  if (typeof window !== "undefined") {
+    window.addEventListener("resize", onResize);
+  }
 
   return (
     <>
@@ -65,17 +67,27 @@ const NavBar: React.FC = () => {
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} Text={"Create"} />
                 <NavBarItem Icon={<CgProfile />} IconOnClick={<CgProfile />} Text={"Profile"} />
               </div>
+              <div className="fixed bottom-5">
+                <div onClick={() => setMore(!more)}>
+                  <NavBarItem Icon={<HiOutlineMenu />} IconOnClick={<HiMenu />} Text={"More"} />
+                </div>
+                {more ? (
+                  <div className="fixed bottom-12 left-4 z-10 w-48 rounded-lg bg-white text-sm shadow-[0px_0px_10px_rgba(0,0,0,0.1)]" onBlur={() => setMore(false)}>
+                    <MoreItem Icon={<IoMdSettings />} Text="Settings" onClickHandler={() => console.log("test")} />
+                    <MoreItem Icon={<RxBookmark />} Text="Saved" />
+                    <MoreItem Icon={<RxTimer />} Text="Your Activity" />
+                    <MoreItem Icon={<BiMessageAltError />} Text="Report a problem" />
+                    <div className="border-t-2">
+                      <MoreItem Icon={<AiOutlineUserSwitch />} Text="Switch accounts" />
+                    </div>
+                    <MoreItem Icon={<MdLogout />} Text="Log out" onClickHandler={() => signOut({ callbackUrl: "http://localhost:3000/" })} />
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </div>
             </div>
           </div>
-          {/* <p className="text-center text-sm text-white sm:text-2xl">
-        {session && <span>Logged in as {session.user?.name}</span>}
-      </p>
-      <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        onClick={() => signOut({ callbackUrl: "http://localhost:3000/" })}
-      >
-        Sign out
-      </button> */}
         </div>
       ) : (
         <div>

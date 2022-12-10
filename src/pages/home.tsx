@@ -1,10 +1,10 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
-import NavBar from "../components/NavBar";
 import Spinner from "../components/Spinner";
+import NavBar from "../components/NavBar";
 
 // const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
 // {hello.data ? hello.data.greeting : "Loading tRPC query..."}
@@ -16,14 +16,14 @@ import Spinner from "../components/Spinner";
 
 const Home: NextPage = () => {
   const { data: session, status } = useSession();
-  const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
 
   if (status == "loading") {
     return <Spinner />;
   }
 
-  if (!hello.data) {
-    return <Spinner />;
+  if (status == "unauthenticated") {
+    const router = useRouter();
+    router.push("/");
   }
 
   return (
@@ -43,5 +43,4 @@ const Home: NextPage = () => {
     </>
   );
 };
-
 export default Home;

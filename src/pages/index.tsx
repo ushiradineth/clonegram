@@ -6,8 +6,14 @@ import Spinner from "../components/Spinner";
 
 const Index: NextPage = () => {
   const { data: session, status } = useSession();
+
   if (status == "loading") {
     return <Spinner />;
+  }
+
+  if (status == "authenticated") {
+    const router = useRouter();
+    router.push("/home");
   }
 
   return (
@@ -40,9 +46,6 @@ const Auth: React.FC = () => {
   if (status == "loading") {
     return <Spinner />;
   }
-
-  const router = useRouter();
-  session && router.push("/home");
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
