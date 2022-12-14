@@ -16,13 +16,15 @@ import Home from "./Home";
 import Create from "./Create";
 
 const Main: React.FC = () => {
-  //redirecting to index if not authenticated
-  const { data: session, status } = useSession();
-  const [card, setCard] = useState(false);
+  const [web, setWeb] = useState(false);
+  const [tab, setTab] = useState(false);
+  const [mobile, setMobile] = useState(false);
   const [more, setMore] = useState(false);
   const [active, setActive] = useState("");
   const [create, setCreate] = useState(false);
   const [hook, setHook] = useState(<></>);
+
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
@@ -34,7 +36,8 @@ const Main: React.FC = () => {
         setHook(<Home />);
         break;
       case "Search":
-        setCard(false);
+        setWeb(false);
+        setTab(true);
         break;
       case "Create":
         setCreate(true);
@@ -47,11 +50,17 @@ const Main: React.FC = () => {
 
   const onResize = () => {
     if (document.body.clientWidth >= 1150) {
-      setCard(true);
+      setWeb(true);
+      setTab(false);
+      setMobile(false);
     } else if (document.body.clientWidth >= 750) {
-      setCard(false);
+      setWeb(false);
+      setTab(true);
+      setMobile(false);
     } else {
-      setCard(false);
+      setWeb(false);
+      setTab(false);
+      setMobile(true);
       setMore(false);
     }
   };
@@ -69,29 +78,29 @@ const Main: React.FC = () => {
   return (
     <>
       <Create create={create} setCreate={setCreate} hook={hook} setActive={setActive} />
-      <div id="Background" className={"flex min-h-screen flex-col items-center justify-center " + (create ? "bg-black" : "bg-gradient-to-b from-[#2e026d] to-[#15162c]")}>
-        <div id="Sidebar" className={"fixed bottom-0 right-0 grid h-12 w-full grid-flow-col gap-4 bg-white md:top-0 md:left-0 md:h-full md:w-16 md:grid-flow-row lg:w-72 " + (create ? "opacity-30" : "")}>
-          <div id="Sidebar-Items" className="text-2xl font-light md:mt-5 md:ml-1 lg:ml-2">
-            {card ? <p className="ml-5 hidden lg:grid">CLONEGRAM</p> : <p className="ml-5 hidden md:grid">C</p>}
-            <div id="Sidebar-Web-View-Items" className="mt-5 ml-2 hidden grid-flow-row place-items-start gap-5 md:visible md:grid">
-              <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} Text={"Home"} ID={"Home"} active={active} setActive={setActive} />
-              <NavBarItem Icon={<BiSearchAlt2 />} IconOnClick={<FaSearch />} Text={"Search"} ID={"Search"} active={active} setActive={setActive} />
-              <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} Text={"Explore"} ID={"Explore"} active={active} setActive={setActive} />
-              <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} Text={"Messages"} ID={"Messages"} active={active} setActive={setActive} />
-              <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} active={active} setActive={setActive} />
-              <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} Text={"Create"} ID={"Create"} active={active} setActive={setActive} />
-              <NavBarItem Icon={<CgProfile />} IconOnClick={<CgProfile />} Text={"Profile"} ID={"Profile"} active={active} setActive={setActive} />
+      <div id="Background" className={"flex min-h-screen flex-col items-center justify-center " + (create ? " bg-black " : " bg-gradient-to-b from-[#2e026d] to-[#15162c] ")}>
+        <div id="Sidebar" className={"fixed bottom-0 left-0 grid gap-4 bg-white " + (web && " h-full w-72 grid-flow-row ") + (tab && " top-0 h-full w-16 grid-flow-row ") + (mobile && " bottom-0 h-12 w-screen grid-flow-col ") + (create && " opacity-30 ")}>
+          <div id="Sidebar-Items" className={"text-2xl font-light " + (web && " ml-2 mt-5 ") + (tab && " ml-1 mt-5 ")}>
+            <p className={"ml-5 " + (mobile ? " hidden " : " grid ")}>{web ? "CLONEGRAM" : "C"}</p>
+            <div id="Sidebar-Web-View-Items" className={"mt-5 ml-2 grid-flow-row place-items-start gap-5 " + (mobile ? " hidden " : " grid ")}>
+              <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} Text={"Home"} ID={"Home"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
+              <NavBarItem Icon={<BiSearchAlt2 />} IconOnClick={<FaSearch />} Text={"Search"} ID={"Search"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
+              <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} Text={"Explore"} ID={"Explore"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
+              <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} Text={"Messages"} ID={"Messages"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
+              <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
+              <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} Text={"Create"} ID={"Create"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
+              <NavBarItem Icon={<CgProfile />} IconOnClick={<CgProfile />} Text={"Profile"} ID={"Profile"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
             </div>
-            <div id="Sidebar-Mobile-View-Items" className="mt-[12px] grid grid-flow-col place-items-center md:hidden">
-              <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} ID={"M-Home"} active={active} setActive={setActive} />
-              <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} ID={"M-Explore"} active={active} setActive={setActive} />
-              <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} ID={"M-Create"} active={active} setActive={setActive} />
-              <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} ID={"M-Messages"} active={active} setActive={setActive} />
-              <NavBarItem Icon={<CgProfile />} IconOnClick={<CgProfile />} ID={"M-Profile"} active={active} setActive={setActive} />
+            <div id="Sidebar-Mobile-View-Items" className={"mt-[12px] grid grid-flow-col place-items-center " + (!mobile && " hidden ")}>
+              <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} ID={"M-Home"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
+              <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} ID={"M-Explore"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
+              <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} ID={"M-Create"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
+              <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} ID={"M-Messages"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
+              <NavBarItem Icon={<CgProfile />} IconOnClick={<CgProfile />} ID={"M-Profile"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
             </div>
-            <div id="Sidebar-More" className="fixed bottom-5 hidden md:block">
-              <div className="md:ml-2 lg:ml-2" onClick={() => setMore(!more)}>
-                <NavBarItem Icon={<HiOutlineMenu />} IconOnClick={<HiMenu />} Text={"More"} ID={"More"} active={active} setActive={setActive} />
+            <div id="Sidebar-More" className={"fixed bottom-5 " + (mobile && " hidden ")}>
+              <div className={"ml-2"} onClick={() => setMore(!more)}>
+                <NavBarItem Icon={<HiOutlineMenu />} IconOnClick={<HiMenu />} Text={"More"} ID={"More"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
               </div>
               {more ? (
                 <div id="Sidebar-More-Items" className="fixed bottom-12 left-4 z-10 w-48 rounded-lg bg-white text-sm shadow-[0px_0px_10px_rgba(0,0,0,0.1)]">
@@ -110,7 +119,7 @@ const Main: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="md:ml-16 lg:ml-72">{hook}</div>
+        <div className={" " + (tab && " ml-16 ") + (web && " ml-72 ")}>{hook}</div>
       </div>
     </>
   );

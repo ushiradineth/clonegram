@@ -8,6 +8,9 @@ interface itemType {
   active: string;
   setActive: (params: any) => any;
   onClickHandler?: () => any;
+  web: boolean;
+  tab: boolean;
+  mobile: boolean;
 }
 
 const NavBarItem = (props: itemType) => {
@@ -30,7 +33,7 @@ const NavBarItem = (props: itemType) => {
   return (
     <div
       id={props.ID}
-      className="flex items-center justify-start md:p-2 md:hover:rounded-full md:hover:bg-gray-100 lg:w-64 lg:pl-3"
+      className={"flex items-center justify-start " + (props.web && " w-64 p-2 pl-3 hover:rounded-full hover:bg-gray-100 ") + (props.tab && " p-2 hover:rounded-full hover:bg-gray-100 ")}
       onClick={() => {
         setClick(true);
         if (props.onClickHandler) {
@@ -40,8 +43,8 @@ const NavBarItem = (props: itemType) => {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <div className={"transition-all duration-200 " + (hover ? "scale-[1.6] md:scale-110" : "scale-150 md:scale-100")}>{click ? props.IconOnClick : props.Icon}</div>
-      {props.Text && <p className="ml-2 hidden text-sm font-normal lg:block">{props.Text}</p>}
+      <div className={"transition-all duration-200 " + (hover ? " scale-[1.6] md:scale-110 " : " scale-150 md:scale-100 ")}>{click ? props.IconOnClick : props.Icon}</div>
+      {props.Text && <p className={"ml-2 text-sm font-normal " + (props.web ? " block " : " hidden ")}>{props.Text}</p>}
     </div>
   );
 };
