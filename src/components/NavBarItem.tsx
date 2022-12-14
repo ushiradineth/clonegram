@@ -40,7 +40,7 @@ const NavBarItem = (props: itemType) => {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <div className={hover ? "scale-[1.6] transition-all duration-200 md:scale-110" : "scale-150 transition-all duration-200 md:scale-100"}>{click ? props.IconOnClick : props.Icon}</div>
+      <div className={"transition-all duration-200 " + (hover ? "scale-[1.6] md:scale-110" : "scale-150 md:scale-100")}>{click ? props.IconOnClick : props.Icon}</div>
       {props.Text && <p className="ml-2 hidden text-sm font-normal lg:block">{props.Text}</p>}
     </div>
   );

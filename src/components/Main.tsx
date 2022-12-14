@@ -22,7 +22,7 @@ const Main: React.FC = () => {
   const [more, setMore] = useState(false);
   const [active, setActive] = useState("");
   const [create, setCreate] = useState(false);
-  const [hook, setHook] = useState(<Home />);
+  const [hook, setHook] = useState(<></>);
   const router = useRouter();
 
   useEffect(() => {
@@ -32,6 +32,9 @@ const Main: React.FC = () => {
     switch (active) {
       case "Home":
         setHook(<Home />);
+        break;
+      case "Search":
+        setCard(false);
         break;
       case "Create":
         setCreate(true);
@@ -66,8 +69,8 @@ const Main: React.FC = () => {
   return (
     <>
       <Create create={create} setCreate={setCreate} hook={hook} setActive={setActive} />
-      <div id="Background" className={create ? "flex min-h-screen flex-col items-center justify-center bg-black" : "flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]"}>
-        <div id="Sidebar" className={create ? "fixed bottom-0 right-0 grid h-12 w-full grid-flow-col gap-4 bg-white opacity-30 md:top-0 md:left-0 md:h-full md:w-16 md:grid-flow-row lg:w-72" : "fixed bottom-0 right-0 grid h-12 w-full grid-flow-col gap-4 bg-white md:top-0 md:left-0 md:h-full md:w-16 md:grid-flow-row lg:w-72"}>
+      <div id="Background" className={"flex min-h-screen flex-col items-center justify-center " + (create ? "bg-black" : "bg-gradient-to-b from-[#2e026d] to-[#15162c]")}>
+        <div id="Sidebar" className={"fixed bottom-0 right-0 grid h-12 w-full grid-flow-col gap-4 bg-white md:top-0 md:left-0 md:h-full md:w-16 md:grid-flow-row lg:w-72 " + (create ? "opacity-30" : "")}>
           <div id="Sidebar-Items" className="text-2xl font-light md:mt-5 md:ml-1 lg:ml-2">
             {card ? <p className="ml-5 hidden lg:grid">CLONEGRAM</p> : <p className="ml-5 hidden md:grid">C</p>}
             <div id="Sidebar-Web-View-Items" className="mt-5 ml-2 hidden grid-flow-row place-items-start gap-5 md:visible md:grid">
