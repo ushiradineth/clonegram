@@ -14,6 +14,7 @@ import NavBarItem from "./NavBarItem";
 import MoreItem from "./MoreItem";
 import Home from "./Home";
 import Create from "./Create";
+import Search from "./Search";
 
 const Main: React.FC = () => {
   const [web, setWeb] = useState(false);
@@ -23,6 +24,7 @@ const Main: React.FC = () => {
   const [active, setActive] = useState("");
   const [create, setCreate] = useState(false);
   const [hook, setHook] = useState(<></>);
+  const [search, setSearch] = useState(false);
 
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -31,6 +33,12 @@ const Main: React.FC = () => {
     if (active !== "Create") {
       setCreate(false);
     }
+
+    if (active !== "Search") {
+      setSearch(false);
+      onResize();
+    }
+
     switch (active) {
       case "Home":
         setHook(<Home />);
@@ -38,6 +46,7 @@ const Main: React.FC = () => {
       case "Search":
         setWeb(false);
         setTab(true);
+        setSearch(true);
         break;
       case "Create":
         setCreate(true);
@@ -50,9 +59,15 @@ const Main: React.FC = () => {
 
   const onResize = () => {
     if (document.body.clientWidth >= 1150) {
-      setWeb(true);
-      setTab(false);
-      setMobile(false);
+      if (active !== "Search") {
+        setWeb(true);
+        setTab(false);
+        setMobile(false);
+      } else {
+        setWeb(false);
+        setTab(true);
+        setMobile(false);
+      }
     } else if (document.body.clientWidth >= 750) {
       setWeb(false);
       setTab(true);
@@ -79,7 +94,7 @@ const Main: React.FC = () => {
     <>
       <Create create={create} setCreate={setCreate} hook={hook} setActive={setActive} />
       <div id="Background" className={"flex min-h-screen flex-col items-center justify-center " + (create ? " bg-black " : " bg-gradient-to-b from-[#2e026d] to-[#15162c] ")}>
-        <div id="Sidebar" className={"fixed bottom-0 left-0 grid gap-4 bg-white " + (web && " h-full w-72 grid-flow-row ") + (tab && " top-0 h-full w-16 grid-flow-row ") + (mobile && " bottom-0 h-12 w-screen grid-flow-col ") + (create && " opacity-30 ")}>
+        <div id="Sidebar" className={"fixed bottom-0 left-0 grid gap-4 border-r-2 bg-white " + (web && " z-10 h-full w-72 grid-flow-row ") + (tab && " top-0 h-full w-16 grid-flow-row ") + (mobile && " bottom-0 h-12 w-screen grid-flow-col ") + (create && " opacity-30 ")}>
           <div id="Sidebar-Items" className={"text-2xl font-light " + (web && " ml-2 mt-5 ") + (tab && " ml-1 mt-5 ")}>
             <p className={"ml-5 " + (mobile ? " hidden " : " grid ")}>{web ? "CLONEGRAM" : "C"}</p>
             <div id="Sidebar-Web-View-Items" className={"mt-5 ml-2 grid-flow-row place-items-start gap-5 " + (mobile ? " hidden " : " grid ")}>
@@ -119,6 +134,7 @@ const Main: React.FC = () => {
             </div>
           </div>
         </div>
+        <Search search={search} mobile={mobile} />
         <div className={" " + (tab && " ml-16 ") + (web && " ml-72 ")}>{hook}</div>
       </div>
     </>
