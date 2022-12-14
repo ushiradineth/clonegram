@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
 import Spinner from "../components/Spinner";
+import Main from "../components/Main";
 
 const Index: NextPage = () => {
   const { data: session, status } = useSession();
@@ -12,8 +13,18 @@ const Index: NextPage = () => {
   }
 
   if (status == "authenticated") {
-    const router = useRouter();
-    router.push("/home");
+    return (
+      <>
+        <Head>
+          <title>Clonegram</title>
+          <meta name="description" content="Clonegram by Ushira Dineth" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <main>
+          <Main />
+        </main>
+      </>
+    );
   }
 
   return (
@@ -49,7 +60,7 @@ const Auth: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("google", { callbackUrl: "http://localhost:3000/home" })}>
+      <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("google", { callbackUrl: "http://localhost:3000/" })}>
         Sign in
       </button>
     </div>
