@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { AiOutlineHome, AiFillHome, AiOutlineHeart, AiFillHeart, AiOutlineUserSwitch } from "react-icons/ai";
 import { MdOutlineExplore, MdExplore, MdLogout } from "react-icons/md";
-import { BiSearchAlt2, BiMessageAltError } from "react-icons/Bi";
+import { BiSearchAlt2, BiMessageAltError } from "react-icons/bi";
 import { IoMdSettings } from "react-icons/io";
 import { HiMenu, HiOutlineMenu } from "react-icons/hi";
 import { RxBookmark, RxTimer } from "react-icons/rx";
@@ -106,7 +106,7 @@ const Main: React.FC = () => {
               <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} Text={"Create"} ID={"Create"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
               <NavBarItem Icon={<CgProfile />} IconOnClick={<CgProfile />} Text={"Profile"} ID={"Profile"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
             </div>
-            <div id="Sidebar-Mobile-View-Items" className={"mt-[12px] grid grid-flow-col place-items-center " + (!mobile && " hidden ")}>
+            <div id="Sidebar-Mobile-View-Items" className={"mt-[4px] grid grid-flow-col place-items-center " + (!mobile && " hidden ")}>
               <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} ID={"M-Home"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
               <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} ID={"M-Explore"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
               <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} ID={"M-Create"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
