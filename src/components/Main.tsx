@@ -30,7 +30,7 @@ const Main: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (active !== "Create") {
+    if (active !== "Create" && active !== "More") {
       setCreate(false);
     }
 
@@ -96,7 +96,7 @@ const Main: React.FC = () => {
       <div id="Background" className={"flex min-h-screen flex-col items-center justify-center " + (create ? " bg-black " : " bg-gradient-to-b from-[#2e026d] to-[#15162c] ")}>
         <div id="Sidebar" className={"fixed bottom-0 left-0 grid gap-4 border-r-2 bg-white " + (web && " z-10 h-full w-72 grid-flow-row ") + (tab && " top-0 h-full w-16 grid-flow-row ") + (mobile && " bottom-0 h-12 w-screen grid-flow-col ") + (create && " opacity-30 ")}>
           <div id="Sidebar-Items" className={"text-2xl font-light " + (web && " ml-2 mt-5 ") + (tab && " ml-1 mt-5 ")}>
-            <p className={"ml-5 " + (mobile ? " hidden " : " grid ")}>{web ? "CLONEGRAM" : "C"}</p>
+            <p className={"ml-5 select-none " + (mobile ? " hidden " : " grid ")}>{web ? "CLONEGRAM" : "C"}</p>
             <div id="Sidebar-Web-View-Items" className={"mt-5 ml-2 grid-flow-row place-items-start gap-5 " + (mobile ? " hidden " : " grid ")}>
               <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} Text={"Home"} ID={"Home"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />
               <NavBarItem Icon={<BiSearchAlt2 />} IconOnClick={<FaSearch />} Text={"Search"} ID={"Search"} active={active} setActive={setActive} web={web} tab={tab} mobile={mobile} />

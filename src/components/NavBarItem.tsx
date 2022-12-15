@@ -33,7 +33,7 @@ const NavBarItem = (props: itemType) => {
   return (
     <div
       id={props.ID}
-      className={"flex items-center justify-start " + (props.web && " w-64 p-2 pl-3 hover:rounded-full hover:bg-gray-100 ") + (props.tab && " p-2 hover:rounded-full hover:bg-gray-100 ")}
+      className={"flex items-center justify-start hover:rounded-full hover:bg-gray-100 active:bg-gray-200 p-2 cursor-pointer " + (props.web && " w-64 p-2 pl-3 ")}
       onClick={() => {
         setClick(true);
         if (props.onClickHandler) {
@@ -44,7 +44,7 @@ const NavBarItem = (props: itemType) => {
       onMouseLeave={() => setHover(false)}
     >
       <div className={"transition-all duration-200 " + (hover ? " scale-[1.6] md:scale-110 " : " scale-150 md:scale-100 ")}>{click ? props.IconOnClick : props.Icon}</div>
-      {props.Text && <p className={"ml-2 text-sm font-normal " + (props.web ? " block " : " hidden ")}>{props.Text}</p>}
+      {props.Text && <p className={"ml-2 text-sm font-normal select-none " + (props.web ? " block " : " hidden ")}>{props.Text}</p>}
     </div>
   );
 };
