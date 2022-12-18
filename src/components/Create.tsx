@@ -22,7 +22,7 @@ const Create = (props: itemType) => {
   const SelectImage = () => {
     return (
       <div className="absolute top-1/2 left-1/2 h-[500px] w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl bg-white transition-all duration-700 md:h-[500px] md:w-[500px] lg:h-[700px] lg:w-[700px]">
-        <div className="flex h-12 w-full select-none items-center justify-center border-b-[1px] border-black font-semibold">Create new post</div>
+        <div className="flex h-12 w-full items-center justify-center border-b-[1px] border-black font-semibold">Create new post</div>
         <div className="flex h-[93.7%] items-center justify-center">
           <div className="grid place-items-center gap-4">
             <svg aria-hidden="true" viewBox="0 0 36.129 36.129" className="h-52" xmlns="http://www.w3.org/2000/svg">
@@ -37,7 +37,7 @@ const Create = (props: itemType) => {
               />
             </svg>
             <p className="select-none text-xl font-light">Add photos and videos here</p>
-            <div onClick={handleUploadClick} className="flex w-[70%] cursor-pointer select-none items-center justify-center rounded-lg bg-blue-500 py-2 text-sm font-semibold text-white hover:bg-blue-600 active:bg-blue-400">
+            <div onClick={handleUploadClick} className="flex w-[70%] cursor-pointer items-center justify-center rounded-lg bg-blue-500 py-2 text-sm font-semibold text-white hover:bg-blue-600 active:bg-blue-400">
               Select From Computer
             </div>
             <input type="file" accept=".png, .jpg, .jpeg, .mp4" ref={inputRef} onChange={handleFileChange} style={{ display: "none" }} multiple />
@@ -50,7 +50,7 @@ const Create = (props: itemType) => {
   const Crop = () => {
     return (
       <div className="absolute top-1/2 left-1/2 z-10 h-[500px] w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl bg-white transition-all duration-700 md:h-[500px] md:w-[500px] lg:h-[700px] lg:w-[700px]">
-        <div className="flex h-12 w-full select-none items-center justify-center font-semibold">
+        <div className="flex h-12 w-full items-center justify-center font-semibold">
           <div className="grid w-full grid-flow-col grid-cols-3 border-b-[2px] py-2">
             <div className="flex cursor-pointer items-center" onClick={() => setDiscard(true)}>
               <div className="ml-5 scale-150">
@@ -122,12 +122,12 @@ const Create = (props: itemType) => {
       <div className="h-full w-screen">
         {discard && (
           <div className="absolute top-1/2 left-1/2 z-[11] h-auto w-[300px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl  bg-white md:w-[400px]">
-            <div className="grid w-full select-none grid-flow-row place-items-center border-b-[1px] border-gray-300 py-8 font-semibold">
+            <div className="grid w-full grid-flow-row place-items-center border-b-[1px] border-gray-300 py-8 font-semibold">
               <p className="select-none">Discard post?</p>
-              <p className="ml-2 select-none text-sm font-normal">If you leave, your edits won't be saved.</p>
+              <p className="ml-2 text-sm font-normal">If you leave, your edits won't be saved.</p>
             </div>
             <div
-              className="flex h-12 w-full cursor-pointer select-none items-center justify-center border-b-[1px] border-gray-300 font-semibold text-red-500"
+              className="flex h-12 w-full cursor-pointer items-center justify-center border-b-[1px] border-gray-300 font-semibold text-red-500"
               onClick={() => {
                 setFileList(null);
                 setDiscard(false);
@@ -135,7 +135,7 @@ const Create = (props: itemType) => {
             >
               <p>Discard</p>
             </div>
-            <div className="flex h-12 w-full cursor-pointer select-none items-center justify-center font-semibold" onClick={() => setDiscard(false)}>
+            <div className="flex h-12 w-full cursor-pointer items-center justify-center font-semibold" onClick={() => setDiscard(false)}>
               <p>Cancel</p>
             </div>
           </div>
