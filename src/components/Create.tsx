@@ -3,6 +3,7 @@ import { AiOutlineClose, AiOutlineExpand } from "react-icons/ai";
 import { BiArrowBack } from "react-icons/bi";
 import { TbRectangle, TbRectangleVertical } from "react-icons/tb";
 import { FiSquare } from "react-icons/fi";
+import OptionMenu from "./OptionMenu";
 
 interface itemType {
   create: boolean;
@@ -119,26 +120,21 @@ const Create = (props: itemType) => {
 
   if (props.create) {
     return (
-      <div className="h-full w-screen">
+      <>
         {discard && (
-          <div className="absolute top-1/2 left-1/2 z-[11] h-auto w-[300px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl  bg-white md:w-[400px]">
-            <div className="grid w-full grid-flow-row place-items-center border-b-[1px] border-gray-300 py-8 font-semibold">
-              <p className="select-none">Discard post?</p>
-              <p className="ml-2 text-sm font-normal">If you leave, your edits won't be saved.</p>
-            </div>
-            <div
-              className="flex h-12 w-full cursor-pointer items-center justify-center border-b-[1px] border-gray-300 font-semibold text-red-500"
-              onClick={() => {
-                setFileList(null);
-                setDiscard(false);
-              }}
-            >
-              <p>Discard</p>
-            </div>
-            <div className="flex h-12 w-full cursor-pointer items-center justify-center font-semibold" onClick={() => setDiscard(false)}>
-              <p>Cancel</p>
-            </div>
-          </div>
+          <OptionMenu
+            title="Discard post?"
+            description="If you leave, your edits won't be saved."
+            buttonPositive="Discard"
+            buttonNegative="Cancel"
+            onClickPositive={() => {
+              setFileList(null);
+              setDiscard(false);
+            }}
+            onClickNegative={() => {
+              setDiscard(false);
+            }}
+          />
         )}
         <div
           className="fixed top-8 right-8 scale-150 hover:cursor-pointer"
@@ -151,9 +147,10 @@ const Create = (props: itemType) => {
           <AiOutlineClose color="white" />
         </div>
         <div className={discard ? "bg-black opacity-30" : ""}>{fileList ? <Crop /> : <SelectImage />}</div>
-      </div>
+      </>
     );
   }
+
   return <></>;
 };
 

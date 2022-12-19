@@ -7,6 +7,7 @@
     import ("./src/env/server.mjs"));
 
 /** @type {import("next").NextConfig} */
+
 const config = {
     reactStrictMode: true,
     swcMinify: true,
@@ -14,5 +15,10 @@ const config = {
         locales: ["en"],
         defaultLocale: "en",
     },
+    images: {
+        domains: ["lh3.googleusercontent.com"],
+        minimumCacheTTL: 1500000,
+    },
 };
+
 export default config;
