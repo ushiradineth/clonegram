@@ -15,7 +15,7 @@ const Profile = (props: itemType) => {
 
   return (
     <div className="grid text-white">
-      <div id="user-details" className={"grid h-fit grid-flow-col grid-cols-12  " + (props.viewport == "Mobile" ? " w-[400px] py-5 " : " w-[700px] py-5 ")}>
+      <div id="user-details" className={"grid h-fit grid-flow-col grid-cols-12 py-5 " + (props.viewport == "Mobile" && " w-[400px] ") + (props.viewport == "Web" && " w-[700px] ") + (props.viewport == "Tab" && " w-[500px] ")}>
         {user.data?.image ? <Image className={"rounded-full " + (props.viewport == "Mobile" ? " col-span-4 ml-4 mt-4 h-24 w-24 " : " col-start-2 col-end-4 ml-4 mt-8 scale-125 ")} src={user.data?.image} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="asdasd" /> : <div id="profile-picture" className={"rounded-full bg-red-300 " + (props.viewport == "Mobile" ? " col-span-4 ml-4 mt-4 h-24 w-24 " : " col-start-2 col-end-4 mt-2 h-40 w-40 ")} />}
         <div id="headline" className={"mb-4 mt-6 ml-4 grid grid-flow-row font-light " + (props.viewport == "Mobile" ? " col-span-8 " : "  col-start-6 col-end-12 h-36 gap-3 ")}>
           <div id="user-info" className="cursor-pointer">
@@ -23,7 +23,7 @@ const Profile = (props: itemType) => {
               <div id="id" className="max-w-[200px] overflow-hidden text-ellipsis text-xl font-light">
                 {user.data?.id}
               </div>
-              <div id="edit-profile" className={"cursor-pointer rounded-[4px] border py-1 px-2 text-xs font-semibold " + (props.viewport == "Mobile" && " hidden")}>
+              <div id="edit-profile" className={"cursor-pointer rounded-[4px] border py-1 px-2 text-xs font-semibold " + (props.viewport == "Mobile" && " hidden ") + (props.viewport == "Tab" && " flex w-[78px] ")}>
                 Edit profile
               </div>
               <div id="settings" className="scale-150">
@@ -77,10 +77,11 @@ const Profile = (props: itemType) => {
           <p className="text-gray-300">following</p>
         </div>
       </div>
-      <div id="posts" className={"grid grid-cols-3 place-items-center py-10 text-black " + (props.viewport == "Mobile" ? " w-[392px] gap-2 " : " w-[832px] gap-8 border-t-[1px] border-gray-500 px-24 ")}>
-        <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" ? " h-32 w-32 " : " h-52 w-52 ")}>1</div>
-        <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" ? " h-32 w-32 " : " h-52 w-52 ")}>1</div>
-        <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" ? " h-32 w-32 " : " h-52 w-52 ")}>1</div>
+      <div id="posts" className={"grid grid-cols-3 place-items-center py-10 text-black " + (props.viewport == "Mobile" && " w-[392px] gap-2 ") + (props.viewport == "Web" && " w-[832px] gap-8 border-t-[1px] border-gray-500 px-24 ") + (props.viewport == "Tab" && " w-[600px] border-t-[1px] border-gray-500 ")}>
+        <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-32 w-32 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " h-48 w-48 m-2 mb-0 ")} />
+        <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-32 w-32 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " h-48 w-48 m-2 mb-0 ")} />
+        <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-32 w-32 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " h-48 w-48 m-2 mb-0 ")} />
+        <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-32 w-32 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " h-48 w-48 m-2 mb-0 ")} />
         {/* <div className={"flex items-center justify-center bg-red-300 col-span-3 " + (props.viewport == "Mobile" ? " h-[392px] w-full " : " h-[624px] w-full ")}>No posts yet</div> */}
       </div>
     </div>

@@ -73,15 +73,21 @@ const Main: React.FC = () => {
     }
   };
 
-  if (typeof document !== "undefined") {
-    useEffect(() => {
-      onResize();
-    }, [document.body.clientWidth]);
-  }
+  // if (typeof document !== "undefined") {
+  //   useEffect(() => {
+      // setTimeout(() => {
+      //   console.log("resize");
+      //   onResize();
+      // }, 1000);
+  //   }, [document.body.clientWidth]);
+  // }
 
-  if (typeof window !== "undefined") {
-    window.addEventListener("resize", onResize);
-  }
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      console.log("resize");
+      window.addEventListener("resize", onResize);
+    }
+  }, []) 
 
   return (
     <div className="select-none">
