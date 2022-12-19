@@ -43,11 +43,41 @@ model Account {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id @unique @default(cuid())
+  handle        String    @unique @default(cuid())
   name          String?
+  bio           String?
   email         String?   @unique
   emailVerified DateTime?
+  createdAt     DateTime  @default(now()) @db.Timestamptz(3)
   image         String?
+  posts         Post[]
   accounts      Account[]
   sessions      Session[]
+  comments      Comment[]
+  likes         Post[]    @relation("likes")
+}
+
+model Post {
+  id        String    @id @unique @default(cuid())
+  caption   String
+  imageURLs String[]
+  createdAt DateTime  @default(now()) @db.Timestamptz(3)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  comments  Comment[]
+  likes     User[]    @relation("likes")
+}
+
+model Comment {
+  id                  String    @id @unique @default(cuid())
+  createdAt           DateTime  @default(now()) @db.Timestamptz(3)
+  post                Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId              String
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String
+  parentReply         Comment?  @relation("parentReply", fields: [id], references: [id], onDelete: Cascade)
+  parentReplyRelation Comment?  @relation("parentReply")
+  replies             Comment[] @relation("replies")
+  repliesRelation     Comment[] @relation("replies")
 }

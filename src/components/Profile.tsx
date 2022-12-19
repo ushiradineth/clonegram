@@ -12,6 +12,9 @@ const Profile = (props: itemType) => {
   const { data: session, status } = useSession();
 
   const user = trpc.user.getUser.useQuery({ id: session?.user?.id! });
+  const posts = trpc.post.getPost.useQuery({ id: session?.user?.id! });
+  console.log(posts);
+  
 
   return (
     <div className="grid text-white">
@@ -21,7 +24,7 @@ const Profile = (props: itemType) => {
           <div id="user-info" className="cursor-pointer">
             <div className="flex items-center gap-4">
               <div id="id" className="max-w-[200px] overflow-hidden text-ellipsis text-xl font-light">
-                {user.data?.id}
+                {user.data?.handle}
               </div>
               <div id="edit-profile" className={"cursor-pointer rounded-[4px] border py-1 px-2 text-xs font-semibold " + (props.viewport == "Mobile" && " hidden ") + (props.viewport == "Tab" && " flex w-[78px] ")}>
                 Edit profile
@@ -78,11 +81,7 @@ const Profile = (props: itemType) => {
         </div>
       </div>
       <div id="posts" className={"grid grid-cols-3 place-items-center py-10 text-black " + (props.viewport == "Mobile" && " w-[392px] gap-2 ") + (props.viewport == "Web" && " w-[832px] gap-8 border-t-[1px] border-gray-500 px-24 ") + (props.viewport == "Tab" && " w-[600px] border-t-[1px] border-gray-500 ")}>
-        <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-32 w-32 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " h-48 w-48 m-2 mb-0 ")} />
-        <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-32 w-32 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " h-48 w-48 m-2 mb-0 ")} />
-        <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-32 w-32 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " h-48 w-48 m-2 mb-0 ")} />
-        <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-32 w-32 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " h-48 w-48 m-2 mb-0 ")} />
-        {/* <div className={"flex items-center justify-center bg-red-300 col-span-3 " + (props.viewport == "Mobile" ? " h-[392px] w-full " : " h-[624px] w-full ")}>No posts yet</div> */}
+        {posts.data ? <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-32 w-32 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " m-2 mb-0 h-48 w-48 ")} /> : <div className={"col-span-3 flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" ? " h-[392px] w-full " : " h-[624px] w-full ")}>No posts yet</div>}
       </div>
     </div>
   );
