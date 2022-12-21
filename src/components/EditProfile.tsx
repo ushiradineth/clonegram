@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { trpc } from "../utils/trpc";
 import { env } from "../env/client.mjs";
+import Spinner from "./Spinner";
 
 interface itemType {
   viewport: string;
@@ -15,8 +16,10 @@ const EditProfile = (props: itemType) => {
   const [image, setImage] = useState<File>();
   const updateUser = trpc.user.updateUser.useMutation();
 
-  const user = trpc.user.getUser.useQuery({ id: session?.user?.id! }, { refetchOnWindowFocus: false });
-  const { refetch: refetchUrl, data: url } = trpc.user.getSignedUrlPromise.useQuery({ id: session?.user?.id! }, { refetchOnWindowFocus: false });
+  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
+
+  const user = trpc.user.getUser.useQuery({ id: session.user.id }, { refetchOnWindowFocus: false });
+  const { refetch: refetchUrl, data: url } = trpc.user.getSignedUrlPromise.useQuery({ id: session.user.id }, { refetchOnWindowFocus: false });
 
   const handleUploadClick = () => {
     imageRef.current?.click();
@@ -51,9 +54,10 @@ const EditProfile = (props: itemType) => {
     }
 
     if (Name || Handle || Bio || Image) {
-      updateUser.mutate({ id: session?.user?.id!, name: Name, handle: Handle, bio: Bio, image: Image })
+      if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
+      updateUser.mutate({ id: session.user.id, name: Name, handle: Handle, bio: Bio, image: Image });
     }
-    props.onClickNegative()
+    props.onClickNegative();
   };
 
   return (

@@ -11,18 +11,19 @@ interface itemType {
 }
 
 const Profile = (props: itemType) => {
-  const { data: session } = useSession();
   const [editProfile, setEditProfile] = useState(false);
+  const { data: session } = useSession();
+  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
 
-  const user = trpc.user.getUser.useQuery({ id: session?.user?.id! }, { refetchOnWindowFocus: false });
-  const posts = trpc.post.getPost.useQuery({ id: session?.user?.id! }, { refetchOnWindowFocus: false });
+  const user = trpc.user.getUser.useQuery({ id: session.user.id }, { refetchOnWindowFocus: false });
+  const posts = trpc.post.getPost.useQuery({ id: session.user.id }, { refetchOnWindowFocus: false });
 
-  useEffect(() => {
-    if (!editProfile) {
-      user.refetch();
-      posts.refetch();
-    }
-  }, [editProfile]);
+  // useEffect(() => {
+  //   if (!editProfile) {
+  //     user.refetch();
+  //     posts.refetch();
+  //   }
+  // }, [editProfile]);
 
   if (user.isSuccess) {
     return (
@@ -119,6 +120,8 @@ const Profile = (props: itemType) => {
   if (user.isLoading || user.isRefetching) {
     return <Spinner />;
   }
+
+  return <Spinner />;
 };
 
 export default Profile;

@@ -66,7 +66,7 @@ const Create = (props: itemType) => {
           <div className={ratio === "16/9" ? " w-[92.7%] " : "h-[99%]"}>
             {files.map((file, i) => {
               if (file.type.match("image")) {
-                return <img src={URL.createObjectURL(file)} className={"h-full w-full object-cover " + " aspect-" + ratio} />;
+                return <img src={URL.createObjectURL(file)} key="image" className={"h-full w-full object-cover " + " aspect-" + ratio} />;
               }
 
               if (file.type.match("video")) {
