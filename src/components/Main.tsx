@@ -84,7 +84,6 @@ const Main: React.FC = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      console.log("resize");
       window.addEventListener("resize", onResize);
     }
   }, []) 
