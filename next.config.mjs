@@ -16,7 +16,7 @@ const config = {
         defaultLocale: "en",
     },
     images: {
-        domains: ["lh3.googleusercontent.com"],
+        domains: ["lh3.googleusercontent.com", "ushiradineth-clonegram.s3.ap-south-1.amazonaws.com"],
         minimumCacheTTL: 1500000,
     },
 };
