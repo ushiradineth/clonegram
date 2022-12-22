@@ -9,7 +9,19 @@ const Index: NextPage = () => {
   const { data: session, status } = useSession();
 
   if (status == "loading") {
-    return <Spinner />;
+    return (
+      <>
+        <Head>
+          <title>Clonegram</title>
+          <meta name="description" content="Clonegram by Ushira Dineth" />
+          <meta name="google-site-verification" content="WqjiADJh02W0ssceX3ZwKlqRFhVgDEEPUQjG8au1k80" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <main>
+          <Spinner />;
+        </main>
+      </>
+    );
   }
 
   if (status == "authenticated") {
