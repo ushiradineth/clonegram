@@ -11,9 +11,27 @@ export const userRouter = router({
   // }),
 
   getUser: protectedProcedure.input(z.object({ id: z.string() })).query(({ input, ctx }) => {
-    return ctx.prisma.user.findFirst({
+    return ctx.prisma.user.findFirstOrThrow({
       where: {
         id: input.id,
+      },
+      include: {
+        posts: true,
+        followers: true,
+        following: true,
+      },
+    });
+  }),
+
+  getUserByHandle: protectedProcedure.input(z.object({ handle: z.string() })).query(({ input, ctx }) => {
+    return ctx.prisma.user.findFirstOrThrow({
+      where: {
+        handle: input.handle,
+      },
+      include: {
+        posts: true,
+        followers: true,
+        following: true,
       },
     });
   }),

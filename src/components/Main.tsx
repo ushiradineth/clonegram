@@ -75,10 +75,10 @@ const Main: React.FC = () => {
 
   // if (typeof document !== "undefined") {
   //   useEffect(() => {
-      // setTimeout(() => {
-      //   console.log("resize");
-      //   onResize();
-      // }, 1000);
+  // setTimeout(() => {
+  //   console.log("resize");
+  //   onResize();
+  // }, 1000);
   //   }, [document.body.clientWidth]);
   // }
 
@@ -86,7 +86,7 @@ const Main: React.FC = () => {
     if (typeof window !== "undefined") {
       window.addEventListener("resize", onResize);
     }
-  }, []) 
+  }, []);
 
   return (
     <div className="select-none">
