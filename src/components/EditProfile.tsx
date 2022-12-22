@@ -57,6 +57,7 @@ const EditProfile = (props: itemType) => {
       if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
       updateUser.mutate({ id: session.user.id, name: Name, handle: Handle, bio: Bio, image: Image });
     }
+    location.reload();
     props.onClickNegative();
   };
 

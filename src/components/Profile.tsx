@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { IoMdSettings } from "react-icons/io";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -13,17 +13,10 @@ interface itemType {
 const Profile = (props: itemType) => {
   const [editProfile, setEditProfile] = useState(false);
   const { data: session } = useSession();
+
   if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
 
   const user = trpc.user.getUser.useQuery({ id: session.user.id }, { refetchOnWindowFocus: false });
-  const posts = trpc.post.getPost.useQuery({ id: session.user.id }, { refetchOnWindowFocus: false });
-
-  // useEffect(() => {
-  //   if (!editProfile) {
-  //     user.refetch();
-  //     posts.refetch();
-  //   }
-  // }, [editProfile]);
 
   if (user.isSuccess) {
     return (
@@ -58,13 +51,13 @@ const Profile = (props: itemType) => {
               </div>
               <div id="stats" className={"grid grid-flow-col gap-2 text-sm font-normal " + (props.viewport == "Mobile" && " hidden ")}>
                 <div className="flex gap-1">
-                  <p className="font-semibold">0</p>posts
+                  <p className="font-semibold">{user.data?.posts.length}</p>posts
                 </div>
                 <div className="flex gap-1">
-                  <p className="font-semibold">0</p>followers
+                  <p className="font-semibold">{user.data?.followers.length}</p>followers
                 </div>
                 <div className="flex gap-1">
-                  <p className="font-semibold">0</p>following
+                  <p className="font-semibold">{user.data?.following.length}</p>following
                 </div>
               </div>
               <div id="details" className={"text-sm font-semibold " + (props.viewport == "Mobile" && " hidden ")}>
@@ -87,31 +80,27 @@ const Profile = (props: itemType) => {
           </div>
           <div id="stats-mobile" className={"grid w-full grid-flow-col place-items-center border-y-[1px] border-gray-500 py-2  text-sm font-normal text-white " + (props.viewport != "Mobile" && " hidden ")}>
             <div className="grid place-items-center">
-              <p className="font-semibold">0</p>
+              <p className="font-semibold">{user.data?.posts.length}</p>
               <p className="text-gray-300">posts</p>
             </div>
             <div className="grid place-items-center">
-              <p className="font-semibold">0</p>
+              <p className="font-semibold">{user.data?.followers.length}</p>
               <p className="text-gray-300">followers</p>
             </div>
             <div className="grid place-items-center">
-              <p className="font-semibold">0</p>
+              <p className="font-semibold">{user.data?.following.length}</p>
               <p className="text-gray-300">following</p>
             </div>
           </div>
-          {posts.isLoading || posts.isRefetching ? (
-            <Spinner removeBackground={true} />
-          ) : (
-            <div id="posts" className={"grid grid-cols-3 place-items-center py-10 text-black " + (props.viewport == "Mobile" && " gap-2 ") + (props.viewport == "Web" && " w-[832px] gap-4 border-t-[1px] border-gray-500 px-24 ") + (props.viewport == "Tab" && " w-[600px] border-t-[1px] border-gray-500 ")}>
-              {/* <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-36 w-36 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " m-2 mb-0 h-48 w-48 ")} />
+          <div id="posts" className={"grid grid-cols-3 place-items-center py-10 text-black " + (props.viewport == "Mobile" && " gap-2 ") + (props.viewport == "Web" && " w-[832px] gap-4 border-t-[1px] border-gray-500 px-24 ") + (props.viewport == "Tab" && " w-[600px] border-t-[1px] border-gray-500 ")}>
+            {/* <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-36 w-36 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " m-2 mb-0 h-48 w-48 ")} />
               <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-36 w-36 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " m-2 mb-0 h-48 w-48 ")} />
               <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-36 w-36 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " m-2 mb-0 h-48 w-48 ")} />
               <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-36 w-36 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " m-2 mb-0 h-48 w-48 ")} />
               <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-36 w-36 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " m-2 mb-0 h-48 w-48 ")} />
               <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-36 w-36 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " m-2 mb-0 h-48 w-48 ")} /> */}
-              {posts.data ? <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-32 w-32 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " m-2 mb-0 h-48 w-48 ")} /> : <div className={"col-span-3 flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" ? " h-[392px] w-[392px] " : " h-[624px] w-full ")}>No posts yet</div>}
-            </div>
-          )}
+            {user.data?.posts ? <div className={"flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" && " h-32 w-32 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " m-2 mb-0 h-48 w-48 ")} /> : <div className={"col-span-3 flex items-center justify-center bg-red-300 " + (props.viewport == "Mobile" ? " h-[392px] w-[392px] " : " h-[624px] w-full ")}>No posts yet</div>}
+          </div>
         </div>
       </div>
     );
