@@ -17,6 +17,7 @@ const Index: NextPage = () => {
       <>
         <Head>
           <title>Clonegram</title>
+          <meta name="google-site-verification" content="WqjiADJh02W0ssceX3ZwKlqRFhVgDEEPUQjG8au1k80" />
           <meta name="description" content="Clonegram by Ushira Dineth" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
