@@ -43,21 +43,23 @@ model Account {
 }
 
 model User {
-  id            String    @id @unique @default(cuid())
-  handle        String    @unique @default(cuid())
-  name          String?
-  bio           String?
-  email         String?   @unique
-  emailVerified DateTime?
-  createdAt     DateTime  @default(now()) @db.Timestamptz(3)
-  image         String?
-  posts         Post[]
-  accounts      Account[]
-  sessions      Session[]
-  comments      Comment[]
-  likes         Post[]    @relation("likes")
-  followers     User[]    @relation("UserFollows")
-  following     User[]    @relation("UserFollows")
+  id                String    @id @unique @default(cuid())
+  handle            String    @unique @default(cuid())
+  name              String?
+  bio               String?
+  email             String?   @unique
+  emailVerified     DateTime?
+  createdAt         DateTime  @default(now()) @db.Timestamptz(3)
+  image             String?
+  posts             Post[]
+  accounts          Account[]
+  sessions          Session[]
+  comments          Comment[]
+  likes             Post[]    @relation("likes")
+  followers         User[]    @relation("UserFollowers")
+  followersRelation User[]    @relation("UserFollowers")
+  following         User[]    @relation("Userfollowing")
+  followingRelation User[]    @relation("Userfollowing")
 }
 
 model Post {

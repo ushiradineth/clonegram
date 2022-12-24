@@ -73,15 +73,6 @@ const Main: React.FC = () => {
     }
   };
 
-  // if (typeof document !== "undefined") {
-  //   useEffect(() => {
-  // setTimeout(() => {
-  //   console.log("resize");
-  //   onResize();
-  // }, 1000);
-  //   }, [document.body.clientWidth]);
-  // }
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.addEventListener("resize", onResize);

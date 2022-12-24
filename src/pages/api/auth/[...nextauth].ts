@@ -12,6 +12,16 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = user.id;
       }
+      session = {
+        ...session,
+        user: {
+          id: user.id,
+          handle: user.handle,
+          email: user.email,
+          name: user.name,
+          image: user.image,
+        },
+      };
       return session;
     },
   },
@@ -20,8 +30,8 @@ export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET
-    })
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
 };
 

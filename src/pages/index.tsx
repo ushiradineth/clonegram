@@ -53,10 +53,8 @@ const Index: NextPage = () => {
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Clone<span className="text-[hsl(280,100%,70%)]">gram</span>
           </h1>
-          <div className="flex flex-col items-center gap-2">
             <p className="text-sm text-white sm:text-2xl">Made with NextJS, TypeScript, tRPC, Zod and TailwindCSS</p>
             <Auth />
-          </div>
         </div>
       </main>
     </>
