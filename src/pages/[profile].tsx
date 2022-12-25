@@ -33,7 +33,7 @@ const Profile = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const profile = router.query.profile as string;
-  const user = trpc.user.getUserByHandle.useQuery({ handle: String(profile) }, { refetchOnWindowFocus: false });
+  const user = trpc.user.getUserByHandle.useQuery({ handle: String(profile) }, { refetchOnWindowFocus: false, retry: false });
   const follow = trpc.user.follow.useMutation();
   const unfollow = trpc.user.unfollow.useMutation();
 
@@ -61,8 +61,7 @@ const Profile = () => {
   if (user.isSuccess) {
     return (
       <>
-        
-        <div className="select-none">
+        <div className={"select-none " + (viewport == "Web" && " ml-72 ") + (viewport == "Tab" && " ml-16 ")}>
           <div id="Background" className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] ">
             <div className={" min-h-screen " /*+ (viewport == "Web" && "  288px ml-72 ")*/}>
               {editProfile && (
@@ -148,7 +147,8 @@ const Profile = () => {
               </div>
             </div>
           </div>
-        </div><Layout />
+        </div>
+        <Layout />
       </>
     );
   } else if (user.isError) {

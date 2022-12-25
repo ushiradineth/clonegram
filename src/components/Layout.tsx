@@ -80,26 +80,68 @@ const Main: React.FC = () => {
   }, []);
 
   return (
-    <div className="select-none w-fit">
+    <div className="w-fit select-none">
       <Create create={create} setCreate={setCreate} hook={hook} setActive={setActive} />
       <div id="Sidebar" className={"fixed left-0 grid gap-4 border-r-2 bg-white " + (viewport == "Web" && " bottom-0 z-10 h-full w-72 grid-flow-row transition-all duration-200 ") + (viewport == "Tab" && " top-0 h-full w-16 grid-flow-row transition-all duration-200 ") + (viewport == "Mobile" && " bottom-0 h-12 w-screen grid-flow-col ") + (create && " opacity-30 ")}>
         <div id="Sidebar-Items" className={"text-2xl font-light transition-all duration-200 " + (viewport == "Web" && " ml-2 mt-5 ") + (viewport == "Tab" && " ml-1 mt-5 ")}>
           <p className={"ml-5 " + (viewport == "Mobile" ? " hidden " : " grid ")}>{viewport == "Web" ? "CLONEGRAM" : "C"}</p>
           <div id="Sidebar-Web-View-Items" className={"mt-5 ml-2 grid-flow-row place-items-start gap-5 " + (viewport == "Mobile" ? " hidden " : " grid ")}>
-            <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} Text={"Home"} ID={"Home"} active={active} setActive={setActive} viewport={viewport} />
+            <NavBarItem
+              Icon={<AiOutlineHome />}
+              IconOnClick={<AiFillHome />}
+              Text={"Home"}
+              ID={"Home"}
+              active={active}
+              setActive={setActive}
+              viewport={viewport}
+              onClickHandler={() => {
+                router.push("home");
+              }}
+            />
             <NavBarItem Icon={<BiSearchAlt2 />} IconOnClick={<FaSearch />} Text={"Search"} ID={"Search"} active={active} setActive={setActive} viewport={viewport} />
             <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} Text={"Explore"} ID={"Explore"} active={active} setActive={setActive} viewport={viewport} />
             <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} Text={"Messages"} ID={"Messages"} active={active} setActive={setActive} viewport={viewport} />
             <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} active={active} setActive={setActive} viewport={viewport} />
             <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} Text={"Create"} ID={"Create"} active={active} setActive={setActive} viewport={viewport} />
-            <NavBarItem Icon={<CgProfile />} IconOnClick={<CgProfile />} Text={"Profile"} ID={"Profile"} active={active} setActive={setActive} viewport={viewport} />
+            <NavBarItem
+              Icon={<CgProfile />}
+              IconOnClick={<CgProfile />}
+              Text={"Profile"}
+              ID={"Profile"}
+              active={active}
+              setActive={setActive}
+              viewport={viewport}
+              onClickHandler={() => {
+                router.push("/" + session?.user?.handle);
+              }}
+            />
           </div>
           <div id="Sidebar-Mobile-View-Items" className={"mt-[4px] grid grid-flow-col place-items-center " + (viewport != "Mobile" && " hidden ")}>
-            <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} ID={"M-Home"} active={active} setActive={setActive} viewport={viewport} />
+            <NavBarItem
+              Icon={<AiOutlineHome />}
+              IconOnClick={<AiFillHome />}
+              ID={"M-Home"}
+              active={active}
+              setActive={setActive}
+              viewport={viewport}
+              onClickHandler={() => {
+                router.push("home");
+              }}
+            />
             <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} ID={"M-Explore"} active={active} setActive={setActive} viewport={viewport} />
             <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} ID={"M-Create"} active={active} setActive={setActive} viewport={viewport} />
             <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} ID={"M-Messages"} active={active} setActive={setActive} viewport={viewport} />
-            <NavBarItem Icon={<CgProfile />} IconOnClick={<CgProfile />} ID={"M-Profile"} active={active} setActive={setActive} viewport={viewport} />
+            <NavBarItem
+              Icon={<CgProfile />}
+              IconOnClick={<CgProfile />}
+              ID={"M-Profile"}
+              active={active}
+              setActive={setActive}
+              viewport={viewport}
+              onClickHandler={() => {
+                router.push("/" + session?.user?.handle);
+              }}
+            />
           </div>
           <div id="Sidebar-More" className={"fixed bottom-5 " + (viewport == "Mobile" && " hidden ")}>
             <div className={"ml-2"} onClick={() => setMore(!more)}>
