@@ -16,7 +16,7 @@ const Profile = (props: itemType) => {
   const [editProfile, setEditProfile] = useState(false);
   const [isUser, setIsUser] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const profile = router.query.profile as string;
   
@@ -41,6 +41,10 @@ const Profile = (props: itemType) => {
     });
   }, []);
 
+  if(status === "unauthenticated"){
+    router.push("/")
+  }
+  
   if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
 
   const unfollowFunc = () => {

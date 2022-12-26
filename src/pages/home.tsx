@@ -1,9 +1,17 @@
+import { useSession } from "next-auth/react";
+import router from "next/router";
 import React from "react";
 
 const Home: React.FC = () => {
+  const { data: session, status } = useSession();
+  
+  if (status === "unauthenticated") {
+    router.push("/");
+  }
+
   return (
     <div className="flex items-center justify-center">
-      <div className="h-96 w-96  bg-black text-white flex items-center justify-center">Home</div>
+      <div className="flex h-96  w-96 items-center justify-center bg-black text-white">Home</div>
     </div>
   );
 };

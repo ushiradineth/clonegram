@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 
 interface itemType {
@@ -10,16 +10,18 @@ interface itemType {
   setActive: (params: any) => any;
   onClickHandler?: () => any;
   viewport: string;
+  theme: {
+    type: string,
+    primary: string,
+    secondary: string,
+    tertiary: string,
+    accent: string
+  };
 }
 
 const NavBarItem = (props: itemType) => {
   const [click, setClick] = useState(false);
-  const [hover, setHover] = useState(false);
-
-  useEffect(() => {
-   console.log(click);
-  }, [click])
-  
+  const [hover, setHover] = useState(false); 
 
   return (
     <div
