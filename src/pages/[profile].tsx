@@ -43,12 +43,16 @@ const Profile = (props: itemType) => {
   if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
 
   const unfollowFunc = () => {
-    unfollow.mutate({ userid: session.user?.id!, pageid: user.data?.id! });
+    if (session?.user?.id && user.data?.id) {
+      unfollow.mutate({ userid: session?.user?.id, pageid: user.data?.id });
+    }
     setIsFollowing(false);
   };
 
   const followFunc = () => {
-    follow.mutate({ userid: session.user?.id!, pageid: user.data?.id! });
+    if (session?.user?.id && user.data?.id) {
+      follow.mutate({ userid: session.user?.id, pageid: user.data?.id });
+    }
     setIsFollowing(true);
   };
 
