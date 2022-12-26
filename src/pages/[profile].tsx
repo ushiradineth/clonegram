@@ -49,6 +49,9 @@ const Profile = (props: itemType) => {
     setIsFollowing(false);
   };
 
+  console.log(session);
+  
+
   const followFunc = () => {
     if (session?.user?.id && user.data?.id) {
       follow.mutate({ userid: session.user?.id, pageid: user.data?.id });
