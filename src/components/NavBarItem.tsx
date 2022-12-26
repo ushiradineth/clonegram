@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 interface itemType {
-  Icon: JSX.Element;
-  IconOnClick: JSX.Element;
+  Icon: JSX.Element | string | null | undefined;
+  IconOnClick?: JSX.Element;
   Text?: string;
   ID: string;
   active: string;
@@ -16,17 +17,9 @@ const NavBarItem = (props: itemType) => {
   const [hover, setHover] = useState(false);
 
   useEffect(() => {
-    if (props.active !== props.ID || props.active !== "M-" + props.ID) {
-      setClick(false);
-    }
-  }, [props.active]);
-
-  useEffect(() => {
-    if (click && (props.active !== props.ID || props.active !== "M-" + props.ID)) {
-      props.setActive(props.ID.split("-").pop());
-      // console.log("Active: " + props.active + " ID: " + props.ID);
-    }
-  });
+   console.log(click);
+  }, [click])
+  
 
   return (
     <div
@@ -41,7 +34,15 @@ const NavBarItem = (props: itemType) => {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <div className={"transition-all duration-200 " + (hover ? (props.viewport == "Mobile" ? " scale-[1.6] " : " scale-110 ") : props.viewport == "Mobile" ? " scale-150 " : " scale-100 ")}>{click ? props.IconOnClick : props.Icon}</div>
+      <div className={"transition-all duration-200 " + 
+      (hover ? (props.viewport == "Mobile" ? " scale-[1.6] " : " scale-110 ") : props.viewport == "Mobile" ? " scale-150 " : " scale-100 ")}>
+        {typeof props.Icon === "string" ? <Image height={props.viewport == "Mobile" ? 14 : 24} width={props.viewport == "Mobile" ? 14 : 24} 
+        className={"transition-all duration-200 rounded-full " +
+        (hover  ? (props.viewport == "Mobile" ? " scale-[1.6] " : " scale-110 ") 
+        : 
+        props.viewport == "Mobile" ? " scale-150 " : " scale-100 ") + 
+        (click && " border-2 border-black ")} 
+        src={props.Icon} alt="Profile Picture" /> : click ? props.IconOnClick : props.Icon}</div>
       {props.Text && <p className={"ml-2 text-sm font-normal " + (props.viewport == "Web" ? " block " : " hidden ")}>{props.Text}</p>}
     </div>
   );

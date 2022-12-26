@@ -19,6 +19,7 @@ const Profile = (props: itemType) => {
   const { data: session } = useSession();
   const router = useRouter();
   const profile = router.query.profile as string;
+  
   const user = trpc.user.getUserByHandle.useQuery({ handle: String(profile) }, { refetchOnWindowFocus: false, retry: false });
   const follow = trpc.user.follow.useMutation({
     onSuccess: async (data) => {
@@ -48,8 +49,6 @@ const Profile = (props: itemType) => {
     }
     setIsFollowing(false);
   };
-
-  console.log(session);
   
 
   const followFunc = () => {

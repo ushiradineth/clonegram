@@ -33,6 +33,8 @@ const Layout = (props: itemType) => {
   const router = useRouter();
   const { data: session, status } = useSession();
 
+  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
+
   if (status === "authenticated") {
     return (
       <>
@@ -61,8 +63,7 @@ const Layout = (props: itemType) => {
                 <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} active={props.active} setActive={props.setActive} viewport={props.viewport} />
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} Text={"Create"} ID={"Create"} active={props.active} setActive={props.setActive} viewport={props.viewport} />
                 <NavBarItem
-                  Icon={<CgProfile />}
-                  IconOnClick={<CgProfile />}
+                  Icon={session.user?.image}
                   Text={"Profile"}
                   ID={"Profile"}
                   active={props.active}
@@ -89,8 +90,7 @@ const Layout = (props: itemType) => {
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} ID={"M-Create"} active={props.active} setActive={props.setActive} viewport={props.viewport} />
                 <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} ID={"M-Messages"} active={props.active} setActive={props.setActive} viewport={props.viewport} />
                 <NavBarItem
-                  Icon={<CgProfile />}
-                  IconOnClick={<CgProfile />}
+                  Icon={session.user?.image}
                   ID={"M-Profile"}
                   active={props.active}
                   setActive={props.setActive}
@@ -106,7 +106,7 @@ const Layout = (props: itemType) => {
                 </div>
                 {props.more ? (
                   <div id="Sidebar-More-Items" className="fixed bottom-12 left-4 z-10 w-48 rounded-lg bg-white text-sm shadow-[0px_0px_10px_rgba(0,0,0,0.1)]">
-                    <MoreItem Icon={<IoMdSettings />} Text="Settings" onClickHandler={() => console.log("test")} />
+                    <MoreItem Icon={<IoMdSettings />} Text="Settings" onClickHandler={() => {}} />
                     <MoreItem Icon={<RxBookmark />} Text="Saved" />
                     <MoreItem Icon={<RxTimer />} Text="Your Activity" />
                     <MoreItem Icon={<BiMessageAltError />} Text="Report a problem" />
