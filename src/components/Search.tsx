@@ -9,7 +9,7 @@ interface itemType {
 const Search = (props: itemType) => {
   return (
     <>
-      <div className={"fixed top-0 left-16 z-10 h-screen rounded-r-xl bg-white shadow-[25px_0px_50px_rgba(0,0,0,0.1)] transition-all duration-1000 " + (props.search ? " w-[350px] border-l-2 " : " z-0 w-0 ") + (props.viewport == "Mobile" && " hidden ")}>
+      <div className={"fixed top-0 left-16 h-screen rounded-r-xl bg-white shadow-[25px_0px_50px_rgba(0,0,0,0.1)] transition-all duration-1000 " + (props.search ? " w-[350px] border-l-2 z-10 " : " z-0 w-0 ") + (props.viewport == "Mobile" && " hidden ")}>
         <div className={"rounded-r-xl bg-white opacity-0 transition-all " + (props.search && " opacity-100 ")}>
           <div className={"h-screen transition-all duration-200"}>
             <div className="grid w-full items-center border-b-[1px] font-semibold">

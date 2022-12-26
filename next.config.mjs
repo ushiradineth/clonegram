@@ -1,4 +1,7 @@
 // @ts-check
+
+import { env } from "./src/env/client.mjs";
+
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
  * This is especially useful for Docker builds.
@@ -15,8 +18,9 @@ const config = {
         defaultLocale: "en",
     },
     images: {
-        domains: ["lh3.googleusercontent.com", "ushiradineth-clonegram.s3.ap-south-1.amazonaws.com"],
-        minimumCacheTTL: 1500000,
+        domains: ["lh3.googleusercontent.com", env.NEXT_PUBLIC_SUPABASE_URL],
+        minimumCacheTTL: 1,
+		disableStaticImages: true
     },
 };
 
