@@ -15,6 +15,8 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
   const [active, setActive] = useState("");
   const [create, setCreate] = useState(false);
   const [search, setSearch] = useState(false);
+  const [theme, setTheme] = useState("");
+
   const router = useRouter();
   const supabase = createClient("https://" + env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY);
 
@@ -70,7 +72,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
 
   return (
     <SessionProvider session={session}>
-      <Layout create={create} setCreate={setCreate} viewport={viewport} active={active} setActive={setActive} search={search} more={more} setMore={setMore} supabase={supabase} />
+      <Layout create={create} setCreate={setCreate} viewport={viewport} active={active} setActive={setActive} search={search} more={more} setMore={setMore} supabase={supabase} theme={theme} setTheme={setTheme} />
       <Component {...pageProps} viewport={viewport} supabase={supabase} />
     </SessionProvider>
   );

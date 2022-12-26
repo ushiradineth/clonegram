@@ -47,6 +47,7 @@ model User {
   handle            String    @unique @default(cuid())
   name              String?
   bio               String?
+  theme             String    @default("dark")
   email             String?   @unique
   emailVerified     DateTime?
   createdAt         DateTime  @default(now()) @db.Timestamptz(3)

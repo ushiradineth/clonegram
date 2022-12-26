@@ -1,16 +1,23 @@
+import themeObject from "./Theme";
+
 interface itemType {
   Icon?: JSX.Element;
   Text: string;
   onClickHandler?: (params: any) => any;
+  theme: {
+    type: string;
+    primary: string;
+    secondary: string;
+    tertiary: string;
+    accent: string;
+  };
+  last?: boolean;
 }
 
 const MoreItem = (props: itemType) => {
   return (
-    <div
-      className="flex items-center border-b-2 p-2 text-sm font-normal hover:bg-gray-50 active:bg-gray-200 cursor-pointer"
-      onClick={props.onClickHandler}
-    >
-      <p className="ml-2 w-[150px]">{props.Text}</p>
+    <div className={"flex cursor-pointer items-center p-2 pr-4 text-sm font-normal " + (!props.last && " border-b-2 border-black ") + " hover:" + (props.theme.type === "dark" ? props.theme.accent : props.theme.accent)} onClick={props.onClickHandler}>
+      <p className="ml-2 w-[150px] font-semibold">{props.Text}</p>
       <div className="scale-150">{props.Icon}</div>
     </div>
   );
