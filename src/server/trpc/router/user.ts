@@ -40,10 +40,10 @@ export const userRouter = router({
     };
     const data: dataType = {};
 
-    if (input.name) data.name = input.name!;
-    if (input.image) data.image = input.image!;
-    if (input.handle) data.handle = input.handle!;
-    if (input.bio) data.bio = input.bio!;
+    if (input.name) data.name = input.name;
+    if (input.image) data.image = input.image;
+    if (input.handle) data.handle = input.handle;
+    if (input.bio) data.bio = input.bio;
 
     return ctx.prisma.user.update({
       where: {

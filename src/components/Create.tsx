@@ -1,14 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { AiOutlineClose, AiOutlineExpand } from "react-icons/ai";
 import { BiArrowBack } from "react-icons/bi";
 import { TbRectangle, TbRectangleVertical } from "react-icons/tb";
 import { FiSquare } from "react-icons/fi";
 import OptionMenu from "./OptionMenu";
+import Image from "next/image";
 
 interface itemType {
   create: boolean;
   setCreate: (params: any) => any;
-  hook: JSX.Element;
   setActive: (params: any) => any;
   supabase: any;
 }
@@ -69,7 +69,7 @@ const Create = (props: itemType) => {
           <div className={ratio === "16/9" ? " w-[92.7%] " : "h-[99%]"}>
             {files.map((file, i) => {
               if (file.type.match("image")) {
-                return <img src={URL.createObjectURL(file)} key="image" className={"h-full w-full object-cover " + " aspect-" + ratio} />;
+                return <Image fill={true} src={URL.createObjectURL(file)} key="image" className={"h-full w-full object-cover " + " aspect-" + ratio} alt={"image"} />;
               }
 
               if (file.type.match("video")) {
@@ -125,26 +125,25 @@ const Create = (props: itemType) => {
     return (
       <>
         {discard && (
-            <OptionMenu
-              title="Discard post?"
-              description="If you leave, your edits won't be saved."
-              buttonPositive="Discard"
-              buttonNegative="Cancel"
-              onClickPositive={() => {
-                setFileList(null);
-                setDiscard(false);
-                props.setCreate(false);
-              }}
-              onClickNegative={() => {
-                setDiscard(false);
-              }}
-            />
+          <OptionMenu
+            title="Discard post?"
+            description="If you leave, your edits won't be saved."
+            buttonPositive="Discard"
+            buttonNegative="Cancel"
+            onClickPositive={() => {
+              setFileList(null);
+              setDiscard(false);
+              props.setCreate(false);
+            }}
+            onClickNegative={() => {
+              setDiscard(false);
+            }}
+          />
         )}
         <div
           className="fixed top-8 right-8 scale-150 hover:cursor-pointer"
           onClick={() => {
             props.setCreate(false);
-            props.setActive(props.hook.type.name);
             setFileList(null);
           }}
         >

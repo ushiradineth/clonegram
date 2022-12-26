@@ -5,7 +5,6 @@ import { IoMdSettings } from "react-icons/io";
 import { HiMenu, HiOutlineMenu } from "react-icons/hi";
 import { RxBookmark, RxTimer } from "react-icons/rx";
 import { RiMessage3Line, RiMessage3Fill, RiAddBoxLine, RiAddBoxFill } from "react-icons/ri";
-import { CgProfile } from "react-icons/cg";
 import { FaSearch } from "react-icons/fa";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -20,7 +19,6 @@ interface itemType {
   create: boolean;
   setCreate: (params: any) => any;
   viewport: string;
-  hook: JSX.Element;
   active: string;
   setActive: (params: any) => any;
   search: boolean;
@@ -39,7 +37,7 @@ const Layout = (props: itemType) => {
     return (
       <>
         <div className="max-h-screen w-fit select-none">
-          <Create create={props.create} setCreate={props.setCreate} hook={props.hook} setActive={props.setActive} supabase={props.supabase} />
+          <Create create={props.create} setCreate={props.setCreate} setActive={props.setActive} supabase={props.supabase} />
           <Search search={props.search} viewport={props.viewport} />
           <div id="Sidebar" className={"fixed left-0 grid gap-4 border-r-2 bg-white " + (props.viewport == "Web" && " bottom-0 z-10 h-full w-72 grid-flow-row transition-all duration-200 ") + (props.viewport == "Tab" && " top-0 h-full w-16 grid-flow-row transition-all duration-200 ") + (props.viewport == "Mobile" && " bottom-0 h-12 w-screen grid-flow-col ") + (props.create && " opacity-30 ")}>
             <div id="Sidebar-Items" className={"text-2xl font-light transition-all duration-200 " + (props.viewport == "Web" && " ml-2 mt-5 ") + (props.viewport == "Tab" && " ml-1 mt-5 ")}>
@@ -106,7 +104,7 @@ const Layout = (props: itemType) => {
                 </div>
                 {props.more ? (
                   <div id="Sidebar-More-Items" className="fixed bottom-12 left-4 z-10 w-48 rounded-lg bg-white text-sm shadow-[0px_0px_10px_rgba(0,0,0,0.1)]">
-                    <MoreItem Icon={<IoMdSettings />} Text="Settings" onClickHandler={() => {}} />
+                    <MoreItem Icon={<IoMdSettings />} Text="Settings" />
                     <MoreItem Icon={<RxBookmark />} Text="Saved" />
                     <MoreItem Icon={<RxTimer />} Text="Your Activity" />
                     <MoreItem Icon={<BiMessageAltError />} Text="Report a problem" />
