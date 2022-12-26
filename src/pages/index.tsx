@@ -1,12 +1,12 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { signIn, useSession } from "next-auth/react";
 import Spinner from "../components/Spinner";
-import Main from "../components/Main";
 
 const Index: NextPage = () => {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
+  const router = useRouter();
 
   if (status == "loading") {
     return (
@@ -25,19 +25,7 @@ const Index: NextPage = () => {
   }
 
   if (status == "authenticated") {
-    return (
-      <>
-        <Head>
-          <title>Clonegram</title>
-          <meta name="description" content="Clonegram by Ushira Dineth" />
-          <meta name="google-site-verification" content="WqjiADJh02W0ssceX3ZwKlqRFhVgDEEPUQjG8au1k80" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <main>
-          <Main />
-        </main>
-      </>
-    );
+    router.push("/home");
   }
 
   return (
@@ -53,8 +41,8 @@ const Index: NextPage = () => {
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Clone<span className="text-[hsl(280,100%,70%)]">gram</span>
           </h1>
-            <p className="text-sm text-white sm:text-2xl">Made with NextJS, TypeScript, tRPC, Zod and TailwindCSS</p>
-            <Auth />
+          <p className="text-sm text-white sm:text-2xl">Made with NextJS, TypeScript, tRPC, Zod and TailwindCSS</p>
+          <Auth />
         </div>
       </main>
     </>
@@ -64,8 +52,7 @@ const Index: NextPage = () => {
 export default Index;
 
 const Auth: React.FC = () => {
-  //redirecting to home if authenticated
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   if (status == "loading") {
     return <Spinner />;
   }

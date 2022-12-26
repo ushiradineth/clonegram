@@ -22,10 +22,6 @@ export const serverSchema = z.object({
 
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),
-
-    AMAZON_ACCESS_KEY: z.string(),
-    AMAZON_SECRET_KEY: z.string(),
-    AMAZON_BUCKET_NAME: z.string()
 });
 
 /**
@@ -34,8 +30,13 @@ export const serverSchema = z.object({
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 export const clientSchema = z.object({
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
-    NEXT_PUBLIC_AMAZON_URL: z.string(),
+    NEXT_PUBLIC_NEXTAUTH_URL: z.preprocess(
+        (str) => process.env.VERCEL_URL || str,
+        process.env.VERCEL ? z.string() : z.string().url(),
+    ),
+    NEXT_PUBLIC_SUPABASE_URL: z.string(),
+    NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY: z.string(),
+    NEXT_PUBLIC_SUPABASE_IMAGE_URL: z.string()
 });
 
 /**
@@ -45,6 +46,8 @@ export const clientSchema = z.object({
  * @type {{ [k in keyof z.infer<typeof clientSchema>]: z.infer<typeof clientSchema>[k] | undefined }}
  */
 export const clientEnv = {
-    // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
-    NEXT_PUBLIC_AMAZON_URL: process.env.NEXT_PUBLIC_AMAZON_URL,
+    NEXT_PUBLIC_NEXTAUTH_URL: process.env.NEXT_PUBLIC_NEXTAUTH_URL,
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY,
+    NEXT_PUBLIC_SUPABASE_IMAGE_URL: process.env.NEXT_PUBLIC_SUPABASE_IMAGE_URL
 };

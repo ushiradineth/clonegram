@@ -1,6 +1,4 @@
 import { z } from "zod";
-import { env } from "../../../env/server.mjs";
-import S3 from "aws-sdk/clients/s3";
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 
 export const userRouter = router({
@@ -34,23 +32,6 @@ export const userRouter = router({
         following: true,
       },
     });
-  }),
-
-  getSignedUrlPromise: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input, ctx }) => {
-    // const s3 = new S3({
-    //   accessKeyId: env.AMAZON_ACCESS_KEY,
-    //   secretAccessKey: env.AMAZON_SECRET_KEY,
-    //   region: "ap-south-1",
-    // });
-    // const fileParams = {
-    //   Bucket: env.AMAZON_BUCKET_NAME,
-    //   Key: "Users/Profile Pictures/" + input.id,
-    //   Expires: 600,
-    //   ContentType: "image",
-    // };
-    // const url = await s3.getSignedUrlPromise("putObject", fileParams);
-    // return url;
-    return "XD" 
   }),
 
   updateUser: protectedProcedure.input(z.object({ id: z.string(), name: z.string().nullish(), image: z.string().nullish(), handle: z.string().nullish(), bio: z.string().nullish() })).mutation(({ input, ctx }) => {
