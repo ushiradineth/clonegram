@@ -69,7 +69,7 @@ const Layout = (props: itemType) => {
                   setActive={props.setActive}
                   viewport={props.viewport}
                   onClickHandler={() => {
-                    router.push("/" + session?.user?.handle);
+                    router.push("/" + session?.user?.handle!);
                   }}
                 />
               </div>
