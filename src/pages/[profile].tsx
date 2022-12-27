@@ -19,7 +19,7 @@ const Profile = (props: itemType) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const profile = router.query.profile as string;
-  
+
   const user = trpc.user.getUserByHandle.useQuery({ handle: String(profile) }, { refetchOnWindowFocus: false, retry: false });
   const follow = trpc.user.follow.useMutation({
     onSuccess: async (data) => {
@@ -41,11 +41,11 @@ const Profile = (props: itemType) => {
     });
   }, []);
 
-  if(status === "unauthenticated"){
-    router.push("/")
+  if (status === "unauthenticated") {
+    router.push("/");
   }
-  
-  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
+
+  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} />;
 
   const unfollowFunc = () => {
     if (session?.user?.id && user.data?.id) {
@@ -53,7 +53,6 @@ const Profile = (props: itemType) => {
     }
     setIsFollowing(false);
   };
-  
 
   const followFunc = () => {
     if (session?.user?.id && user.data?.id) {
@@ -159,7 +158,7 @@ const Profile = (props: itemType) => {
     return <div className="grid h-screen w-screen place-items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-3xl font-light text-white">Error: User does not exist.</div>;
   }
 
-  return <Spinner />;
+  return <Spinner viewport={props.viewport} />;
 };
 
 export default Profile;

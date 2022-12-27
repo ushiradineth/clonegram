@@ -26,7 +26,7 @@ const EditProfile = (props: itemType) => {
     },
   });
 
-  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
+  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} />;
 
   const user = trpc.user.getUser.useQuery({ id: session.user.id }, { refetchOnWindowFocus: false });
 
@@ -58,7 +58,7 @@ const EditProfile = (props: itemType) => {
     }
 
     if (Name || Handle || Bio || Image) {
-      if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
+      if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} />;
       updateUser.mutate({ id: session.user.id, name: Name, handle: Handle, bio: Bio, image: Image });
     }
   };
