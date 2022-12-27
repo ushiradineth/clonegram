@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
 import EditProfile from "../components/EditProfile";
 import Spinner from "../components/Spinner";
+import themeObject from "../components/Theme";
 
 interface itemType {
   viewport: string;
@@ -19,7 +20,6 @@ const Profile = (props: itemType) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const profile = router.query.profile as string;
-
   const user = trpc.user.getUserByHandle.useQuery({ handle: String(profile) }, { refetchOnWindowFocus: false, retry: false });
   const follow = trpc.user.follow.useMutation({
     onSuccess: async (data) => {
@@ -47,6 +47,8 @@ const Profile = (props: itemType) => {
 
   if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} />;
 
+  const theme = themeObject(session?.user?.theme);
+
   const unfollowFunc = () => {
     if (session?.user?.id && user.data?.id) {
       unfollow.mutate({ userid: session?.user?.id, pageid: user.data?.id });
@@ -65,7 +67,7 @@ const Profile = (props: itemType) => {
     return (
       <>
         <div className={"select-none " + (props.viewport == "Web" && " ml-72 ") + (props.viewport == "Tab" && " ml-16 ")}>
-          <div id="Background" className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] ">
+          <div id="Background" className={"flex min-h-screen flex-col items-center justify-center " + theme.secondary}>
             <div className={" min-h-screen " /*+ (viewport == "Web" && "  288px ml-72 ")*/}>
               {editProfile && (
                 <EditProfile
