@@ -36,7 +36,7 @@ const Index = (props: itemType) => {
 
   if (status == "authenticated") {
     router.push("/home");
-    return <></>
+    return <div className={"h-screen w-screen " + props.theme.secondary}></div>
   }
 
   return (
