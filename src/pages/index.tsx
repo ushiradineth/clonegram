@@ -36,6 +36,7 @@ const Index = (props: itemType) => {
 
   if (status == "authenticated") {
     router.push("/home");
+    return <></>
   }
 
   return (
