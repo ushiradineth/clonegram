@@ -83,7 +83,7 @@ const Profile = (props: itemType) => {
                   supabase={props.supabase}
                 />
               )}
-              <div className={"grid w-fit text-white " + (editProfile ? " opacity-30 " : "") + (props.viewport && " place-items-center ")}>
+              <div className={"grid w-fit " + (editProfile ? " opacity-30 " : "") + (props.viewport && " place-items-center ")}>
                 <div id="user-details" className={"flex h-fit items-center justify-center py-5 " + (props.viewport == "Mobile" && " w-[400px] ") + (props.viewport == "Web" && " w-[700px] ") + (props.viewport == "Tab" && " w-[500px] ")}>
                   <div className="flex items-center justify-center pr-10 ">{user.data?.image ? <Image className={"rounded-full " + (props.viewport == "Mobile" ? " ml-4 mt-4 h-24 w-24 " : " flex w-24 scale-125 justify-center ")} src={user.data?.image} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority /> : <div id="profile-picture" className={"rounded-full bg-red-300 " + (props.viewport == "Mobile" ? " col-span-4 ml-4 mt-4 h-24 w-24 " : " col-start-2 col-end-4 mt-2 h-40 w-40 ")} />}</div>
                   <div id="headline" className={"mb-4 mt-6 ml-4 grid grid-flow-row font-light " + (props.viewport != "Mobile" && " h-fit gap-3 ")}>
