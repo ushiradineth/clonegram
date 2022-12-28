@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "../env/client.mjs";
+import themeObject from "../components/Theme";
 
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   const [viewport, setViewport] = useState("");
@@ -15,7 +16,15 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
   const [active, setActive] = useState("");
   const [create, setCreate] = useState(false);
   const [search, setSearch] = useState(false);
-  const [theme, setTheme] = useState("");
+
+  const [theme, setTheme] = useState({ type: "", primary: "", secondary: "", tertiary: "", accent: "" });
+  
+  if (typeof localStorage !== "undefined") {
+    useEffect(() => {
+      const themeType = localStorage.getItem("theme") || "light";
+      setTheme(themeObject(themeType));
+    }, [localStorage.getItem("theme")]);
+  }
 
   const router = useRouter();
   const supabase = createClient("https://" + env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY);
@@ -73,7 +82,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
   return (
     <SessionProvider session={session}>
       <Layout create={create} setCreate={setCreate} viewport={viewport} active={active} setActive={setActive} search={search} more={more} setMore={setMore} supabase={supabase} theme={theme} setTheme={setTheme} />
-      <Component {...pageProps} viewport={viewport} supabase={supabase} />
+      <Component {...pageProps} viewport={viewport} supabase={supabase} theme={theme} />
     </SessionProvider>
   );
 };

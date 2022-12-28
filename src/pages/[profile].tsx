@@ -11,6 +11,13 @@ import themeObject from "../components/Theme";
 interface itemType {
   viewport: string;
   supabase: unknown;
+  theme: {
+    type: string;
+    primary: string;
+    secondary: string;
+    tertiary: string;
+    accent: string;
+  };
 }
 
 const Profile = (props: itemType) => {
@@ -47,8 +54,6 @@ const Profile = (props: itemType) => {
 
   if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} />;
 
-  const theme = themeObject(session?.user?.theme);
-
   const unfollowFunc = () => {
     if (session?.user?.id && user.data?.id) {
       unfollow.mutate({ userid: session?.user?.id, pageid: user.data?.id });
@@ -67,7 +72,7 @@ const Profile = (props: itemType) => {
     return (
       <>
         <div className={"select-none " + (props.viewport == "Web" && " ml-72 ") + (props.viewport == "Tab" && " ml-16 ")}>
-          <div id="Background" className={"flex min-h-screen flex-col items-center justify-center " + theme.secondary}>
+          <div id="Background" className={"flex min-h-screen flex-col items-center justify-center " + props.theme.secondary}>
             <div className={" min-h-screen " /*+ (viewport == "Web" && "  288px ml-72 ")*/}>
               {editProfile && (
                 <EditProfile
