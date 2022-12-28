@@ -10,7 +10,7 @@ import themeObject from "../components/Theme";
 
 interface itemType {
   viewport: string;
-  supabase: any;
+  supabase: unknown;
 }
 
 const Profile = (props: itemType) => {

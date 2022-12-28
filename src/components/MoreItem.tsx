@@ -3,7 +3,7 @@ import themeObject from "./Theme";
 interface itemType {
   Icon?: JSX.Element;
   Text: string;
-  onClickHandler?: (params: any) => any;
+  onClickHandler?: (params: unknown) => unknown;
   theme: {
     type: string;
     primary: string;

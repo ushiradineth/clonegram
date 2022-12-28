@@ -8,9 +8,9 @@ import Image from "next/image";
 
 interface itemType {
   create: boolean;
-  setCreate: (params: any) => any;
-  setActive: (params: any) => any;
-  supabase: any;
+  setCreate: (params: unknown) => unknown;
+  setActive: (params: unknown) => unknown;
+  supabase: unknown;
 }
 
 const Create = (props: itemType) => {

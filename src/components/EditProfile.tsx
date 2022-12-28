@@ -9,7 +9,7 @@ import OptionMenu from "./OptionMenu";
 
 interface itemType {
   viewport: string;
-  onClickNegative: (...arg: any) => any;
+  onClickNegative: (...arg: any) => unknown;
   supabase: any;
 }
 

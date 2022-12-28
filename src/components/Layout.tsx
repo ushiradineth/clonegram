@@ -19,16 +19,16 @@ import { env } from "../env/client.mjs";
 
 interface itemType {
   create: boolean;
-  setCreate: (params: any) => any;
+  setCreate: (params: unknown) => unknown;
   theme: string;
-  setTheme: (params: any) => any;
+  setTheme: (params: unknown) => unknown;
   viewport: string;
   active: string;
-  setActive: (params: any) => any;
+  setActive: (params: unknown) => unknown;
   search: boolean;
   more: boolean;
-  setMore: (params: any) => any;
-  supabase: any;
+  setMore: (params: unknown) => unknown;
+  supabase: unknown;
 }
 
 const Layout = (props: itemType) => {

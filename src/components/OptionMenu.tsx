@@ -5,8 +5,8 @@ interface itemType {
   description: string;
   buttonPositive: string;
   buttonNegative: string;
-  onClickPositive: (...arg: any) => any;
-  onClickNegative: (...arg: any) => any;
+  onClickPositive: (...arg: any) => unknown;
+  onClickNegative: (...arg: any) => unknown;
 }
 
 const OptionMenu = (props: itemType) => {
