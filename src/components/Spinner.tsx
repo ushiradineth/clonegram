@@ -1,16 +1,19 @@
 import Head from "next/head";
-
 import themeObject from "../components/Theme";
 
 interface itemType {
   removeBackground?: boolean;
   viewport?: string;
+  theme: {
+    type: string;
+    primary: string;
+    secondary: string;
+    tertiary: string;
+    accent: string;
+  };
 }
 
 const Spinner = (props: itemType) => {
-
-  const theme = themeObject("dark");
-
   return (
     <>
       <Head>
@@ -18,7 +21,7 @@ const Spinner = (props: itemType) => {
         <meta name="description" content="Clonegram by Ushira Dineth" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={"flex min-h-screen flex-col items-center justify-center " + (!props.removeBackground && theme.secondary) + (props.viewport == "Web" && " ml-72 ") + (props.viewport == "Tab" && " ml-16 ")}>
+      <main className={"flex min-h-screen flex-col items-center justify-center " + (!props.removeBackground && props.theme.secondary) + (props.viewport == "Web" && " ml-72 ") + (props.viewport == "Tab" && " ml-16 ")}>
         <div className="container flex flex-col items-center justify-center gap-6 px-4 py-16 sm:gap-12 ">
           <div className="flex flex-col items-center gap-2">
             <div role="status">

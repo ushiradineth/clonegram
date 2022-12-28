@@ -16,18 +16,25 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
   const [active, setActive] = useState("");
   const [create, setCreate] = useState(false);
   const [search, setSearch] = useState(false);
-
+  const [lsTheme, setlsTheme] = useState("");
   const [theme, setTheme] = useState({ type: "", primary: "", secondary: "", tertiary: "", accent: "" });
-  
-  if (typeof localStorage !== "undefined") {
-    useEffect(() => {
-      const themeType = localStorage.getItem("theme") || "light";
-      setTheme(themeObject(themeType));
-    }, [localStorage.getItem("theme")]);
-  }
-
   const router = useRouter();
   const supabase = createClient("https://" + env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY);
+
+  const onResize = () => {
+    if (document.body.clientWidth >= 1150) {
+      if (active !== "Search") {
+        setViewport("Web");
+      } else {
+        setViewport("Tab");
+      }
+    } else if (document.body.clientWidth >= 750) {
+      setViewport("Tab");
+    } else {
+      setViewport("Mobile");
+      setMore(false);
+    }
+  };
 
   useEffect(() => {
     if (active !== "Create" && active !== "More") {
@@ -58,30 +65,23 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
     }
   }, [active, viewport]);
 
-  const onResize = () => {
-    if (document.body.clientWidth >= 1150) {
-      if (active !== "Search") {
-        setViewport("Web");
-      } else {
-        setViewport("Tab");
-      }
-    } else if (document.body.clientWidth >= 750) {
-      setViewport("Tab");
-    } else {
-      setViewport("Mobile");
-      setMore(false);
+  useEffect(() => {
+    if (lsTheme) {
+      localStorage.setItem("theme", lsTheme);
+      setTheme(themeObject(lsTheme));
     }
-  };
+  }, [lsTheme]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.addEventListener("resize", onResize);
     }
+    if (localStorage.getItem("theme")) setlsTheme(localStorage.getItem("theme") || "light");
   }, []);
 
   return (
     <SessionProvider session={session}>
-      <Layout create={create} setCreate={setCreate} viewport={viewport} active={active} setActive={setActive} search={search} more={more} setMore={setMore} supabase={supabase} theme={theme} setTheme={setTheme} />
+      <Layout create={create} setCreate={setCreate} viewport={viewport} active={active} setActive={setActive} search={search} more={more} setMore={setMore} supabase={supabase} theme={theme} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} />
       <Component {...pageProps} viewport={viewport} supabase={supabase} theme={theme} />
     </SessionProvider>
   );

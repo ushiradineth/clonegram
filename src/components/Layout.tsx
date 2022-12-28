@@ -33,6 +33,8 @@ interface itemType {
     accent: string;
   };
   setTheme: (params: any) => any;
+  lsTheme: string;
+  setlsTheme: (params: any) => any;
 }
 
 const Layout = (props: itemType) => {
@@ -124,8 +126,8 @@ const Layout = (props: itemType) => {
                       Text="Switch Appearence"
                       theme={props.theme}
                       onClickHandler={() => {
-                        localStorage.setItem("theme", props.theme.type === "dark" ? "light" : "dark");
-                        props.setTheme({ type: localStorage.getItem("theme"), primary: props.theme.primary, secondary: props.theme.secondary, tertiary: props.theme.tertiary, accent: props.theme.accent });
+                        props.setlsTheme(props.theme.type === "dark" ? "light" : "dark");
+                        props.setTheme({ type: props.lsTheme, primary: props.theme.primary, secondary: props.theme.secondary, tertiary: props.theme.tertiary, accent: props.theme.accent });
                       }}
                     />
                     <MoreItem Icon={<BiMessageAltError />} Text="Report a problem" theme={props.theme} />
@@ -142,9 +144,9 @@ const Layout = (props: itemType) => {
       </>
     );
   }
-  // color={theme.type === "dark" ? "white" : "black"}
+
   if (status === "loading") {
-    return <Spinner />;
+    return <Spinner theme={props.theme} />;
   }
 
   return <></>;

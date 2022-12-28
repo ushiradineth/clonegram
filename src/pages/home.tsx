@@ -1,7 +1,6 @@
 import { useSession } from "next-auth/react";
 import router from "next/router";
 import React from "react";
-import themeObject from "../components/Theme";
 
 interface itemType {
   viewport: string;

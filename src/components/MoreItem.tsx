@@ -1,5 +1,3 @@
-import themeObject from "./Theme";
-
 interface itemType {
   Icon?: JSX.Element;
   Text: string;

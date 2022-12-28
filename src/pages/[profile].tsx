@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
 import EditProfile from "../components/EditProfile";
 import Spinner from "../components/Spinner";
-import themeObject from "../components/Theme";
 
 interface itemType {
   viewport: string;
@@ -52,7 +51,7 @@ const Profile = (props: itemType) => {
     router.push("/");
   }
 
-  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} />;
+  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} theme={props.theme} />;
 
   const unfollowFunc = () => {
     if (session?.user?.id && user.data?.id) {
@@ -81,6 +80,7 @@ const Profile = (props: itemType) => {
                     setEditProfile(false);
                   }}
                   supabase={props.supabase}
+                  theme={props.theme}
                 />
               )}
               <div className={"grid w-fit " + (editProfile ? " opacity-30 " : "") + (props.viewport && " place-items-center ")}>
@@ -165,7 +165,7 @@ const Profile = (props: itemType) => {
     return <div className="grid h-screen w-screen place-items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-3xl font-light text-white">Error: User does not exist.</div>;
   }
 
-  return <Spinner viewport={props.viewport} />;
+  return <Spinner viewport={props.viewport} theme={props.theme} />;
 };
 
 export default Profile;

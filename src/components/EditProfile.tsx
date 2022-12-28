@@ -11,6 +11,13 @@ interface itemType {
   viewport: string;
   onClickNegative: (...arg: any) => unknown;
   supabase: any;
+  theme: {
+    type: string;
+    primary: string;
+    secondary: string;
+    tertiary: string;
+    accent: string;
+  };
 }
 
 const EditProfile = (props: itemType) => {
@@ -26,7 +33,7 @@ const EditProfile = (props: itemType) => {
     },
   });
 
-  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} />;
+  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} theme={props.theme} />;
 
   const user = trpc.user.getUser.useQuery({ id: session.user.id }, { refetchOnWindowFocus: false });
 
@@ -58,7 +65,7 @@ const EditProfile = (props: itemType) => {
     }
 
     if (Name || Handle || Bio || Image) {
-      if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} />;
+      if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} theme={props.theme} />;
       updateUser.mutate({ id: session.user.id, name: Name, handle: Handle, bio: Bio, image: Image });
     }
   };

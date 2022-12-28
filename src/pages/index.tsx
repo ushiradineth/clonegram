@@ -4,12 +4,34 @@ import { useRouter } from "next/router";
 import { signIn, useSession } from "next-auth/react";
 import Spinner from "../components/Spinner";
 
-const Index: NextPage = () => {
+interface itemType {
+  viewport: string;
+  supabase: unknown;
+  theme: {
+    type: string;
+    primary: string;
+    secondary: string;
+    tertiary: string;
+    accent: string;
+  };
+}
+
+interface authItemType {
+  theme: {
+    type: string;
+    primary: string;
+    secondary: string;
+    tertiary: string;
+    accent: string;
+  };
+}
+
+const Index = (props: itemType) => {
   const { status } = useSession();
   const router = useRouter();
 
   if (status == "loading") {
-    return <Spinner />;
+    return <Spinner theme={props.theme} />;
   }
 
   if (status == "authenticated") {
@@ -34,7 +56,7 @@ const Index: NextPage = () => {
             <h1>Database and storage on Supabase</h1>
             <h1>Hosted on Vercel</h1>
           </div>
-          <Auth />
+          <Auth theme={props.theme} />
         </div>
       </main>
     </>
@@ -43,10 +65,10 @@ const Index: NextPage = () => {
 
 export default Index;
 
-const Auth: React.FC = () => {
+const Auth = (props: authItemType) => {
   const { status } = useSession();
   if (status == "loading") {
-    return <Spinner />;
+    return <Spinner theme={props.theme} />;
   }
 
   return (
