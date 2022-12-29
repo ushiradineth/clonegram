@@ -71,20 +71,9 @@ const EditProfile = (props: itemType) => {
   };
 
   return (
-    <div className={"h-full w-full bg-black " + (props.viewport == "Tab" && " ml-16 ") + (props.viewport == "Web" && " ml-72 ")}>
-      {discard && (
-        <OptionMenu
-          title="Discard post?"
-          description="If you leave, your edits won't be saved."
-          buttonPositive="Discard"
-          buttonNegative="Cancel"
-          onClickPositive={props.onClickNegative}
-          onClickNegative={() => {
-            setDiscard(false);
-          }}
-        />
-      )}
-      <div className="absolute top-1/2 left-1/2 z-[11] h-auto w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl bg-white">
+    <div className={"fixed top-0 left-0 z-30 h-screen w-screen bg-black bg-opacity-30"} onClick={() => setDiscard(true)}>
+      {discard && <OptionMenu title="Discard post?" description="If you leave, your edits won't be saved." buttonPositive="Discard" buttonNegative="Cancel" onClickPositive={props.onClickNegative} onClickNegative={() => setDiscard(false)} theme={props.theme} />}
+      <div className={"absolute top-1/2 left-1/2 z-[11] h-auto w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl " + props.theme.tertiary}>
         <div className="grid grid-flow-row place-items-center border-b-[1px] border-gray-300 font-semibold">
           <div className="grid grid-flow-col">
             {user.data?.image && <Image className={"m-4 h-12 w-12 rounded-full"} src={user.data?.image} height={96} width={96} alt="Profile Picture" priority />}

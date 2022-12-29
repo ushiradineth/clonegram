@@ -47,8 +47,8 @@ const Layout = (props: itemType) => {
     return (
       <>
         <div className="max-h-screen w-fit select-none">
-          {/* <Create create={props.create} setCreate={props.setCreate} setActive={props.setActive} supabase={props.supabase} /> */}
-          {/* <Search search={props.search} viewport={props.viewport} /> */}
+          <Create create={props.create} setCreate={props.setCreate} setActive={props.setActive} supabase={props.supabase} theme={props.theme} />
+          <Search search={props.search} viewport={props.viewport} />
           <div id="Sidebar" className={"fixed left-0 grid gap-4 border-r-2 " + props.theme.primary + (props.viewport == "Web" && " bottom-0 z-10 h-full w-72 grid-flow-row transition-all duration-200 ") + (props.viewport == "Tab" && " top-0 h-full w-16 grid-flow-row transition-all duration-200 ") + (props.viewport == "Mobile" && " bottom-0 h-12 w-screen grid-flow-col ") + (props.create && " opacity-30 ")}>
             <div id="Sidebar-Items" className={"text-2xl font-light transition-all duration-200 " + (props.viewport == "Web" && " ml-2 mt-5 ") + (props.viewport == "Tab" && " ml-1 mt-5 ")}>
               <div className={"ml-5 text-red-300 " + (props.viewport == "Mobile" ? " hidden " : " grid ")}>{props.viewport == "Web" ? "CLONEGRAM" : "C"}</div>

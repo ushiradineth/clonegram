@@ -11,6 +11,13 @@ interface itemType {
   setCreate: (params: unknown) => unknown;
   setActive: (params: unknown) => unknown;
   supabase: unknown;
+  theme: {
+    type: string;
+    primary: string;
+    secondary: string;
+    tertiary: string;
+    accent: string;
+  };
 }
 
 const Create = (props: itemType) => {
@@ -138,6 +145,7 @@ const Create = (props: itemType) => {
             onClickNegative={() => {
               setDiscard(false);
             }}
+            theme={props.theme}
           />
         )}
         <div
