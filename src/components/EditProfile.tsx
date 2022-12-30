@@ -18,6 +18,7 @@ interface itemType {
     tertiary: string;
     accent: string;
   };
+  user: any;
 }
 
 const EditProfile = (props: itemType) => {
@@ -28,14 +29,12 @@ const EditProfile = (props: itemType) => {
   const [image, setImage] = useState<File>();
   const updateUser = trpc.user.updateUser.useMutation({
     onSuccess: async (data) => {
-      router.push(data.handle);
+      data.handle === session?.user?.handle ? location.reload() : router.push(data.handle);
       props.onClickNegative();
     },
   });
 
   if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} theme={props.theme} />;
-
-  const user = trpc.user.getUser.useQuery({ id: session.user.id }, { refetchOnWindowFocus: false });
 
   const handleUploadClick = () => {
     imageRef.current?.click();
@@ -56,12 +55,12 @@ const EditProfile = (props: itemType) => {
     const Bio = (document.getElementById("Bio") as HTMLInputElement).value;
 
     if (image) {
-      const { data, error } = await props.supabase.storage.from("clonegram").upload(user.data?.id, image, {
+      const { data, error } = await props.supabase.storage.from("clonegram").upload(props.user.data.id, image, {
         cacheControl: "1",
         upsert: true,
       });
 
-      Image = env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + user.data?.id;
+      Image = env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + props.user.data?.id;
     }
 
     if (Name || Handle || Bio || Image) {
@@ -71,14 +70,14 @@ const EditProfile = (props: itemType) => {
   };
 
   return (
-    <div className={"fixed top-0 left-0 z-30 h-screen w-screen bg-black bg-opacity-30"} onClick={() => setDiscard(true)}>
+    <div className={"fixed top-0 left-0 z-30 h-screen w-screen bg-black bg-opacity-30"}>
       {discard && <OptionMenu title="Discard post?" description="If you leave, your edits won't be saved." buttonPositive="Discard" buttonNegative="Cancel" onClickPositive={props.onClickNegative} onClickNegative={() => setDiscard(false)} theme={props.theme} />}
-      <div className={"absolute top-1/2 left-1/2 z-[11] h-auto w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl " + props.theme.tertiary}>
+      <div className={"absolute top-1/2 left-1/2 h-auto w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl " + props.theme.tertiary}>
         <div className="grid grid-flow-row place-items-center border-b-[1px] border-gray-300 font-semibold">
           <div className="grid grid-flow-col">
-            {user.data?.image && <Image className={"m-4 h-12 w-12 rounded-full"} src={user.data?.image} height={96} width={96} alt="Profile Picture" priority />}
+            {<Image className={"m-4 h-12 w-12 rounded-full"} src={image ? URL.createObjectURL(image) : props.user.data?.image} height={96} width={96} alt="Profile Picture" />}
             <div>
-              <div className="mt-4">{user.data?.handle}</div>
+              <div className="mt-4">{props.user.data?.handle}</div>
               <button className="mt-1 cursor-pointer text-sm font-semibold text-blue-400" onClick={handleUploadClick}>
                 Change profile picture
               </button>
@@ -90,15 +89,21 @@ const EditProfile = (props: itemType) => {
               <p>Handle</p>
               <p>Bio</p>
             </div>
-            <div className="grid grid-flow-row gap-2">
+            <div className="grid grid-flow-row gap-2 text-black">
               <input type="file" accept=".png, .jpg, .jpeg" ref={imageRef} onChange={handleFileChange} style={{ display: "none" }} />
-              <input type="text" id="Name" className="border-2" minLength={1} maxLength={20} />
-              <input type="text" id="Handle" className="border-2" minLength={1} maxLength={20} />
-              <input type="text" id="Bio" className="border-2" maxLength={150} />
+              <input type="text" id="Name" className="border-2 pl-2" minLength={1} maxLength={20} />
+              <input type="text" id="Handle" className="border-2 pl-2" minLength={1} maxLength={20} />
+              <input type="text" id="Bio" className="border-2 pl-2" maxLength={150} />
             </div>
           </div>
         </div>
-        <div className="flex h-12 w-full cursor-pointer items-center justify-center border-b-[1px] border-gray-300 font-semibold text-blue-400" onClick={onSave}>
+        <div
+          className="flex h-12 w-full cursor-pointer items-center justify-center border-b-[1px] border-gray-300 font-semibold text-blue-400"
+          onClick={() => {
+            onSave();
+            props.onClickNegative();
+          }}
+        >
           <p>Save</p>
         </div>
         <div className="flex h-12 w-full cursor-pointer items-center justify-center font-semibold" onClick={() => setDiscard(true)}>
