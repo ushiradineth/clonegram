@@ -76,7 +76,8 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
     if (typeof window !== "undefined") {
       window.addEventListener("resize", onResize);
     }
-    if (localStorage.getItem("theme")) setlsTheme(localStorage.getItem("theme") || "light");
+
+    setlsTheme(localStorage.getItem("theme") || window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   }, []);
 
   return (
