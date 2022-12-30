@@ -34,7 +34,7 @@ export const userRouter = router({
     });
   }),
 
-  updateUser: protectedProcedure.input(z.object({ id: z.string(), name: z.string().nullish(), image: z.string().nullish(), handle: z.string().nullish(), bio: z.string().nullish() })).mutation(({ input, ctx }) => {
+  updateUser: protectedProcedure.input(z.object({ id: z.string(), name: z.string().nullish(), image: z.string().nullish(), handle: z.string().nullish(), bio: z.object({ text: z.string().nullish(), changed: z.boolean() }) })).mutation(({ input, ctx }) => {
     type dataType = {
       [key: string]: string;
     };
@@ -43,7 +43,9 @@ export const userRouter = router({
     if (input.name) data.name = input.name;
     if (input.image) data.image = input.image;
     if (input.handle) data.handle = input.handle;
-    if (input.bio) data.bio = input.bio;
+    if (input.bio.changed) {
+      !input.bio.text ? (data.bio = "") : (data.bio = input.bio.text);
+    }
 
     return ctx.prisma.user.update({
       where: {
@@ -76,12 +78,12 @@ export const userRouter = router({
 
   unfollow: protectedProcedure.input(z.object({ userid: z.string(), pageid: z.string() })).mutation(async ({ input, ctx }) => {
     const q1 = await ctx.prisma.user.update({
-      where: { id: input.pageid },
-      data: { followers: { disconnect: { id: input.userid } } },
+      where: { id: input.userid },
+      data: { followers: { disconnect: { id: input.pageid } } },
     });
     const q2 = await ctx.prisma.user.update({
-      where: { id: input.userid },
-      data: { following: { disconnect: { id: input.pageid } } },
+      where: { id: input.pageid },
+      data: { following: { disconnect: { id: input.userid } } },
     });
 
     return { q1, q2 };
