@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
 import EditProfile from "../components/EditProfile";
 import Spinner from "../components/Spinner";
-
 interface itemType {
   viewport: string;
   supabase: unknown;
@@ -21,12 +20,25 @@ interface itemType {
 
 const Profile = (props: itemType) => {
   const [editProfile, setEditProfile] = useState(false);
-  const [isUser, setIsUser] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
   const profile = router.query.profile as string;
-  const user = trpc.user.getUserByHandle.useQuery({ handle: String(profile) }, { refetchOnWindowFocus: false, retry: false });
+  const user = trpc.user.getUserByHandle.useQuery(
+    { handle: String(profile) },
+    {
+      refetchOnWindowFocus: false,
+      retry: false,
+      onSuccess: async (data) => {
+        data.following.forEach((element) => {
+          if (element.id === session?.user?.id) {
+            setIsFollowing(true);
+          }
+        });
+      },
+    }
+  );
+
   const follow = trpc.user.follow.useMutation({
     onSuccess: async (data) => {
       router.push(data.q2.id);
@@ -37,15 +49,6 @@ const Profile = (props: itemType) => {
       router.push(data.q2.id);
     },
   });
-
-  useEffect(() => {
-    setIsUser(user.data?.handle === session?.user?.handle);
-    user.data?.following.forEach((element) => {
-      if (element.id === session?.user?.id) {
-        setIsFollowing(true);
-      }
-    });
-  }, []);
 
   if (status === "unauthenticated") {
     router.push("/");
@@ -70,21 +73,12 @@ const Profile = (props: itemType) => {
   if (user.isSuccess) {
     return (
       <div>
-        {editProfile && (
-          <EditProfile
-            viewport={props.viewport}
-            onClickNegative={() => {
-              setEditProfile(false);
-            }}
-            supabase={props.supabase}
-            theme={props.theme}
-          />
-        )}
+        {editProfile && <EditProfile viewport={props.viewport} onClickNegative={() => setEditProfile(false)} supabase={props.supabase} theme={props.theme} user={user} />}
         <div className={"select-none " + (props.viewport == "Web" && " ml-72 ") + (props.viewport == "Tab" && " ml-16 ")}>
           <div id="Background" className={"flex min-h-screen flex-col items-center justify-center " + props.theme.secondary}>
             <div className={"grid w-fit " + (editProfile ? " opacity-30 " : "") + (props.viewport && " place-items-center ")}>
-              <div id="user-details" className={"flex h-fit items-center justify-center py-5 " + (props.viewport == "Mobile" && " w-[400px] ") + (props.viewport == "Web" && " w-[700px] ") + (props.viewport == "Tab" && " w-[500px] ")}>
-                <div className="flex items-center justify-center pr-10 ">{user.data?.image ? <Image className={"rounded-full " + (props.viewport == "Mobile" ? " ml-4 mt-4 h-24 w-24 " : " flex w-24 scale-125 justify-center ")} src={user.data?.image} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority /> : <div id="profile-picture" className={"rounded-full bg-red-300 " + (props.viewport == "Mobile" ? " col-span-4 ml-4 mt-4 h-24 w-24 " : " col-start-2 col-end-4 mt-2 h-40 w-40 ")} />}</div>
+              <div id="user-details" className={"flex h-fit py-5 " + (props.viewport == "Mobile" && " w-[400px] ") + (props.viewport == "Web" && " w-[700px] items-center justify-center ") + (props.viewport == "Tab" && " w-[500px] items-center justify-center ")}>
+                <div className={props.viewport == "Mobile" ? " mr-2 " : " pr-10 "}>{user.data?.image ? <Image className={"rounded-full " + (props.viewport == "Mobile" ? " ml-2 mt-4 h-24 w-24 " : " flex w-24 scale-125 justify-center ")} src={user.data?.image} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority /> : <div id="profile-picture" className={"rounded-full bg-red-300 " + (props.viewport == "Mobile" ? " col-span-4 ml-4 mt-4 h-24 w-24 " : " col-start-2 col-end-4 mt-2 h-40 w-40 ")} />}</div>
                 <div id="headline" className={"mb-4 mt-6 ml-4 grid grid-flow-row font-light " + (props.viewport != "Mobile" && " h-fit gap-3 ")}>
                   <div id="user-info" className="cursor-pointer">
                     <div className="flex items-center gap-4">
@@ -94,19 +88,25 @@ const Profile = (props: itemType) => {
                       <div
                         id="cta"
                         onClick={() => {
-                          isUser ? setEditProfile(true) : isFollowing ? unfollowFunc() : followFunc();
+                          user.data.handle === session.user?.handle ? setEditProfile(true) : isFollowing ? unfollowFunc() : followFunc();
                         }}
                         className={"cursor-pointer rounded-[4px] border py-1 px-2 text-xs font-semibold " + (props.viewport == "Mobile" && " hidden ") + (props.viewport == "Tab" && " flex w-[78px] ")}
                       >
-                        {isUser ? "Edit profile" : isFollowing ? "Following" : "Follow"}
+                        {user.data.handle === session.user.handle ? "Edit profile" : isFollowing ? "Following" : "Follow"}
                       </div>
                       <div id="settings" className="scale-150">
                         <IoMdSettings />
                       </div>
                     </div>
                   </div>
-                  <div id="cta-mobile" onClick={() => setEditProfile(true)} className={"mt-2 flex h-fit w-[235px] cursor-pointer items-center justify-center rounded-[4px] border p-2 text-xs font-semibold  " + (props.viewport != "Mobile" && " hidden ") + (!isUser && " hidden ")}>
-                    Edit profile
+                  <div
+                    id="cta-mobile"
+                    onClick={() => {
+                      user.data.handle === session.user?.handle ? setEditProfile(true) : isFollowing ? unfollowFunc() : followFunc();
+                    }}
+                    className={"mt-2 flex h-fit w-[235px] cursor-pointer items-center justify-center rounded-[4px] border p-2 text-xs font-semibold  " + (props.viewport != "Mobile" && " hidden ")}
+                  >
+                    {user.data.handle === session.user.handle ? "Edit profile" : isFollowing ? "Following" : "Follow"}
                   </div>
                   <div id="stats" className={"grid grid-flow-col gap-2 text-sm font-normal " + (props.viewport == "Mobile" && " hidden ")}>
                     <div className="flex gap-1">
@@ -123,21 +123,21 @@ const Profile = (props: itemType) => {
                     <div id="name" className="">
                       {user.data?.name}
                     </div>
-                    <div id="bio" className={"mr-2 grid grid-flow-col break-all " + (user.data?.bio ? "" : " hidden ")}>
+                    <div id="bio" className={"mr-2 grid w-72 grid-flow-col break-all " + (user.data?.bio ? "" : " hidden ")}>
                       {user.data?.bio}
                     </div>
                   </div>
                 </div>
               </div>
-              <div id="details-mobile" className={"ml-5 mb-5 text-sm font-semibold " + (props.viewport != "Mobile" && " hidden ")}>
+              <div id="details-mobile" className={"ml-5 mb-5 w-fit px-10 text-sm font-semibold " + (props.viewport != "Mobile" && " hidden ")}>
                 <div id="name" className="">
                   {user.data?.name}
                 </div>
-                <div id="bio" className={"mr-4 grid grid-flow-col break-all " + (user.data?.bio ? "" : " hidden ")}>
+                <div id="bio" className={"mr-4 grid w-96 grid-flow-col break-all " + (user.data?.bio ? "" : " hidden ")}>
                   {user.data?.bio}
                 </div>
               </div>
-              <div id="stats-mobile" className={"grid w-full grid-flow-col place-items-center border-y-[1px] border-gray-500 py-2  text-sm font-normal text-white " + (props.viewport != "Mobile" && " hidden ")}>
+              <div id="stats-mobile" className={"grid w-screen grid-flow-col place-items-center border-y-[1px] border-gray-500 py-2 text-sm font-normal text-white " + (props.viewport != "Mobile" && " hidden ")}>
                 <div className="grid place-items-center">
                   <p className="font-semibold">{user.data?.posts.length}</p>
                   <p className="text-gray-300">posts</p>
