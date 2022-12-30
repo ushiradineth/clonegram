@@ -63,9 +63,9 @@ const EditProfile = (props: itemType) => {
       Image = env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + props.user.data?.id;
     }
 
-    if (Name || Handle || Bio || Image) {
+    if (Name || Handle || Bio !== props.user.data.bio || Image) {
       if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} theme={props.theme} />;
-      updateUser.mutate({ id: session.user.id, name: Name, handle: Handle, bio: Bio, image: Image });
+      updateUser.mutate({ id: session.user.id, name: Name, handle: Handle, bio: {text: Bio, changed: Bio !== props.user.data.bio}, image: Image });
     }
   };
 
@@ -73,7 +73,7 @@ const EditProfile = (props: itemType) => {
     <div className={"fixed top-0 left-0 z-30 h-screen w-screen bg-black bg-opacity-30"}>
       {discard && <OptionMenu title="Discard post?" description="If you leave, your edits won't be saved." buttonPositive="Discard" buttonNegative="Cancel" onClickPositive={props.onClickNegative} onClickNegative={() => setDiscard(false)} theme={props.theme} />}
       <div className={"absolute top-1/2 left-1/2 h-auto w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl " + props.theme.tertiary}>
-        <div className="grid grid-flow-row place-items-center border-b-[1px] border-gray-300 font-semibold">
+        <div className="grid grid-flow-row place-items-center border-b border-gray-300 font-semibold">
           <div className="grid grid-flow-col">
             {<Image className={"m-4 h-12 w-12 rounded-full"} src={image ? URL.createObjectURL(image) : props.user.data?.image} height={96} width={96} alt="Profile Picture" />}
             <div>
@@ -91,14 +91,14 @@ const EditProfile = (props: itemType) => {
             </div>
             <div className="grid grid-flow-row gap-2 text-black">
               <input type="file" accept=".png, .jpg, .jpeg" ref={imageRef} onChange={handleFileChange} style={{ display: "none" }} />
-              <input type="text" id="Name" className="border-2 pl-2" minLength={1} maxLength={20} />
-              <input type="text" id="Handle" className="border-2 pl-2" minLength={1} maxLength={20} />
-              <input type="text" id="Bio" className="border-2 pl-2" maxLength={150} />
+              <input type="text" id="Name" className="border-2 pl-2" defaultValue={props.user.data.name} minLength={1} maxLength={20} />
+              <input type="text" id="Handle" className="border-2 pl-2" defaultValue={props.user.data.handle} minLength={1} maxLength={20} />
+              <input type="text" id="Bio" className="border-2 pl-2" defaultValue={props.user.data.bio} maxLength={150} />
             </div>
           </div>
         </div>
         <div
-          className="flex h-12 w-full cursor-pointer items-center justify-center border-b-[1px] border-gray-300 font-semibold text-blue-400"
+          className="flex h-12 w-full cursor-pointer items-center justify-center border-b border-gray-300 font-semibold text-blue-400"
           onClick={() => {
             onSave();
             props.onClickNegative();
