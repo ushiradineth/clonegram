@@ -1,5 +1,5 @@
 import Head from "next/head";
-import themeObject from "../components/Theme";
+import { useSession } from "next-auth/react";
 
 interface itemType {
   removeBackground?: boolean;
@@ -14,6 +14,8 @@ interface itemType {
 }
 
 const Spinner = (props: itemType) => {
+  const { data: session } = useSession();
+  
   return (
     <>
       <Head>
@@ -21,7 +23,7 @@ const Spinner = (props: itemType) => {
         <meta name="description" content="Clonegram by Ushira Dineth" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={"flex min-h-screen flex-col items-center justify-center " + (!props.removeBackground && props.theme.secondary) + (props.viewport == "Web" && " ml-72 ") + (props.viewport == "Tab" && " ml-16 ")}>
+      <main className={"flex min-h-screen flex-col items-center justify-center " + (!props.removeBackground && props.theme.secondary) + (props.viewport == "Web" && session && " ml-72 ") + (props.viewport == "Tab" && session && " ml-16 ")}>
         <div className="container flex flex-col items-center justify-center gap-6 px-4 py-16 sm:gap-12 ">
           <div className="flex flex-col items-center gap-2">
             <div role="status">
