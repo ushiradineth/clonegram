@@ -49,23 +49,22 @@ const EditProfile = (props: itemType) => {
   };
 
   const onSave = async () => {
-    let Image = null;
+    let Image;
     const Name = (document.getElementById("Name") as HTMLInputElement).value;
     const Handle = (document.getElementById("Handle") as HTMLInputElement).value;
     const Bio = (document.getElementById("Bio") as HTMLInputElement).value;
 
-    if (image) {
+    if (Name !== props.user.data.name || Handle !== props.user.data.handle || (props.user.data.bio ? Bio !== props.user.data.bio : Bio !== "") || typeof image !== "undefined") {
+      if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} theme={props.theme} />;
+
       const { data, error } = await props.supabase.storage.from("clonegram").upload(props.user.data.id, image, {
         cacheControl: "1",
         upsert: true,
       });
 
       Image = env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + props.user.data?.id;
-    }
 
-    if (Name || Handle || Bio !== props.user.data.bio || Image) {
-      if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} theme={props.theme} />;
-      updateUser.mutate({ id: session.user.id, name: Name, handle: Handle, bio: {text: Bio, changed: Bio !== props.user.data.bio}, image: Image });
+      updateUser.mutate({ id: session.user.id, name: Name, handle: Handle, bio: { text: Bio, changed: Bio !== props.user.data.bio }, image: Image });
     }
   };
 
@@ -106,7 +105,16 @@ const EditProfile = (props: itemType) => {
         >
           <p>Save</p>
         </div>
-        <div className="flex h-12 w-full cursor-pointer items-center justify-center font-semibold" onClick={() => setDiscard(true)}>
+        <div
+          className="flex h-12 w-full cursor-pointer items-center justify-center font-semibold"
+          onClick={() => {
+            const Name = (document.getElementById("Name") as HTMLInputElement).value;
+            const Handle = (document.getElementById("Handle") as HTMLInputElement).value;
+            const Bio = (document.getElementById("Bio") as HTMLInputElement).value;
+
+            Name !== props.user.data.name || Handle !== props.user.data.handle || (props.user.data.bio ? Bio !== props.user.data.bio : Bio !== "") || typeof image !== "undefined" ? setDiscard(true) : props.onClickNegative();
+          }}
+        >
           <p>Cancel</p>
         </div>
       </div>
