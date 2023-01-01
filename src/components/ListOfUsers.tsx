@@ -3,6 +3,7 @@ import { BiUserPlus } from "react-icons/bi";
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { trpc } from "../utils/trpc";
 
 interface itemType {
   viewport: string;
@@ -14,18 +15,42 @@ interface itemType {
     accent: string;
   };
   users: {
+    UserID: string;
     UserName: string;
     UserHandle: string;
     UserImage: string;
     UserFollowing: boolean;
   }[];
   title: string;
-  UserText: string;
+  userHandle: string | undefined;
+  userID: string | undefined;
+  pageID: string;
   onClickNegative: (...arg: any) => unknown;
 }
 
 const ListOfUsers = (props: itemType) => {
   const router = useRouter();
+  const follow = trpc.user.follow.useMutation({});
+  const unfollow = trpc.user.unfollow.useMutation({});
+  const remove = trpc.user.removeFollower.useMutation({});
+
+  const followFunc = (pageID: any) => {
+    if (props.userID && pageID) {
+      follow.mutate({ userid: props.userID, pageid: pageID });
+    }
+  };
+
+  const unfollowFunc = (pageID: any) => {
+    if (props.userID && pageID) {
+      unfollow.mutate({ userid: props.userID, pageid: pageID });
+    }
+  };
+
+  const removeFunc = (pageID: any) => {
+    if (props.userID && pageID) {
+      remove.mutate({ userid: props.userID, pageid: pageID });
+    }
+  };
 
   return (
     <div className="fixed top-0 left-0 z-20 h-screen w-screen select-none bg-black bg-opacity-30" onClick={() => props.onClickNegative}>
@@ -44,8 +69,8 @@ const ListOfUsers = (props: itemType) => {
                     <div>{user.UserHandle}</div>
                     <div>{user.UserName}</div>
                   </div>
-                  <div id="follow" className="cursor-pointer rounded-[4px] border py-1 px-2 text-xs font-semibold">
-                    {props.UserText}
+                  <div id="cta" className="cursor-pointer rounded-[4px] border py-1 px-2 text-xs font-semibold" onClick={() => (user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? removeFunc(user.UserID) : user.UserFollowing ? unfollowFunc(user.UserID) : followFunc(user.UserID)) : router.push({ pathname: "/" + user.UserHandle }))}>
+                    {user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? "Remove" : user.UserFollowing ? "Following" : "Follow") : "Profile"}
                   </div>
                 </div>
               );
