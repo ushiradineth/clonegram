@@ -8,6 +8,7 @@ import { trpc } from "../utils/trpc";
 import EditProfile from "../components/EditProfile";
 import Spinner from "../components/Spinner";
 import ListOfUsers from "../components/ListOfUsers";
+import { signIn } from "next-auth/react";
 
 interface itemType {
   viewport: string;
@@ -31,10 +32,18 @@ const Profile = (props: itemType) => {
   const router = useRouter();
   const profile = router.query.profile as string;
 
-  const followers = new Array<{ UserName: string; UserHandle: string; UserImage: string }>();
-  const following = new Array<{ UserName: string; UserHandle: string; UserImage: string }>();
+  const followers = new Array<{ UserName: string; UserHandle: string; UserImage: string; UserFollowing: boolean }>();
+  const following = new Array<{ UserName: string; UserHandle: string; UserImage: string; UserFollowing: boolean }>();
 
-  const page = trpc.user.getUserByHandle.useQuery({ handle: String(profile) }, { refetchOnWindowFocus: false, retry: false });
+  useEffect(() => {
+    setEditProfile(false);
+    setIsFollowing(false);
+    setFollowersMenu(false);
+    setFollowingMenu(false);
+  }, [router.query]);
+
+  const user = trpc.user.getUser.useQuery({ id: session?.user?.id || "0" }, { refetchOnWindowFocus: false, retry: false, enabled: Boolean(session) });
+  const page = trpc.user.getUserByHandle.useQuery({ handle: String(profile) }, { refetchOnWindowFocus: false, retry: false, enabled: Boolean(profile) });
 
   const follow = trpc.user.follow.useMutation({
     onSuccess: (data) => {
@@ -60,27 +69,21 @@ const Profile = (props: itemType) => {
     }
   };
 
-  if (status === "unauthenticated") {
-    router.push("/");
-  }
-
-  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} theme={props.theme} />;
-
-  if (session?.user?.id === page.data?.id && !router.query.user) {
-    router.push({ pathname: "/" + router.query.profile, query: { user: "true" } });
-  }
-
-  if (session?.user?.id !== page.data?.id && router.query.user) {
-    router.push({ pathname: "/" + router.query.profile });
-  }
-
   if (page.isSuccess) {
+    const userfollowing: any = [];
+
+    if (session) {
+      user.data?.following.forEach((element) => {
+        userfollowing.push(element.handle);
+      });
+    }
+
     page.data.following.forEach((element) => {
-      if (element.name && element.image) following.push({ UserName: element.name, UserHandle: element.handle, UserImage: element.image });
+      if (element.name && element.image) following.push({ UserName: element.name, UserHandle: element.handle, UserImage: element.image, UserFollowing: userfollowing.indexOf(element.handle) > -1 || false });
     });
 
     page.data.followers.forEach((element) => {
-      if (element.name && element.image) followers.push({ UserName: element.name, UserHandle: element.handle, UserImage: element.image });
+      if (element.name && element.image) followers.push({ UserName: element.name, UserHandle: element.handle, UserImage: element.image, UserFollowing: userfollowing.indexOf(element.handle) > -1 });
       if (element.id === session?.user?.id && !isFollowing) setIsFollowing(true);
     });
   }
@@ -96,7 +99,15 @@ const Profile = (props: itemType) => {
       {editProfile && <EditProfile viewport={props.viewport} onClickNegative={() => setEditProfile(false)} supabase={props.supabase} theme={props.theme} user={page} />}
       {followersMenu && <ListOfUsers viewport={props.viewport} users={followers} theme={props.theme} UserText="Remove" onClickNegative={() => setFollowersMenu(false)} title="Followers" />}
       {followingMenu && <ListOfUsers viewport={props.viewport} users={following} theme={props.theme} UserText="Following" onClickNegative={() => setFollowingMenu(false)} title="Following" />}
-      <div className={"select-none " + (props.viewport == "Web" && " ml-72 ") + (props.viewport == "Tab" && " ml-16 ")}>
+      {!session && (
+        <div className={"fixed bottom-0 left-0 flex h-12 w-screen items-center justify-center gap-2 " + props.theme.primary}>
+          Sign in to Clonegram to see more!{" "}
+          <button className={"rounded-full px-4 py-2 font-semibold no-underline transition " + props.theme.tertiary} onClick={() => signIn("google", { callbackUrl: "http://localhost:3000/" })}>
+            Sign in
+          </button>
+        </div>
+      )}
+      <div className={"select-none " + (props.viewport == "Web" && session && " ml-72 ") + (props.viewport == "Tab" && session && " ml-16 ")}>
         <div id="Background" className={"flex min-h-screen flex-col items-center justify-center " + props.theme.secondary}>
           <div className={"grid w-fit " + (editProfile ? " opacity-30 " : "") + (props.viewport && " place-items-center ")}>
             <div id="user-details" className={"flex h-fit py-5 " + (props.viewport == "Mobile" && " w-[400px] ") + (props.viewport == "Web" && " w-[700px] items-center justify-center ") + (props.viewport == "Tab" && " w-[500px] items-center justify-center ")}>
@@ -107,27 +118,27 @@ const Profile = (props: itemType) => {
                     <div id="id" className="max-w-[200px] overflow-hidden text-ellipsis text-xl">
                       {page.data?.handle}
                     </div>
-                    <div id="cta" onClick={() => (router.query.user ? setEditProfile(true) : isFollowing ? unfollowFunc() : followFunc())} className={"cursor-pointer rounded-[4px] border-2 py-1 px-2 text-xs font-semibold " + (props.viewport == "Mobile" && " hidden ")}>
-                      {router.query.user ? "Edit profile" : isFollowing ? "Following" : "Follow"}
-                    </div>
+                    <button id="cta" onClick={() => (session ? (session?.user?.id === page.data?.id ? setEditProfile(true) : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))} className={"cursor-pointer rounded-[4px] border-2 py-1 px-2 text-xs font-semibold " + (props.viewport == "Mobile" && " hidden ")}>
+                      {session?.user?.id === page.data?.id ? "Edit profile" : isFollowing ? "Following" : "Follow"}
+                    </button>
                     <div id="settings" className="scale-150">
                       <IoMdSettings />
                     </div>
                   </div>
                 </div>
-                <div id="cta-mobile" onClick={() => (router.query.user ? setEditProfile(true) : isFollowing ? unfollowFunc() : followFunc())} className={"mt-2 flex h-fit w-[235px] cursor-pointer items-center justify-center rounded-[4px] border-2 p-2 text-xs font-semibold  " + (props.viewport != "Mobile" && " hidden ")}>
-                  {router.query.user ? "Edit profile" : isFollowing ? "Following" : "Follow"}
+                <div id="cta-mobile" onClick={() => (session ? (session?.user?.id === page.data?.id ? setEditProfile(true) : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))} className={"mt-2 flex h-fit w-[235px] cursor-pointer items-center justify-center rounded-[4px] border-2 p-2 text-xs font-semibold  " + (props.viewport != "Mobile" && " hidden ")}>
+                  {session?.user?.id === page.data?.id ? "Edit profile" : isFollowing ? "Following" : "Follow"}
                 </div>
                 <div id="stats" className={"grid grid-flow-col gap-2 text-sm font-normal " + (props.viewport == "Mobile" && " hidden ")}>
                   <div className="flex gap-1">
                     <p className="font-semibold">{page.data?.posts.length}</p>
                     <p className={props.theme.type === "dark" ? "text-gray-300" : "text-black"}>posts</p>
                   </div>
-                  <div className="flex cursor-pointer gap-1" onClick={() => setFollowersMenu(true)}>
+                  <div className="flex cursor-pointer gap-1" onClick={() => (session ? setFollowersMenu(true) : router.push("/"))}>
                     <p className="font-semibold">{page.data?.followers.length}</p>
                     <p className={props.theme.type === "dark" ? "text-gray-300" : "text-black"}>followers</p>
                   </div>
-                  <div className="flex cursor-pointer gap-1" onClick={() => setFollowingMenu(true)}>
+                  <div className="flex cursor-pointer gap-1" onClick={() => (session ? setFollowingMenu(true) : router.push("/"))}>
                     <p className="font-semibold">{page.data?.following.length}</p>
                     <p className={props.theme.type === "dark" ? "text-gray-300" : "text-black"}>following</p>
                   </div>
@@ -153,11 +164,11 @@ const Profile = (props: itemType) => {
                 <p className="font-semibold">{page.data?.posts.length}</p>
                 <p className={props.theme.type === "dark" ? "text-gray-300" : "text-black"}>posts</p>
               </div>
-              <div className="grid cursor-pointer place-items-center" onClick={() => setFollowersMenu(true)}>
+              <div className="grid cursor-pointer place-items-center" onClick={() => (session ? setFollowingMenu(true) : router.push("/"))}>
                 <p className="font-semibold">{page.data?.followers.length}</p>
                 <p className={props.theme.type === "dark" ? "text-gray-300" : "text-black"}>followers</p>
               </div>
-              <div className="grid cursor-pointer place-items-center" onClick={() => setFollowingMenu(true)}>
+              <div className="grid cursor-pointer place-items-center" onClick={() => (session ? setFollowersMenu(true) : router.push("/"))}>
                 <p className="font-semibold">{page.data?.following.length}</p>
                 <p className={props.theme.type === "dark" ? "text-gray-300" : "text-black"}>following</p>
               </div>
