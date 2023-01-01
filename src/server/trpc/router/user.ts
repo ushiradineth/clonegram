@@ -8,7 +8,7 @@ export const userRouter = router({
   //   };
   // }),
 
-  getUser: protectedProcedure.input(z.object({ id: z.string() })).query(({ input, ctx }) => {
+  getUser: publicProcedure.input(z.object({ id: z.string() })).query(({ input, ctx }) => {
     return ctx.prisma.user.findFirstOrThrow({
       where: {
         id: input.id,
@@ -21,7 +21,7 @@ export const userRouter = router({
     });
   }),
 
-  getUserByHandle: protectedProcedure.input(z.object({ handle: z.string() })).query(({ input, ctx }) => {
+  getUserByHandle: publicProcedure.input(z.object({ handle: z.string() })).query(({ input, ctx }) => {
     return ctx.prisma.user.findFirstOrThrow({
       where: {
         handle: input.handle,
@@ -66,17 +66,30 @@ export const userRouter = router({
   follow: protectedProcedure.input(z.object({ userid: z.string(), pageid: z.string() })).mutation(async ({ input, ctx }) => {
     const q1 = await ctx.prisma.user.update({
       where: { id: input.userid },
-      data: { following: { set: { id: input.pageid } } },
+      data: { following: { connect: { id: input.pageid } } },
     });
     const q2 = await ctx.prisma.user.update({
       where: { id: input.pageid },
-      data: { followers: { set: { id: input.userid } } },
+      data: { followers: { connect: { id: input.userid } } },
     });
 
     return { q1, q2 };
   }),
 
   unfollow: protectedProcedure.input(z.object({ userid: z.string(), pageid: z.string() })).mutation(async ({ input, ctx }) => {
+    const q1 = await ctx.prisma.user.update({
+      where: { id: input.userid },
+      data: { following: { disconnect: { id: input.pageid } } },
+    });
+    const q2 = await ctx.prisma.user.update({
+      where: { id: input.pageid },
+      data: { followers: { disconnect: { id: input.userid } } },
+    });
+
+    return { q1, q2 };
+  }),
+
+  removeFollower: protectedProcedure.input(z.object({ userid: z.string(), pageid: z.string() })).mutation(async ({ input, ctx }) => {
     const q1 = await ctx.prisma.user.update({
       where: { id: input.userid },
       data: { followers: { disconnect: { id: input.pageid } } },
