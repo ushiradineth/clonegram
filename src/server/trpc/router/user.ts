@@ -88,17 +88,4 @@ export const userRouter = router({
 
     return { q1, q2 };
   }),
-
-  removeFollower: protectedProcedure.input(z.object({ userid: z.string(), pageid: z.string() })).mutation(async ({ input, ctx }) => {
-    const q1 = await ctx.prisma.user.update({
-      where: { id: input.userid },
-      data: { followers: { disconnect: { id: input.pageid } } },
-    });
-    const q2 = await ctx.prisma.user.update({
-      where: { id: input.pageid },
-      data: { following: { disconnect: { id: input.userid } } },
-    });
-
-    return { q1, q2 };
-  }),
 });
