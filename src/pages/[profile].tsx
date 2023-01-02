@@ -94,11 +94,6 @@ const Profile = (props: itemType) => {
     }
   }, [page.data]);
 
-  useEffect(() => {
-    console.log(following);
-    console.log(followers);
-  }, [followingMenu, followersMenu]);
-
   if (page.isError) {
     return <div className="grid h-screen w-screen place-items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-3xl font-light text-white">Error: User does not exist.</div>;
   }
