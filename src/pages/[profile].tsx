@@ -25,15 +25,14 @@ interface itemType {
 const Profile = (props: itemType) => {
   const [editProfile, setEditProfile] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [followers, setFollowers] = useState(new Array<{ UserID: string; UserName: string; UserHandle: string; UserImage: string; UserFollowing: boolean; UserRemoved: boolean }>());
+  const [following, setFollowing] = useState(new Array<{ UserID: string; UserName: string; UserHandle: string; UserImage: string; UserFollowing: boolean; UserRemoved: boolean }>());
   const [followersMenu, setFollowersMenu] = useState(false);
   const [followingMenu, setFollowingMenu] = useState(false);
 
   const { data: session, status } = useSession();
   const router = useRouter();
   const profile = router.query.profile as string;
-
-  const followers = new Array<{ UserID: string; UserName: string; UserHandle: string; UserImage: string; UserFollowing: boolean }>();
-  const following = new Array<{ UserID: string; UserName: string; UserHandle: string; UserImage: string; UserFollowing: boolean }>();
 
   useEffect(() => {
     setEditProfile(false);
@@ -69,24 +68,36 @@ const Profile = (props: itemType) => {
     }
   };
 
-  if (page.isSuccess) {
-    const userfollowing: any = [];
+  useEffect(() => {
+    if (page.isSuccess) {
+      const userfollowing: Array<string> = [];
+      const followersArray: Array<{ UserID: string; UserName: string; UserHandle: string; UserImage: string; UserFollowing: boolean; UserRemoved: boolean }> = [];
+      const followingArray: Array<{ UserID: string; UserName: string; UserHandle: string; UserImage: string; UserFollowing: boolean; UserRemoved: boolean }> = [];
 
-    if (session) {
-      user.data?.following.forEach((element) => {
-        userfollowing.push(element.handle);
+      if (session) {
+        user.data?.following.forEach((element) => {
+          userfollowing.push(element.handle);
+        });
+      }
+
+      page.data.following.forEach((element) => {
+        if (element.name && element.image) followingArray.push({ UserID: element.id, UserName: element.name, UserHandle: element.handle, UserImage: element.image, UserFollowing: userfollowing.indexOf(element.handle) > -1 || false, UserRemoved: false });
       });
+
+      page.data.followers.forEach((element) => {
+        if (element.name && element.image) followersArray.push({ UserID: element.id, UserName: element.name, UserHandle: element.handle, UserImage: element.image, UserFollowing: userfollowing.indexOf(element.handle) > -1 || false, UserRemoved: false });
+        if (element.id === session?.user?.id && !isFollowing) setIsFollowing(true);
+      });
+
+      setFollowing(followingArray);
+      setFollowers(followersArray);
     }
+  }, [page.data]);
 
-    page.data.following.forEach((element) => {
-      if (element.name && element.image) following.push({ UserID: element.id, UserName: element.name, UserHandle: element.handle, UserImage: element.image, UserFollowing: userfollowing.indexOf(element.handle) > -1 || false });
-    });
-
-    page.data.followers.forEach((element) => {
-      if (element.name && element.image) followers.push({ UserID: element.id, UserName: element.name, UserHandle: element.handle, UserImage: element.image, UserFollowing: userfollowing.indexOf(element.handle) > -1 });
-      if (element.id === session?.user?.id && !isFollowing) setIsFollowing(true);
-    });
-  }
+  useEffect(() => {
+    console.log(following);
+    console.log(followers);
+  }, [followingMenu, followersMenu]);
 
   if (page.isError) {
     return <div className="grid h-screen w-screen place-items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-3xl font-light text-white">Error: User does not exist.</div>;
@@ -97,8 +108,8 @@ const Profile = (props: itemType) => {
   return (
     <div>
       {editProfile && <EditProfile viewport={props.viewport} onClickNegative={() => setEditProfile(false)} supabase={props.supabase} theme={props.theme} user={page} />}
-      {followersMenu && <ListOfUsers viewport={props.viewport} users={followers} theme={props.theme} onClickNegative={() => setFollowersMenu(false)} title="Followers" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page.data.id} />}
-      {followingMenu && <ListOfUsers viewport={props.viewport} users={following} theme={props.theme} onClickNegative={() => setFollowingMenu(false)} title="Following" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page.data.id} />}
+      {followersMenu && <ListOfUsers viewport={props.viewport} users={followers} userSetter={() => setFollowers} theme={props.theme} onClickNegative={() => setFollowersMenu(false)} title="Followers" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page.data.id} />}
+      {followingMenu && <ListOfUsers viewport={props.viewport} users={following} userSetter={() => setFollowing} theme={props.theme} onClickNegative={() => setFollowingMenu(false)} title="Following" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page.data.id} />}
       {!session && (
         <div className={"fixed bottom-0 left-0 flex h-12 w-screen items-center justify-center gap-2 " + props.theme.primary}>
           Sign in to Clonegram to see more!{" "}

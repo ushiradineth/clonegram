@@ -1,6 +1,6 @@
 import { AiOutlineClose } from "react-icons/ai";
 import { BiUserPlus } from "react-icons/bi";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
@@ -20,11 +20,13 @@ interface itemType {
     UserHandle: string;
     UserImage: string;
     UserFollowing: boolean;
+    UserRemoved: boolean;
   }[];
   title: string;
   userHandle: string | undefined;
   userID: string | undefined;
   pageID: string;
+  userSetter: (...arg: any) => unknown;
   onClickNegative: (...arg: any) => unknown;
 }
 
@@ -32,23 +34,56 @@ const ListOfUsers = (props: itemType) => {
   const router = useRouter();
   const follow = trpc.user.follow.useMutation({});
   const unfollow = trpc.user.unfollow.useMutation({});
-  const remove = trpc.user.removeFollower.useMutation({});
 
-  const followFunc = (pageID: any) => {
-    if (props.userID && pageID) {
-      follow.mutate({ userid: props.userID, pageid: pageID });
+  const followFunc = (
+    page: {
+      UserID: string;
+      UserName: string;
+      UserHandle: string;
+      UserImage: string;
+      UserFollowing: boolean;
+      UserRemoved: boolean;
+    },
+    setText: { (value: React.SetStateAction<string>): void; (arg0: string): void }
+  ) => {
+    if (props.userID && page.UserID) {
+      follow.mutate({ userid: props.userID, pageid: page.UserID });
+      page.UserFollowing = true;
+      props.userSetter(props.users);
     }
   };
 
-  const unfollowFunc = (pageID: any) => {
-    if (props.userID && pageID) {
-      unfollow.mutate({ userid: props.userID, pageid: pageID });
+  const unfollowFunc = (
+    page: {
+      UserID: string;
+      UserName: string;
+      UserHandle: string;
+      UserImage: string;
+      UserFollowing: boolean;
+      UserRemoved: boolean;
+    },
+    setText: { (value: React.SetStateAction<string>): void; (arg0: string): void }
+  ) => {
+    if (props.userID && page.UserID) {
+      unfollow.mutate({ userid: props.userID, pageid: page.UserID });
+      page.UserFollowing = false;
     }
   };
 
-  const removeFunc = (pageID: any) => {
-    if (props.userID && pageID) {
-      remove.mutate({ userid: props.userID, pageid: pageID });
+  const removeFunc = (
+    page: {
+      UserID: string;
+      UserName: string;
+      UserHandle: string;
+      UserImage: string;
+      UserFollowing: boolean;
+      UserRemoved: boolean;
+    },
+    setText: { (value: React.SetStateAction<string>): void; (arg0: string): void }
+  ) => {
+    if (props.userID && page.UserID) {
+      unfollow.mutate({ userid: page.UserID, pageid: props.userID });
+      page.UserRemoved = true;
     }
   };
 
@@ -62,6 +97,16 @@ const ListOfUsers = (props: itemType) => {
           </div>
           {props.users.length > 0 ? (
             props.users.map((user, index) => {
+              const [text, setText] = useState("");
+
+              useEffect(() => {
+                !user.UserRemoved && (user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? setText("Remove") : user.UserFollowing ? setText("Following") : setText("Follow")) : setText("Profile"));
+              });
+
+              useEffect(() => {
+                !user.UserRemoved && (user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? setText("Remove") : user.UserFollowing ? setText("Following") : setText("Follow")) : setText("Profile"));
+              }, [user]);
+
               return (
                 <div key={index} className={"flex h-12 w-full items-center justify-center p-10 " + (index !== props.users.length - 1 && " border-b ")}>
                   <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => router.push({ pathname: "/" + user.UserHandle })} src={user.UserImage} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
@@ -69,9 +114,9 @@ const ListOfUsers = (props: itemType) => {
                     <div>{user.UserHandle}</div>
                     <div>{user.UserName}</div>
                   </div>
-                  <div id="cta" className="cursor-pointer rounded-[4px] border py-1 px-2 text-xs font-semibold" onClick={() => (user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? removeFunc(user.UserID) : user.UserFollowing ? unfollowFunc(user.UserID) : followFunc(user.UserID)) : router.push({ pathname: "/" + user.UserHandle }))}>
-                    {user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? "Remove" : user.UserFollowing ? "Following" : "Follow") : "Profile"}
-                  </div>
+                  <button id={user.UserHandle} disabled={user.UserRemoved} className={"rounded-[4px] border py-1 px-2 text-xs font-semibold " + (user.UserRemoved ? " cursor-not-allowed bg-gray-300 text-gray-500 " : " cursor-pointer ")} onClick={() => !user.UserRemoved && (user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? removeFunc(user, setText) : user.UserFollowing ? unfollowFunc(user, setText) : followFunc(user, setText)) : router.push({ pathname: "/" + user.UserHandle }))}>
+                    {user.UserRemoved ? "Removed" : text}
+                  </button>
                 </div>
               );
             })
