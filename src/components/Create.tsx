@@ -9,7 +9,6 @@ import Image from "next/image";
 interface itemType {
   create: boolean;
   setCreate: (params: unknown) => unknown;
-  setActive: (params: unknown) => unknown;
   supabase: unknown;
   theme: {
     type: string;
@@ -30,8 +29,8 @@ const Create = (props: itemType) => {
 
   const SelectImage = () => {
     return (
-      <div className="absolute z-10 h-screen w-full bg-black" onClick={() => setDiscard(true)}>
-        <div className="absolute top-1/2 left-1/2 h-[500px] w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl bg-white transition-all duration-700 md:h-[500px] md:w-[500px] lg:h-[700px] lg:w-[700px]">
+      <div className="fixed top-0 left-0 z-20 h-screen w-screen bg-black bg-opacity-30">
+        <div className={"absolute top-1/2 left-1/2 h-[500px] w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl transition-all duration-700 md:h-[500px] md:w-[500px] lg:h-[700px] lg:w-[700px] " + props.theme.tertiary}>
           <div className="flex h-12 w-full items-center justify-center border-b-[1px] border-black font-semibold">Create new post</div>
           <div className="flex h-[93.7%] items-center justify-center">
             <div className="grid place-items-center gap-4">
@@ -60,7 +59,7 @@ const Create = (props: itemType) => {
 
   const Crop = () => {
     return (
-      <div className="absolute top-1/2 left-1/2 z-10 h-[500px] w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl bg-white transition-all duration-700 md:h-[500px] md:w-[500px] lg:h-[700px] lg:w-[700px]">
+      <div className={"absolute top-1/2 left-1/2 z-10 h-[500px] w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl transition-all duration-700 md:h-[500px] md:w-[500px] lg:h-[700px] lg:w-[700px] " + props.theme.tertiary}>
         <div className="flex h-12 w-full items-center justify-center font-semibold">
           <div className="grid w-full grid-flow-col grid-cols-3 border-b-[2px] py-2">
             <div className="flex cursor-pointer items-center" onClick={() => setDiscard(true)}>
@@ -90,7 +89,7 @@ const Create = (props: itemType) => {
               }
             })}
           </div>
-          <div className={"fixed bottom-2 left-4 cursor-pointer rounded-full p-2 shadow-[0px_0px_10px_rgba(0,0,0,0.7)] transition-all duration-500 hover:text-gray-500 hover:shadow-[0px_0px_10px_rgba(0,0,0,0.4)] " + (ratioMenu ? " text-black " : " text-white ") + (ratioMenu ? " bg-white " : " bg-black ")} onClick={() => setRatioMenu(!ratioMenu)}>
+          <div className={"fixed bottom-2 left-4 cursor-pointer rounded-full p-2 shadow-[0px_0px_10px_rgba(0,0,0,0.7)] transition-all duration-500 hover:text-gray-500 hover:shadow-[0px_0px_10px_rgba(0,0,0,0.4)] " + (ratioMenu ? " bg-white text-black " : " bg-black text-white ")} onClick={() => setRatioMenu(!ratioMenu)}>
             <AiOutlineExpand />
           </div>
           {ratioMenu && (
@@ -148,15 +147,13 @@ const Create = (props: itemType) => {
             theme={props.theme}
           />
         )}
-        <div
-          className="fixed top-8 right-8 scale-150 hover:cursor-pointer"
+        <AiOutlineClose
+          className={"fixed top-8 right-8 z-50 scale-150 cursor-pointer " + (props.theme.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")}
           onClick={() => {
-            props.setCreate(false);
+            setDiscard(true);
             setFileList(null);
           }}
-        >
-          <AiOutlineClose color="white" />
-        </div>
+        />
         <div>{fileList ? <Crop /> : <SelectImage />}</div>
       </>
     );

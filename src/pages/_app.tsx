@@ -13,7 +13,6 @@ import themeObject from "../components/Theme";
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   const [viewport, setViewport] = useState("");
   const [more, setMore] = useState(false);
-  const [active, setActive] = useState("");
   const [create, setCreate] = useState(false);
   const [search, setSearch] = useState(false);
   const [lsTheme, setlsTheme] = useState("");
@@ -23,11 +22,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
 
   const onResize = () => {
     if (document.body.clientWidth >= 1150) {
-      if (active !== "Search") {
-        setViewport("Web");
-      } else {
-        setViewport("Tab");
-      }
+      setViewport("Web");
     } else if (document.body.clientWidth >= 750) {
       setViewport("Tab");
     } else {
@@ -37,33 +32,24 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
   };
 
   useEffect(() => {
-    if (active !== "Create" && active !== "More") {
+    if (more) {
       setCreate(false);
+      setSearch(false);
     }
 
-    if (active !== "Search") {
+    if (create) {
+      setMore(false);
       setSearch(false);
+    }
+
+    if (search) {
+      setViewport("Tab");
+      setMore(false);
+      setCreate(false);
+    } else {
       onResize();
     }
-
-    switch (active) {
-      case "Home":
-        router.push("/");
-        break;
-      case "Search":
-        setViewport("Tab");
-        setSearch(true);
-        break;
-      case "Create":
-        setCreate(true);
-        break;
-      case "Profile":
-        router.push("/" + session?.user?.handle);
-        break;
-      default:
-        break;
-    }
-  }, [active, viewport]);
+  }, [viewport, search, create, more]);
 
   useEffect(() => {
     if (lsTheme) {
@@ -82,7 +68,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
 
   return (
     <SessionProvider session={session}>
-      <Layout create={create} setCreate={setCreate} viewport={viewport} active={active} setActive={setActive} search={search} more={more} setMore={setMore} supabase={supabase} theme={theme} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} />
+      <Layout create={create} setCreate={setCreate} viewport={viewport} search={search} setSearch={setSearch} more={more} setMore={setMore} supabase={supabase} theme={theme} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} />
       <Component {...pageProps} viewport={viewport} supabase={supabase} theme={theme} />
     </SessionProvider>
   );
