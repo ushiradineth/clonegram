@@ -43,46 +43,68 @@ model Account {
 }
 
 model User {
-  id                String    @id @unique @default(cuid())
-  handle            String    @unique @default(cuid())
-  name              String?
-  bio               String?
-  theme             String    @default("dark")
-  email             String?   @unique
-  emailVerified     DateTime?
-  createdAt         DateTime  @default(now()) @db.Timestamptz(3)
-  image             String?
-  posts             Post[]
-  accounts          Account[]
-  sessions          Session[]
-  comments          Comment[]
-  likes             Post[]    @relation("likes")
-  followers         User[]    @relation("UserFollowers")
-  followersRelation User[]    @relation("UserFollowers")
-  following         User[]    @relation("Userfollowing")
-  followingRelation User[]    @relation("Userfollowing")
+  id            String    @id @unique @default(cuid())
+  handle        String    @unique @default(cuid())
+  name          String?
+  bio           String?
+  email         String?   @unique
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now()) @db.Timestamptz(3)
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  comments      Comment[]
+
+  posts Post[] @relation("UserPosts")
+  likes Post[] @relation("UserLikes")
+  saved Post[] @relation("UserSaved")
+
+  following      User[] @relation("UserFollowing")
+  followers      User[] @relation("UserFollowers")
+  blocking       User[] @relation("UserBlocking")
+  blockedby      User[] @relation("UserBlockedby")
+  recentSearches User[] @relation("UserRecentSearches")
+
+  //relations for same table refs or cross table refs
+  followingRelation      User[] @relation("UserFollowing")
+  followersRelation      User[] @relation("UserFollowers")
+  blockingRelation       User[] @relation("UserBlocking")
+  blockedbyRelation      User[] @relation("UserBlockedby")
+  recentSearchesRelation User[] @relation("UserRecentSearches")
+  PostsUserRelation      Post[] @relation("PostUser")
+  PostsLikesRelation     Post[] @relation("PostLikes")
+  PostsSavedRelation     Post[] @relation("PostSaved")
 }
 
 model Post {
   id        String    @id @unique @default(cuid())
   caption   String
-  imageURLs String[]
   createdAt DateTime  @default(now()) @db.Timestamptz(3)
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+  imageURLs String[]
   comments  Comment[]
-  likes     User[]    @relation("likes")
+
+  user  User   @relation("PostUser", fields: [userId], references: [id])
+  likes User[] @relation("PostLikes")
+  saved User[] @relation("PostSaved")
+
+  //relations for same table refs or cross table refs
+  UserPostsRelation User[] @relation("UserPosts")
+  UserLikesRelation User[] @relation("UserLikes")
+  UserSavedRelation User[] @relation("UserSaved")
 }
 
 model Comment {
-  id                  String    @id @unique @default(cuid())
-  createdAt           DateTime  @default(now()) @db.Timestamptz(3)
-  post                Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId              String
-  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId              String
-  parentReply         Comment?  @relation("parentReply", fields: [id], references: [id], onDelete: Cascade)
+  id          String    @id @unique @default(cuid())
+  createdAt   DateTime  @default(now()) @db.Timestamptz(3)
+  post        Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  parentReply Comment?  @relation("parentReply", fields: [id], references: [id], onDelete: Cascade)
+  replies     Comment[] @relation("replies")
+
+  //relations for same table refs or cross table refs
   parentReplyRelation Comment?  @relation("parentReply")
-  replies             Comment[] @relation("replies")
   repliesRelation     Comment[] @relation("replies")
 }
