@@ -171,7 +171,7 @@ const Search = (props: itemType) => {
 
   return (
     <>
-      <div className={"fixed top-0 left-16 z-30 h-screen rounded-r-xl shadow-[25px_0px_50px_rgba(0,0,0,0.1)] transition-all duration-1000 " + (props.search ? " z-10 w-[350px] border-l-2 " : " z-0 w-0 ") + (props.viewport == "Mobile" && " hidden ") + props.theme.secondary}>
+      <div className={"fixed top-0 left-16 z-30 h-screen rounded-r-xl transition-all duration-1000 " + (props.theme.type === "dark" ? " shadow-[5px_0px_50px_rgba(255,255,255,0.1)] " : " shadow-[25px_0px_50px_rgba(0,0,0,0.2)] ") + (props.search ? " z-10 w-[350px] border-l-2 " : " z-0 w-0 ") + (props.viewport == "Mobile" && " hidden ") + props.theme.secondary}>
         <div className={"rounded-r-xl transition-all " + (props.search ? " opacity-100 " : " opacity-0 ") + props.theme.secondary}>
           <div className={"h-screen transition-all duration-200"}>
             <div className="grid w-full items-center border-b-[1px] font-semibold">
