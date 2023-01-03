@@ -38,7 +38,7 @@ interface itemType {
 
 const Layout = (props: itemType) => {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession(); 
 
   if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <></>;
 
@@ -46,6 +46,11 @@ const Layout = (props: itemType) => {
     props.setlsTheme(props.theme.type === "dark" ? "light" : "dark");
     props.setTheme({ type: props.lsTheme, primary: props.theme.primary, secondary: props.theme.secondary, tertiary: props.theme.tertiary, accent: props.theme.accent });
   };
+
+  const signout = () => {
+    signOut({ callbackUrl: env.NEXT_PUBLIC_NEXTAUTH_URL })
+    localStorage.removeItem("clonegram.recentSearch")
+  }
 
   if (status === "authenticated") {
     return (
@@ -82,7 +87,7 @@ const Layout = (props: itemType) => {
                     <MoreItem Icon={<HiOutlineMoon />} Text="Switch Appearence" theme={props.theme} onClickHandler={switchLayout} />
                     <MoreItem Icon={<BiMessageAltError />} Text="Report a problem" theme={props.theme} />
                     <MoreItem Icon={<AiOutlineUserSwitch />} Text="Switch accounts" theme={props.theme} />
-                    <MoreItem Icon={<MdLogout />} Text="Log out" onClickHandler={() => signOut({ callbackUrl: env.NEXT_PUBLIC_NEXTAUTH_URL })} theme={props.theme} last={true} />
+                    <MoreItem Icon={<MdLogout />} Text="Log out" onClickHandler={signout} theme={props.theme} last={true} />
                   </div>
                 )}
               </div>

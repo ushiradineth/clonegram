@@ -5,6 +5,7 @@ import { BiUserPlus } from "react-icons/bi";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
+import { useSession } from "next-auth/react";
 
 interface itemType {
   search: boolean;
@@ -25,6 +26,7 @@ const Search = (props: itemType) => {
   const [keyword, setKeyword] = useState<string>();
   const [users, setUsers] = useState<{ userID: string; userName: string; userImage: string; userHandle: string }[]>([]);
   const router = useRouter();
+  const { data: session } = useSession();
 
   const usersList = trpc.user.getUsersSearch.useMutation({
     onSuccess: (data) => {
@@ -37,8 +39,6 @@ const Search = (props: itemType) => {
   });
 
   const onClickProfile = (user: { userID: string; userName: string; userImage: string; userHandle: any }) => {
-    console.log("clicked");
-
     var tempRecentSearches = recentSearches;
 
     tempRecentSearches.forEach((element, index) => {
@@ -50,7 +50,7 @@ const Search = (props: itemType) => {
     tempRecentSearches.splice(0, 0, user);
     tempRecentSearches.splice(5, 1);
 
-    localStorage.setItem("recentSearch", JSON.stringify(tempRecentSearches));
+    localStorage.setItem("clonegram.recentSearch", JSON.stringify(tempRecentSearches));
 
     props.setSearch(false);
     router.push({ pathname: "/" + user.userHandle });
@@ -76,7 +76,7 @@ const Search = (props: itemType) => {
       }
     });
 
-    localStorage.setItem("recentSearch", JSON.stringify(tempRecentSearches));
+    localStorage.setItem("clonegram.recentSearch", JSON.stringify(tempRecentSearches));
 
     setRecentSearches(tempRecentSearches);
   };
@@ -89,9 +89,13 @@ const Search = (props: itemType) => {
   }, [keyword]);
 
   useEffect(() => {
-    var tempRecentSearches: any[] = [];
+    if (localStorage.getItem("clonegram.userID") !== session?.user?.id) {
+      localStorage.removeItem("clonegram.recentSearch");
+      if (session?.user?.id) localStorage.setItem("clonegram.userID", session?.user?.id);
+    }
 
-    var oldRecentSearch = JSON.parse(localStorage.getItem("recentSearch") || "{}");
+    var tempRecentSearches: any[] = [];
+    var oldRecentSearch = JSON.parse(localStorage.getItem("clonegram.recentSearch") || "{}");
 
     if (oldRecentSearch.forEach) {
       oldRecentSearch.forEach((element: any) => {

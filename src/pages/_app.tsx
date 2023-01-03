@@ -4,7 +4,6 @@ import { SessionProvider } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import "../styles/globals.css";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "../env/client.mjs";
@@ -17,7 +16,6 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
   const [search, setSearch] = useState(false);
   const [lsTheme, setlsTheme] = useState("");
   const [theme, setTheme] = useState({ type: "", primary: "", secondary: "", tertiary: "", accent: "" });
-  const router = useRouter();
   const supabase = createClient("https://" + env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY);
 
   const onResize = () => {
