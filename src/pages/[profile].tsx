@@ -127,9 +127,8 @@ const Profile = (props: itemType) => {
                     <button id="cta" onClick={() => (session ? (session?.user?.id === page.data?.id ? setEditProfile(true) : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))} className={"cursor-pointer rounded-[4px] border-2 py-1 px-2 text-xs font-semibold " + (props.viewport == "Mobile" && " hidden ")}>
                       {session?.user?.id === page.data?.id ? "Edit profile" : isFollowing ? "Following" : "Follow"}
                     </button>
-                    <div id="settings" className="scale-150">
-                      <IoMdSettings />
-                    </div>
+
+                    <IoMdSettings id="settings" className="scale-150 cursor-pointer" onClick={() => router.push("/settings")} />
                   </div>
                 </div>
                 <div id="cta-mobile" onClick={() => (session ? (session?.user?.id === page.data?.id ? setEditProfile(true) : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))} className={"mt-2 flex h-fit w-[235px] cursor-pointer items-center justify-center rounded-[4px] border-2 p-2 text-xs font-semibold  " + (props.viewport != "Mobile" && " hidden ")}>
