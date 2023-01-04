@@ -65,7 +65,7 @@ const Layout = (props: itemType) => {
         <div className="max-h-screen w-fit select-none">
           {props.create && <Create create={props.create} setCreate={props.setCreate} supabase={props.supabase} theme={props.theme} />}
           {props.search && <Search search={props.search} setSearch={props.setSearch} theme={props.theme} viewport={props.viewport} />}
-          <div id="Sidebar" className={"fixed left-0 grid gap-4 " + props.theme.primary + (props.viewport == "Web" && " bottom-0 z-10 h-full w-72 grid-flow-row border-r transition-all duration-200 ") + (props.viewport == "Tab" && " top-0 h-full w-16 grid-flow-row border-r transition-all duration-200 ") + (props.viewport == "Mobile" && " top-0 h-screen bg-transparent w-screen grid-flow-col ")}>
+          <div id="Sidebar" className={"fixed left-0 grid gap-4 " + (props.viewport !== "Mobile" && props.theme.primary) + (props.viewport == "Web" && " bottom-0 z-10 h-full w-72 grid-flow-row border-r transition-all duration-200 ") + (props.viewport == "Tab" && " top-0 h-full w-16 grid-flow-row border-r transition-all duration-200 ") + (props.viewport == "Mobile" && " top-0 h-screen w-screen grid-flow-col ")}>
             <div id="Sidebar-Items" className={"text-2xl font-light transition-all duration-200 " + (props.viewport == "Web" && " ml-2 mt-5 ") + (props.viewport == "Tab" && " ml-1 mt-5 ")}>
               <div className={"ml-5 text-red-300 " + (props.viewport == "Mobile" ? " hidden " : " grid ")}>{props.viewport == "Web" ? "CLONEGRAM" : "C"}</div>
               <div id="Sidebar-Web-View-Items" className={"mt-5 ml-2 grid-flow-row place-items-start gap-5 " + (props.viewport == "Mobile" ? " hidden " : " grid ")}>
@@ -77,11 +77,11 @@ const Layout = (props: itemType) => {
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} Text={"Create"} ID={"Create"} viewport={props.viewport} theme={props.theme} onClickHandler={() => props.setCreate(!props.create)} active={props.create} />
                 <NavBarItem Icon={session.user?.image} Text={"Profile"} ID={"Profile"} viewport={props.viewport} onClickHandler={() => onClickHandler("/" + session?.user?.handle)} theme={props.theme} active={Boolean(router.query.profile === session.user.handle && !props.create && !props.search && !props.more)} />
               </div>
-              {/* <div id="Header-Mobile-View-Items" className={"fixed top-0-0 mt-[4px] grid h-12 w-screen grid-flow-col place-items-center border-b " + props.theme.primary + (props.viewport != "Mobile" && " hidden ")}>
+              {/* <div id="Header-Mobile-View-Items" className={"top-0-0 fixed mt-[4px] grid h-12 w-screen grid-flow-col place-items-center border-b " + props.theme.primary + (props.viewport != "Mobile" && " hidden ")}>
                 <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} viewport={props.viewport} theme={props.theme} />
               </div> */}
               <div id="Footer-Mobile-View-Items" className={"fixed bottom-0 mt-[4px] grid h-12 w-screen grid-flow-col place-items-center border-t " + props.theme.primary + (props.viewport != "Mobile" && " hidden ")}>
-                <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} ID={"M-Home"} viewport={props.viewport}onClickHandler={() => onClickHandler("/home")} active={Boolean(router.pathname == "/home" && !props.create && !props.search && !props.more)} theme={props.theme} />
+                <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} ID={"M-Home"} viewport={props.viewport} onClickHandler={() => onClickHandler("/home")} active={Boolean(router.pathname == "/home" && !props.create && !props.search && !props.more)} theme={props.theme} />
                 <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} ID={"M-Explore"} viewport={props.viewport} theme={props.theme} />
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} ID={"M-Create"} viewport={props.viewport} theme={props.theme} onClickHandler={() => props.setCreate(!props.create)} active={props.create} />
                 <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} ID={"M-Messages"} viewport={props.viewport} theme={props.theme} />
