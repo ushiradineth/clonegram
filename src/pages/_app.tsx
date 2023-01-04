@@ -17,6 +17,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
   const [lsTheme, setlsTheme] = useState("");
   const [theme, setTheme] = useState({ type: "", primary: "", secondary: "", tertiary: "", accent: "" });
   const supabase = createClient("https://" + env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY);
+  const [hideSideComponents, setHideSideComponents] = useState(false);
 
   const onResize = () => {
     if (document.body.clientWidth >= 1150) {
@@ -47,7 +48,20 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
     } else {
       onResize();
     }
+
+    if (viewport === "Mobile" && !create) {
+      setHideSideComponents(true);
+    }
   }, [viewport, search, create, more]);
+
+  useEffect(() => {
+    if (hideSideComponents) {
+      create && setCreate(false);
+      more && setMore(false);
+      search && setSearch(false);
+      setHideSideComponents(false);
+    }
+  }, [hideSideComponents]);
 
   useEffect(() => {
     if (lsTheme) {
@@ -66,7 +80,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
 
   return (
     <SessionProvider session={session}>
-      <Layout create={create} setCreate={setCreate} viewport={viewport} search={search} setSearch={setSearch} more={more} setMore={setMore} supabase={supabase} theme={theme} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} />
+      <Layout create={create} setCreate={setCreate} viewport={viewport} search={search} setSearch={setSearch} more={more} setMore={setMore} supabase={supabase} theme={theme} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} hideSideComponents={hideSideComponents} setHideSideComponents={setHideSideComponents} />
       <Component {...pageProps} viewport={viewport} supabase={supabase} theme={theme} />
     </SessionProvider>
   );
