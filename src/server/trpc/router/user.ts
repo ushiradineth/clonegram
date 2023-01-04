@@ -36,6 +36,19 @@ export const userRouter = router({
     });
   }),
 
+  getUsersByHandle: publicProcedure.input(z.object({ handle_1: z.string(), handle_2: z.string() })).query(({ input, ctx }) => {
+    return ctx.prisma.user.findMany({
+      where: {
+        OR: [{ handle: input.handle_1 }, { handle: input.handle_2 }],
+      },
+      include: {
+        posts: true,
+        followers: true,
+        following: true,
+      },
+    });
+  }),
+
   updateUser: protectedProcedure.input(z.object({ id: z.string(), name: z.string().nullish(), image: z.string().nullish(), handle: z.string().nullish(), bio: z.object({ text: z.string().nullish(), changed: z.boolean() }) })).mutation(({ input, ctx }) => {
     type dataType = {
       [key: string]: string;

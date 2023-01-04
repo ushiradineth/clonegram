@@ -29,7 +29,7 @@ const EditProfile = (props: itemType) => {
   const [image, setImage] = useState<File>();
   const updateUser = trpc.user.updateUser.useMutation({
     onSuccess: async (data) => {
-      data.handle === session?.user?.handle ? location.reload() : router.push(data.handle);
+      data.handle === session?.user?.handle ? location.reload() : router.push({ pathname: data.handle, query: { user: "true" } });
       props.onClickNegative();
     },
   });
@@ -54,17 +54,19 @@ const EditProfile = (props: itemType) => {
     const Handle = (document.getElementById("Handle") as HTMLInputElement).value;
     const Bio = (document.getElementById("Bio") as HTMLInputElement).value;
 
-    if (Name !== props.user.data.name || Handle !== props.user.data.handle || (props.user.data.bio ? Bio !== props.user.data.bio : Bio !== "") || typeof image !== "undefined") {
+    if (Name !== props.user.name || Handle !== props.user.handle || (props.user.bio ? Bio !== props.user.bio : Bio !== "") || typeof image !== "undefined") {
       if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} theme={props.theme} />;
 
-      const { data, error } = await props.supabase.storage.from("clonegram").upload(props.user.data.id, image, {
-        cacheControl: "1",
-        upsert: true,
-      });
+      if (typeof image !== "undefined") {
+        const { data, error } = await props.supabase.storage.from("clonegram").upload(props.user.id, image, {
+          cacheControl: "1",
+          upsert: true,
+        });
 
-      Image = env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + props.user.data?.id;
+        Image = env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + props.user?.id;
+      }
 
-      updateUser.mutate({ id: session.user.id, name: Name, handle: Handle, bio: { text: Bio, changed: Bio !== props.user.data.bio }, image: Image });
+      updateUser.mutate({ id: session.user.id, name: Name, handle: Handle, bio: { text: Bio, changed: Bio !== props.user.bio }, image: Image });
     }
   };
 
@@ -74,9 +76,9 @@ const EditProfile = (props: itemType) => {
       <div className={"absolute top-1/2 left-1/2 h-auto w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl " + props.theme.tertiary}>
         <div className="grid grid-flow-row place-items-center border-b border-gray-300 font-semibold">
           <div className="grid grid-flow-col">
-            {<Image className={"m-4 h-12 w-12 rounded-full"} src={image ? URL.createObjectURL(image) : props.user.data?.image} height={96} width={96} alt="Profile Picture" />}
+            {<Image className={"m-4 h-12 w-12 rounded-full"} src={image ? URL.createObjectURL(image) : props.user?.image} height={96} width={96} alt="Profile Picture" />}
             <div>
-              <div className="mt-4">{props.user.data?.handle}</div>
+              <div className="mt-4">{props.user?.handle}</div>
               <button className="mt-1 cursor-pointer text-sm font-semibold text-blue-400" onClick={handleUploadClick}>
                 Change profile picture
               </button>
@@ -90,9 +92,9 @@ const EditProfile = (props: itemType) => {
             </div>
             <div className="grid grid-flow-row gap-2 text-black">
               <input type="file" accept=".png, .jpg, .jpeg" ref={imageRef} onChange={handleFileChange} style={{ display: "none" }} />
-              <input type="text" id="Name" className="border-2 pl-2" defaultValue={props.user.data.name} minLength={1} maxLength={20} />
-              <input type="text" id="Handle" className="border-2 pl-2" defaultValue={props.user.data.handle} minLength={1} maxLength={20} />
-              <input type="text" id="Bio" className="border-2 pl-2" defaultValue={props.user.data.bio} maxLength={150} />
+              <input type="text" id="Name" className="border-2 pl-2" defaultValue={props.user.name} minLength={1} maxLength={20} />
+              <input type="text" id="Handle" className="border-2 pl-2" defaultValue={props.user.handle} minLength={1} maxLength={20} />
+              <input type="text" id="Bio" className="border-2 pl-2" defaultValue={props.user.bio} maxLength={150} />
             </div>
           </div>
         </div>
@@ -112,7 +114,7 @@ const EditProfile = (props: itemType) => {
             const Handle = (document.getElementById("Handle") as HTMLInputElement).value;
             const Bio = (document.getElementById("Bio") as HTMLInputElement).value;
 
-            Name !== props.user.data.name || Handle !== props.user.data.handle || (props.user.data.bio ? Bio !== props.user.data.bio : Bio !== "") || typeof image !== "undefined" ? setDiscard(true) : props.onClickNegative();
+            Name !== props.user.name || Handle !== props.user.handle || (props.user.bio ? Bio !== props.user.bio : Bio !== "") || typeof image !== "undefined" ? setDiscard(true) : props.onClickNegative();
           }}
         >
           <p>Cancel</p>
