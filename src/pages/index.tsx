@@ -16,16 +16,6 @@ interface itemType {
   };
 }
 
-interface authItemType {
-  theme: {
-    type: string;
-    primary: string;
-    secondary: string;
-    tertiary: string;
-    accent: string;
-  };
-}
-
 const Index = (props: itemType) => {
   const { status } = useSession();
   const router = useRouter();
@@ -36,7 +26,7 @@ const Index = (props: itemType) => {
 
   if (status == "authenticated") {
     router.push("/home");
-    return <div className={"h-screen w-screen " + props.theme.secondary}></div>
+    return <div className={"h-screen w-screen " + props.theme.secondary}></div>;
   }
 
   return (
@@ -57,7 +47,21 @@ const Index = (props: itemType) => {
             <h1>Database and storage on Supabase</h1>
             <h1>Hosted on Vercel</h1>
           </div>
-          <Auth theme={props.theme} />
+          <div className="flex flex-col items-center justify-center gap-4">
+            <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("google", { callbackUrl: "http://localhost:3000/" })}>
+              Sign in with Google
+            </button>
+            <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("twitter", { callbackUrl: "http://localhost:3000/" })}>
+              Sign in with Twitter
+            </button>
+            <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("github", { callbackUrl: "http://localhost:3000/" })}>
+              Sign in with GitHub
+            </button>
+          </div>
+        </div>
+        <div className="fixed bottom-0 grid h-20 w-screen grid-flow-col place-items-center px-[45%] text-white  ">
+          <div>Privacy</div>
+          <div>About</div>
         </div>
       </main>
     </>
@@ -65,18 +69,3 @@ const Index = (props: itemType) => {
 };
 
 export default Index;
-
-const Auth = (props: authItemType) => {
-  const { status } = useSession();
-  if (status == "loading") {
-    return <Spinner theme={props.theme} />;
-  }
-
-  return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("google", { callbackUrl: "http://localhost:3000/" })}>
-        Sign in
-      </button>
-    </div>
-  );
-};

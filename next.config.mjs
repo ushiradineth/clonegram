@@ -18,9 +18,12 @@ const config = {
         defaultLocale: "en",
     },
     images: {
-        domains: ["lh3.googleusercontent.com", env.NEXT_PUBLIC_SUPABASE_URL],
+        remotePatterns: [{
+            protocol: "https",
+            hostname: "**",
+        }, ],
         minimumCacheTTL: 1,
-		disableStaticImages: true
+        disableStaticImages: true
     },
 };
 
