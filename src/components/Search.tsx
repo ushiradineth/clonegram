@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
 import { useSession } from "next-auth/react";
+import Spinner from "./Spinner";
 
 interface itemType {
   search: boolean;
@@ -56,7 +57,7 @@ const Search = (props: itemType) => {
     router.push({ pathname: "/" + user.userHandle });
   };
 
-  if (typeof document !== "undefined") {
+  if (typeof document !== "undefined" || typeof window !== "undefined") {
     (document.getElementById("search") as HTMLInputElement) &&
       (document.getElementById("search") as HTMLInputElement).addEventListener("keyup", () => {
         clearTimeout(0);
@@ -139,7 +140,7 @@ const Search = (props: itemType) => {
       </div>
     );
   };
-
+  
   const SearchResults = () => {
     return (
       <div>
@@ -188,6 +189,7 @@ const Search = (props: itemType) => {
                 />
               </div>
             </div>
+            {usersList.isLoading && <Spinner theme={props.theme} removeBackground={true} />}
             {isEmpty ? <RecentSearches /> : <SearchResults />}
           </div>
         </div>
