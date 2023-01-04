@@ -50,10 +50,10 @@ const Index = (props: itemType) => {
             <h1>Hosted on Vercel</h1>
           </div>
           <div className="flex flex-col items-center justify-center gap-4">
-            <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("google", { callbackUrl: env.NEXT_PUBLIC_NEXTAUTH_URL  })}>
+            <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("google", { callbackUrl: env.NEXT_PUBLIC_NEXTAUTH_URL })}>
               Sign in with Google
             </button>
-            <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("twitter", { callbackUrl: "http://localhost:3000/" })}>
+            <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("twitter", { callbackUrl: env.NEXT_PUBLIC_NEXTAUTH_URL })}>
               Sign in with Twitter
             </button>
             <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("github", { callbackUrl: env.NEXT_PUBLIC_NEXTAUTH_URL })}>
