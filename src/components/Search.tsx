@@ -62,9 +62,9 @@ const Search = (props: itemType) => {
       (document.getElementById("search") as HTMLInputElement).addEventListener("keyup", () => {
         clearTimeout(0);
         if ((document.getElementById("search") as HTMLInputElement).value) {
-          setTimeout(() => setKeyword((document.getElementById("search") as HTMLInputElement).value), 1000);
+          setTimeout(() => setKeyword((document.getElementById("search") as HTMLInputElement)?.value), 1000);
         }
-        setTimeout(() => setisEmpty(!Boolean((document.getElementById("search") as HTMLInputElement).value)), 1000);
+        setTimeout(() => setisEmpty(!Boolean((document.getElementById("search") as HTMLInputElement)?.value)), 1000);
       });
   }
 
