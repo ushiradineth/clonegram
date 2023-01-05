@@ -45,6 +45,8 @@ export const userRouter = router({
         posts: true,
         followers: true,
         following: true,
+        blockedby: true,
+        blocking: true
       },
     });
   }),
@@ -99,6 +101,40 @@ export const userRouter = router({
     const q2 = await ctx.prisma.user.update({
       where: { id: input.pageid },
       data: { followers: { disconnect: { id: input.userid } } },
+    });
+
+    return { q1, q2 };
+  }),
+
+  block: protectedProcedure.input(z.object({ userid: z.string(), pageid: z.string() })).mutation(async ({ input, ctx }) => {
+    const q1 = await ctx.prisma.user.update({
+      where: { id: input.userid },
+      data: {
+        blocking: { connect: { id: input.pageid } },
+        following: { disconnect: { id: input.pageid } },
+        followers: { disconnect: { id: input.pageid } },
+      },
+    });
+    const q2 = await ctx.prisma.user.update({
+      where: { id: input.pageid },
+      data: {
+        blocking: { connect: { id: input.userid } },
+        following: { disconnect: { id: input.userid } },
+        followers: { disconnect: { id: input.userid } },
+      },
+    });
+
+    return { q1, q2 };
+  }),
+
+  unblock: protectedProcedure.input(z.object({ userid: z.string(), pageid: z.string() })).mutation(async ({ input, ctx }) => {
+    const q1 = await ctx.prisma.user.update({
+      where: { id: input.userid },
+      data: { blocking: { disconnect: { id: input.pageid } } },
+    });
+    const q2 = await ctx.prisma.user.update({
+      where: { id: input.pageid },
+      data: { blockedby: { disconnect: { id: input.userid } } },
     });
 
     return { q1, q2 };
