@@ -45,8 +45,8 @@ const Profile = (props: itemType) => {
   const singleQuery = trpc.user.getUserByHandle.useQuery({ handle: String(profile) }, { retry: false, refetchOnWindowFocus: false, enabled: Boolean((status === "unauthenticated" || session?.user?.handle === String(profile)) && Boolean(profile)) });
   const doubleQuery = trpc.user.getUsersByHandle.useQuery({ user: session?.user?.handle || "0", page: String(profile) }, { retry: false, refetchOnWindowFocus: false, enabled: Boolean(status === "authenticated" && session?.user?.handle !== String(profile) && !router.query.user) });
 
-  const user = status === "unauthenticated" ? singleQuery.data : session?.user?.handle === String(profile) ? singleQuery.data : doubleQuery.data?.at(0);
-  const page = status === "unauthenticated" ? singleQuery.data : session?.user?.handle === String(profile) ? singleQuery.data : doubleQuery.data?.at(1);
+  const user = status === "unauthenticated" ? singleQuery.data : session?.user?.handle === String(profile) ? singleQuery.data : doubleQuery.data?.at(0)?.handle === session?.user?.handle ? doubleQuery.data?.at(0) : doubleQuery.data?.at(1);
+  const page = status === "unauthenticated" ? singleQuery.data : session?.user?.handle === String(profile) ? singleQuery.data : doubleQuery.data?.at(0)?.handle === String(profile) ? doubleQuery.data?.at(0) : doubleQuery.data?.at(1);
 
   const follow = trpc.user.follow.useMutation({
     onSuccess: (data) => {
