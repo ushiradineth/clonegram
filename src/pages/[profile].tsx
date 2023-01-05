@@ -114,10 +114,6 @@ const Profile = (props: itemType) => {
     }
   }, [doubleQuery.data, singleQuery.data]);
 
-  useEffect(() => {
-    console.log(isBlockedBy, isBlocking);
-  }, [isBlockedBy, isBlocking]);
-
   if (doubleQuery.isLoading && singleQuery.isLoading) {
     return <Spinner theme={props.theme} viewport={props.viewport} />;
   }
@@ -132,7 +128,7 @@ const Profile = (props: itemType) => {
         {editProfile && <EditProfile viewport={props.viewport} onClickNegative={() => setEditProfile(false)} supabase={props.supabase} theme={props.theme} user={page} />}
         {followersMenu && <ListOfUsers viewport={props.viewport} users={followers} userSetter={() => setFollowers} theme={props.theme} onClickNegative={() => setFollowersMenu(false)} title="Followers" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page?.id ? page.id : "0"} />}
         {followingMenu && <ListOfUsers viewport={props.viewport} users={following} userSetter={() => setFollowing} theme={props.theme} onClickNegative={() => setFollowingMenu(false)} title="Following" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page?.id ? page.id : "0"} />}
-        {options && <ProfileOptions onClickNegative={() => setOptions(false)} theme={props.theme} page={page} />}
+        {options && <ProfileOptions onClickNegative={() => setOptions(false)} theme={props.theme} page={page} setIsBlocking={setIsBlocking} />}
         {!session && (
           <div className={"fixed bottom-0 left-0 flex h-12 w-screen items-center justify-center gap-2 " + props.theme.primary}>
             Sign in to Clonegram to see more!

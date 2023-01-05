@@ -14,6 +14,7 @@ interface itemType {
     accent: string;
   };
   page: any;
+  setIsBlocking: (...arg: any) => unknown;
 }
 
 const ProfileOptions = (props: itemType) => {
@@ -23,13 +24,13 @@ const ProfileOptions = (props: itemType) => {
 
   const block = trpc.user.block.useMutation({
     onSuccess: (data) => {
-      location.reload;
+      props.setIsBlocking(true)
     },
   });
 
   const blockFunc = () => {
     if (session?.user?.id && props.page?.id) {
-      block.mutate({ userid: session.user?.id, pageid: props.page?.id });
+      block.mutate({ userid: session.user?.id, pageid: props.page?.id })
     }
   };
 
