@@ -118,7 +118,7 @@ export const userRouter = router({
     const q2 = await ctx.prisma.user.update({
       where: { id: input.pageid },
       data: {
-        blocking: { connect: { id: input.userid } },
+        blockedby: { connect: { id: input.userid } },
         following: { disconnect: { id: input.userid } },
         followers: { disconnect: { id: input.userid } },
       },
