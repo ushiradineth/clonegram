@@ -36,10 +36,10 @@ export const userRouter = router({
     });
   }),
 
-  getUsersByHandle: publicProcedure.input(z.object({ handle_1: z.string(), handle_2: z.string() })).query(({ input, ctx }) => {
+  getUsersByHandle: publicProcedure.input(z.object({ user: z.string(), page: z.string() })).query(({ input, ctx }) => {
     return ctx.prisma.user.findMany({
       where: {
-        OR: [{ handle: input.handle_1 }, { handle: input.handle_2 }],
+        OR: [{ handle: input.user }, { handle: input.page }],
       },
       include: {
         posts: true,
