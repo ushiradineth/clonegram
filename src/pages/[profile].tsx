@@ -119,8 +119,8 @@ const Profile = (props: itemType) => {
   }
 
   if (status === "unauthenticated" ? singleQuery.isError : session?.user?.handle === String(profile) ? singleQuery.isError : doubleQuery.data?.at(0)?.handle === String(profile) ? false : doubleQuery.data?.at(1)?.handle !== String(profile)) return <div className={"grid h-screen place-items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-3xl font-light text-white " + (props.viewport == "Web" && session && " ml-72 ") + (props.viewport == "Tab" && session && " ml-16 ")}>User does not exist</div>;
-  if (isBlockedBy) return <div className={"grid h-screen place-items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-3xl font-light text-white " + (props.viewport == "Web" && session && " ml-72 ") + (props.viewport == "Tab" && session && " ml-16 ")}>This user has blocked you</div>;
-  if (isBlocking) return <div className={"grid h-screen place-items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-3xl font-light text-white " + (props.viewport == "Web" && session && " ml-72 ") + (props.viewport == "Tab" && session && " ml-16 ")}>You have blocked this user</div>;
+  if (isBlocking) return <div className={"grid h-screen place-items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-3xl font-light text-white " + (props.viewport == "Web" && session && " ml-72 ") + (props.viewport == "Tab" && session && " ml-16 ")}>This user has blocked you</div>;
+  if (isBlockedBy) return <div className={"grid h-screen place-items-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-3xl font-light text-white " + (props.viewport == "Web" && session && " ml-72 ") + (props.viewport == "Tab" && session && " ml-16 ")}>You have blocked this user</div>;
 
   if (!isBlockedBy && !isBlocking)
     return (
