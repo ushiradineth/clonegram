@@ -117,7 +117,7 @@ const Profile = (props: itemType) => {
           </button>
         </div>
       )}
-      <div className={"select-none " + (props.viewport == "Web" && session && " ml-72 ") + (props.viewport == "Tab" && session && " ml-16 ")}>
+      <div className={" " + (props.viewport == "Web" && session && " ml-72 ") + (props.viewport == "Tab" && session && " ml-16 ")}>
         <div id="Background" className={"flex min-h-screen flex-col items-center justify-center " + props.theme.secondary}>
           <div className={"grid w-fit " + (editProfile ? " opacity-30 " : "") + (props.viewport && " place-items-center ")}>
             <div id="user-details" className={"flex h-fit py-5 " + (props.viewport == "Mobile" && " w-[400px] ") + (props.viewport == "Web" && " w-[700px] items-center justify-center ") + (props.viewport == "Tab" && " w-[500px] items-center justify-center ")}>
@@ -135,7 +135,7 @@ const Profile = (props: itemType) => {
                     <IoMdSettings id="settings" className="scale-150 cursor-pointer" onClick={() => router.push("/settings")} />
                   </div>
                 </div>
-                <div id="cta-mobile" onClick={() => (session ? (session?.user?.id === page?.id ? setEditProfile(true) : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))} className={"mt-2 flex h-fit w-[235px] cursor-pointer items-center justify-center rounded-[4px] border-2 p-2 text-xs font-semibold  " + (props.viewport != "Mobile" && " hidden ")}>
+                <div id="cta-mobile" onClick={() => (session ? (session?.user?.id === page?.id ? setEditProfile(true) : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))} className={"mt-2 z-10 flex h-fit w-[235px] cursor-pointer items-center justify-center rounded-[4px] border-2 p-2 text-xs font-semibold  " + (props.viewport != "Mobile" && " hidden ")}>
                   {session?.user?.id === page?.id ? "Edit profile" : isFollowing ? "Following" : "Follow"}
                 </div>
                 <div id="stats" className={"grid grid-flow-col gap-2 text-sm font-normal " + (props.viewport == "Mobile" && " hidden ")}>
@@ -168,12 +168,19 @@ const Profile = (props: itemType) => {
                 {page?.bio}
               </div>
             </div>
-            <div id="stats-mobile" className={"grid w-screen grid-flow-col place-items-center border-y border-gray-500 py-2 text-sm font-normal " + (props.viewport != "Mobile" && " hidden ")}>
+            <div id="stats-mobile" className={"grid w-screen grid-flow-col place-items-center border-y z-10 border-gray-500 py-2 text-sm font-normal " + (props.viewport != "Mobile" && " hidden ")}>
               <div className="grid place-items-center">
                 <p className="font-semibold">{page?.posts.length}</p>
                 <p className={props.theme.type === "dark" ? "text-gray-300" : "text-black"}>posts</p>
               </div>
-              <div className="grid cursor-pointer place-items-center" onClick={() => (session ? setFollowersMenu(true) : router.push("/"))}>
+              <div
+                className="grid cursor-pointer place-items-center"
+                onClick={() => {
+                  console.log("test");
+                  
+                  session ? setFollowersMenu(true) : router.push("/");
+                }}
+              >
                 <p className="font-semibold">{page?.followers.length}</p>
                 <p className={props.theme.type === "dark" ? "text-gray-300" : "text-black"}>followers</p>
               </div>
