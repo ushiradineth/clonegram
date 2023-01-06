@@ -8,16 +8,19 @@ import Layout from "../components/Layout";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "../env/client.mjs";
 import themeObject from "../components/Theme";
+import GetUser from "../components/GetUser";
 
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   const [viewport, setViewport] = useState("");
   const [more, setMore] = useState(false);
   const [create, setCreate] = useState(false);
+  const [status, setStatus] = useState("");
+  const [user, setUser] = useState(null);
   const [search, setSearch] = useState(false);
   const [lsTheme, setlsTheme] = useState("");
+  const [hideSideComponents, setHideSideComponents] = useState(false);
   const [theme, setTheme] = useState({ type: "", primary: "", secondary: "", tertiary: "", accent: "" });
   const supabase = createClient("https://" + env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY);
-  const [hideSideComponents, setHideSideComponents] = useState(false);
 
   const onResize = () => {
     if (document.body.clientWidth >= 1150) {
@@ -80,8 +83,16 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
 
   return (
     <SessionProvider session={session}>
-      <Layout create={create} setCreate={setCreate} viewport={viewport} search={search} setSearch={setSearch} more={more} setMore={setMore} supabase={supabase} theme={theme} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} hideSideComponents={hideSideComponents} setHideSideComponents={setHideSideComponents} />
-      <Component {...pageProps} viewport={viewport} supabase={supabase} theme={theme} />
+      <>
+        {status === "authenticated" || status === "unauthenticated" ? (
+          <>
+            <Layout create={create} setCreate={setCreate} viewport={viewport} search={search} setSearch={setSearch} more={more} setMore={setMore} supabase={supabase} theme={theme} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} hideSideComponents={hideSideComponents} setHideSideComponents={setHideSideComponents} />
+            <Component {...pageProps} viewport={viewport} supabase={supabase} theme={theme} user={user} />
+          </>
+        ) : (
+          <GetUser user={user} setUser={setUser} theme={theme} status={status} setStatus={setStatus} />
+        )}
+      </>
     </SessionProvider>
   );
 };
