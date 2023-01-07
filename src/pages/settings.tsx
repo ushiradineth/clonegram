@@ -6,6 +6,7 @@ import Spinner from "../components/Spinner";
 import EditProfile from "../components/EditProfile";
 import BlockedUsers from "../components/BlockedUsers";
 import { UserType } from "../types/types";
+import Head from "next/head";
 
 interface itemType {
   viewport: string;
@@ -26,7 +27,7 @@ const Profile = (props: itemType) => {
   const [active, setActive] = useState("Edit Profile");
   const [hook, setHook] = useState(<EditProfile viewport={props.viewport} supabase={props.supabase} theme={props.theme} user={props.user} />);
 
-  useEffect(() => {    
+  useEffect(() => {
     switch (active) {
       case "Edit Profile":
         setHook(<EditProfile viewport={props.viewport} supabase={props.supabase} theme={props.theme} user={props.user} />);
@@ -44,7 +45,12 @@ const Profile = (props: itemType) => {
 
   return (
     <>
-      <div className={"h-screen select-none " + (props.viewport == "Web" && " ml-72 ") + (props.viewport == "Tab" && " ml-16 ")}>
+      <Head>
+        <title>Settings • Clonegram</title>
+        <meta name="description" content="Clonegram by Ushira Dineth" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main className={"h-screen select-none " + (props.viewport == "Web" && " ml-72 ") + (props.viewport == "Tab" && " ml-16 ")}>
         <div id="Background" className={"flex min-h-screen items-center justify-center " + props.theme.secondary}>
           <div id="Setting" className="flex h-[600px] w-fit items-center justify-center">
             <div id="Sidebar" className={"bottom-0 z-10 grid h-full w-72 grid-flow-row gap-4 border border-gray-400 " + props.theme.primary}>
@@ -56,7 +62,7 @@ const Profile = (props: itemType) => {
             <div className={"flex h-full w-[500px] items-center justify-center border border-gray-400 " + props.theme.primary}>{hook}</div>
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 };
