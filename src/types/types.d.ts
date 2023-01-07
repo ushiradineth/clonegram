@@ -13,4 +13,7 @@ export interface UserType {
   isSuccess: boolean;
   isLoading: boolean;
   isError: boolean;
+  isRefetching: boolean;
+  isFetching: boolean;
+  isFetched: boolean;
 }

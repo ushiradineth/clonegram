@@ -9,6 +9,7 @@ import { createClient } from "@supabase/supabase-js";
 import { env } from "../env/client.mjs";
 import themeObject from "../components/Theme";
 import GetUser from "../components/GetUser";
+import { UserType } from "../types/types";
 
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   const [viewport, setViewport] = useState("");
@@ -86,11 +87,12 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
       <>
         {status === "authenticated" || status === "unauthenticated" ? (
           <>
-            <Layout create={create} setCreate={setCreate} viewport={viewport} search={search} setSearch={setSearch} more={more} setMore={setMore} supabase={supabase} theme={theme} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} hideSideComponents={hideSideComponents} setHideSideComponents={setHideSideComponents} />
-            <Component {...pageProps} viewport={viewport} supabase={supabase} theme={theme} user={user} />
+            <GetUser user={user} setUser={setUser} theme={theme} status={status} setStatus={setStatus} enabled={false} />
+            <Layout create={create} setCreate={setCreate} viewport={viewport} search={search} setSearch={setSearch} more={more} setMore={setMore} supabase={supabase} theme={theme} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} hideSideComponents={hideSideComponents} setHideSideComponents={setHideSideComponents} user={user as unknown as UserType} />
+            <Component {...pageProps} viewport={viewport} supabase={supabase} theme={theme} user={user} setUser={setUser} />
           </>
         ) : (
-          <GetUser user={user} setUser={setUser} theme={theme} status={status} setStatus={setStatus} />
+          <GetUser user={user} setUser={setUser} theme={theme} status={status} setStatus={setStatus} enabled={true} />
         )}
       </>
     </SessionProvider>

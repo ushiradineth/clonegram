@@ -136,7 +136,7 @@ const Profile = (props: itemType) => {
           <div id="Background" className={"flex min-h-screen flex-col items-center justify-center " + props.theme.secondary}>
             <div className={"grid w-fit " + (props.viewport && " place-items-center ")}>
               <div id="user-details" className={"flex h-fit py-5 " + (props.viewport == "Mobile" && " w-[400px] ") + (props.viewport == "Web" && " w-[700px] items-center justify-center ") + (props.viewport == "Tab" && " w-[500px] items-center justify-center ")}>
-                <Image className={"rounded-full " + (props.viewport == "Mobile" ? " mr-2 ml-2 mt-4 h-24 w-24 " : " mr-10 flex w-24 scale-125 justify-center ")} src={page.data?.image ? page.data?.image : ""} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
+                <Image className={"rounded-full " + (props.viewport == "Mobile" ? " mr-2 ml-2 mt-4 h-24 w-24 " : " mr-10 flex w-24 scale-125 justify-center ")} src={page.data?.image ? page.data?.image : ""} height={96} width={96} alt="Profile Picture" priority />
                 <div id="headline" className={"mb-4 mt-6 ml-4 grid grid-flow-row " + (props.viewport != "Mobile" && " h-fit gap-3 ")}>
                   <div id="user-info">
                     <div className={"flex items-center " + (props.viewport === "Mobile" ? " gap-3 " : " gap-2 ")}>

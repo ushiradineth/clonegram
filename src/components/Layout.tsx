@@ -14,6 +14,7 @@ import Create from "./Create";
 import Search from "./Search";
 import Spinner from "./Spinner";
 import { env } from "../env/client.mjs";
+import { UserType } from "../types/types";
 
 interface itemType {
   create: boolean;
@@ -36,6 +37,7 @@ interface itemType {
   setlsTheme: (params: any) => any;
   hideSideComponents: boolean;
   setHideSideComponents: (params: any) => any;
+  user: UserType;
 }
 
 const Layout = (props: itemType) => {
@@ -75,7 +77,7 @@ const Layout = (props: itemType) => {
                 <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} Text={"Messages"} ID={"Messages"} viewport={props.viewport} theme={props.theme} />
                 <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} viewport={props.viewport} theme={props.theme} />
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} Text={"Create"} ID={"Create"} viewport={props.viewport} theme={props.theme} onClickHandler={() => props.setCreate(!props.create)} active={props.create} />
-                <NavBarItem Icon={session.user?.image} Text={"Profile"} ID={"Profile"} viewport={props.viewport} onClickHandler={() => onClickHandler("/" + session?.user?.handle)} theme={props.theme} active={Boolean(router.query.profile === session.user.handle && !props.create && !props.search && !props.more)} />
+                <NavBarItem Icon={props.user?.data.image} Text={"Profile"} ID={"Profile"} viewport={props.viewport} onClickHandler={() => onClickHandler("/" + props.user.data.handle)} theme={props.theme} active={Boolean(router.query.profile === props.user.data.handle && !props.create && !props.search && !props.more)} />
               </div>
               {/* <div id="Header-Mobile-View-Items" className={"top-0-0 fixed mt-[4px] grid h-12 w-screen grid-flow-col place-items-center border-b " + props.theme.primary + (props.viewport != "Mobile" && " hidden ")}>
                 <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} viewport={props.viewport} theme={props.theme} />
@@ -85,7 +87,7 @@ const Layout = (props: itemType) => {
                 <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} ID={"M-Explore"} viewport={props.viewport} theme={props.theme} />
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} ID={"M-Create"} viewport={props.viewport} theme={props.theme} onClickHandler={() => props.setCreate(!props.create)} active={props.create} />
                 <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} ID={"M-Messages"} viewport={props.viewport} theme={props.theme} />
-                <NavBarItem Icon={session.user?.image} ID={"M-Profile"} viewport={props.viewport} onClickHandler={() => onClickHandler("/" + session?.user?.handle)} theme={props.theme} active={Boolean(router.query.profile === session.user.handle && !props.create && !props.search && !props.more)} />
+                <NavBarItem Icon={props.user?.data.image} ID={"M-Profile"} viewport={props.viewport} onClickHandler={() => onClickHandler("/" + props.user.data.handle)} theme={props.theme} active={Boolean(router.query.profile === props.user.data.handle && !props.create && !props.search && !props.more)} />
               </div>
               <div id="Sidebar-More" className={"fixed bottom-5 left-2 z-0 " + (props.viewport == "Mobile" && " hidden ")}>
                 <NavBarItem Icon={<HiOutlineMenu />} IconOnClick={<HiMenu />} Text={"More"} ID={"More"} viewport={props.viewport} theme={props.theme} onClickHandler={() => props.setMore(!props.more)} active={props.more} />

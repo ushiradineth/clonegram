@@ -9,11 +9,12 @@ interface itemType {
   theme: any;
   status: any;
   setStatus: (params: any) => any;
+  enabled?: boolean;
 }
 
 const GetUser = (props: itemType) => {
   const { data: session, status } = useSession();
-  const user = trpc.user.getUser.useQuery({ id: session?.user?.id || "" }, { enabled: status === "authenticated", retry: false, refetchOnWindowFocus: false });
+  const user = trpc.user.getUser.useQuery({ id: session?.user?.id || "" }, { enabled: status === "authenticated" && props.enabled, retry: false, refetchOnWindowFocus: false });
 
   useEffect(() => {
     if (user.isSuccess && props.user !== user) props.setUser(user);
@@ -21,8 +22,15 @@ const GetUser = (props: itemType) => {
     if (status !== props.status && status === "authenticated" && user.isSuccess) props.setStatus(status);
     if (status !== props.status && status === "unauthenticated") props.setStatus(status);
   }, [user.isSuccess, status]);
-  
-  return <Spinner theme={props.theme} />
+
+  useEffect(() => {
+    if (user.isSuccess && user.isFetched && props.user != null ? props.user.data !== user.data : false) {
+      props.setUser(user);
+    }
+  }, [user]);
+
+  props.enabled && status === "loading" && <Spinner theme={props.theme} />;
+  return <></>;
 };
 
 export default GetUser;

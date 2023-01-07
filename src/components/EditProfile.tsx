@@ -1,15 +1,15 @@
-import React, { useState, useRef, type ChangeEvent } from "react";
+import React, { useState, useRef, type ChangeEvent, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
+import NextImage from "next/image";
 import { trpc } from "../utils/trpc";
 import { env } from "../env/client.mjs";
 import Spinner from "./Spinner";
 import { useRouter } from "next/router";
-import OptionMenu from "./OptionMenu";
+import { userAgent } from "next/server";
+import { UserType } from "../types/types";
 
 interface itemType {
   viewport: string;
-  onClickNegative: (...arg: any) => unknown;
   supabase: any;
   theme: {
     type: string;
@@ -18,19 +18,20 @@ interface itemType {
     tertiary: string;
     accent: string;
   };
-  user: any;
+  user: UserType;
 }
 
 const EditProfile = (props: itemType) => {
   const { data: session } = useSession();
-  const [discard, setDiscard] = useState(false);
   const router = useRouter();
   const imageRef = useRef<HTMLInputElement | null>(null);
   const [image, setImage] = useState<File>();
+  const [imageURL, setImageURL] = useState<File>();
+  const [edited, setEdited] = useState(false);
   const updateUser = trpc.user.updateUser.useMutation({
     onSuccess: async (data) => {
-      data.handle === session?.user?.handle ? location.reload() : router.push({ pathname: data.handle, query: { user: "true" } });
-      props.onClickNegative();
+      props.user.refetch()
+      // router.push({ pathname: data.handle, query: { user: "true" } });
     },
   });
 
@@ -54,70 +55,76 @@ const EditProfile = (props: itemType) => {
     const Handle = (document.getElementById("Handle") as HTMLInputElement).value;
     const Bio = (document.getElementById("Bio") as HTMLInputElement).value;
 
-    if (Name !== props.user.name || Handle !== props.user.handle || (props.user.bio ? Bio !== props.user.bio : Bio !== "") || typeof image !== "undefined") {
-      if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} theme={props.theme} />;
-
+    if (Name !== props.user.data.name || Handle !== props.user.data.handle || (props.user.data.bio ? Bio !== props.user.data.bio : Bio !== "") || typeof image !== "undefined") {
       if (typeof image !== "undefined") {
-        const { data, error } = await props.supabase.storage.from("clonegram").upload(props.user.id, image, {
+        const { data, error } = await props.supabase.storage.from("clonegram").upload(props.user.data.id, imageURL, {
           cacheControl: "1",
           upsert: true,
         });
 
-        Image = env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + props.user?.id;
+        Image = env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + props.user?.data.id;
       }
 
-      updateUser.mutate({ id: session.user.id, name: Name, handle: Handle, bio: { text: Bio, changed: Bio !== props.user.bio }, image: Image });
+      updateUser.mutate({ id: session.user?.id || "", name: Name, handle: Handle, bio: { text: Bio, changed: Bio !== props.user.data.bio }, image: Image });
     }
   };
 
+  useEffect(() => {
+    var img = new (Image as any)();
+    img.src = image ? URL.createObjectURL(image) : props.user?.data.image;
+    img.onload = async function () {
+      var canvas = document.createElement("canvas");
+      var ctx = canvas.getContext("2d");
+      canvas.width = 240;
+      canvas.height = 240;
+      ctx?.drawImage(img, 0, 0, 240, 240);
+      const blob = await (await fetch(canvas.toDataURL("image/jpeg"))).blob();
+      const file = new File([blob], "fileName.jpg", { type: "image/jpeg" });
+      setImageURL(file);
+    };
+    img.setAttribute("crossorigin", "anonymous");
+  }, [image]);
+
   return (
-    <div className={"fixed top-0 left-0 z-30 h-screen w-screen bg-black bg-opacity-30"}>
-      {discard && <OptionMenu title="Discard post?" description="If you leave, your edits won't be saved." buttonPositive="Discard" buttonNegative="Cancel" onClickPositive={props.onClickNegative} onClickNegative={() => setDiscard(false)} theme={props.theme} />}
-      <div className={"absolute top-1/2 left-1/2 h-auto w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl " + props.theme.tertiary}>
-        <div className="grid grid-flow-row place-items-center border-b border-gray-300 font-semibold">
-          <div className="grid grid-flow-col">
-            {<Image className={"m-4 h-12 w-12 rounded-full"} src={image ? URL.createObjectURL(image) : props.user?.image} height={96} width={96} alt="Profile Picture" />}
-            <div>
-              <div className="mt-4">{props.user?.handle}</div>
-              <button className="mt-1 cursor-pointer text-sm font-semibold text-blue-400" onClick={handleUploadClick}>
+    <div className="h-auto w-[400px]">
+      <div className="grid grid-flow-col">
+        <div className="ml-6 grid w-fit grid-flow-col place-items-center"></div>
+      </div>
+      <div className="grid grid-flow-row place-items-center font-semibold">
+        <div className="my-4 mb-8 grid w-fit grid-flow-col place-items-start gap-8">
+          <div className="grid grid-flow-row place-items-end gap-3">
+            <div className="mb-4 mt-2 h-12 w-12 rounded-full">{imageURL && <NextImage className={"rounded-full"} src={URL.createObjectURL(imageURL)} height={48} width={48} alt="Profile Picture" />}</div>
+            <p>Name</p>
+            <p>Handle</p>
+            <p>Bio</p>
+          </div>
+          <div className="mt-2 grid grid-flow-row gap-2 font-semibold text-black">
+            <input type="file" accept=".png, .jpg, .jpeg" ref={imageRef} onChange={handleFileChange} style={{ display: "none" }} />
+            <div className="mb-4 h-fit w-fit">
+              <div id="user-handle" className="text-white">
+                {props.user?.data.handle}
+              </div>
+              <button className="cursor-pointer text-sm text-blue-400" onClick={handleUploadClick}>
                 Change profile picture
               </button>
             </div>
+            <input type="text" id="Name" className="border-2 pl-2" onChange={(e) => setEdited(e.target.value !== props.user.data.name)} defaultValue={props.user.data.name || ""} minLength={1} maxLength={20} />
+            <input type="text" id="Handle" className="border-2 pl-2" onChange={(e) => setEdited(e.target.value !== props.user.data.handle)} defaultValue={props.user.data.handle} minLength={1} maxLength={20} />
+            <input type="text" id="Bio" className="border-2 pl-2" onChange={(e) => setEdited(e.target.value !== props.user.data.bio)} defaultValue={props.user.data.bio || ""} maxLength={150} />
+            <button disabled={!edited} id="Submit" className={"mt-2 flex h-12 w-[50%] cursor-pointer items-center justify-center rounded-2xl disabled:cursor-not-allowed disabled:bg-zinc-400 " + (updateUser.isError && " bg-red-400 ") + (edited && "  bg-blue-400 ")} onClick={() => onSave()}>
+              {updateUser.isLoading ? (
+                <div role="status">
+                  <svg aria-hidden="true" className="mr-2 h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
+                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
+                  </svg>
+                  <span className="sr-only">Loading...</span>
+                </div>
+              ) : (
+                (updateUser.isIdle || edited) && <p>Submit</p>
+              )}
+            </button>
           </div>
-          <div className="my-4 mb-8 grid w-full grid-flow-col place-items-center">
-            <div className="grid grid-flow-row place-items-end gap-3">
-              <p>Name</p>
-              <p>Handle</p>
-              <p>Bio</p>
-            </div>
-            <div className="grid grid-flow-row gap-2 text-black">
-              <input type="file" accept=".png, .jpg, .jpeg" ref={imageRef} onChange={handleFileChange} style={{ display: "none" }} />
-              <input type="text" id="Name" className="border-2 pl-2" defaultValue={props.user.name} minLength={1} maxLength={20} />
-              <input type="text" id="Handle" className="border-2 pl-2" defaultValue={props.user.handle} minLength={1} maxLength={20} />
-              <input type="text" id="Bio" className="border-2 pl-2" defaultValue={props.user.bio} maxLength={150} />
-            </div>
-          </div>
-        </div>
-        <div
-          className="flex h-12 w-full cursor-pointer items-center justify-center border-b border-gray-300 font-semibold text-blue-400"
-          onClick={() => {
-            onSave();
-            props.onClickNegative();
-          }}
-        >
-          <p>Save</p>
-        </div>
-        <div
-          className="flex h-12 w-full cursor-pointer items-center justify-center font-semibold"
-          onClick={() => {
-            const Name = (document.getElementById("Name") as HTMLInputElement).value;
-            const Handle = (document.getElementById("Handle") as HTMLInputElement).value;
-            const Bio = (document.getElementById("Bio") as HTMLInputElement).value;
-
-            Name !== props.user.name || Handle !== props.user.handle || (props.user.bio ? Bio !== props.user.bio : Bio !== "") || typeof image !== "undefined" ? setDiscard(true) : props.onClickNegative();
-          }}
-        >
-          <p>Cancel</p>
         </div>
       </div>
     </div>
