@@ -79,9 +79,9 @@ const Layout = (props: itemType) => {
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} Text={"Create"} ID={"Create"} viewport={props.viewport} theme={props.theme} onClickHandler={() => props.setCreate(!props.create)} active={props.create} />
                 <NavBarItem Icon={props.user?.data.image} Text={"Profile"} ID={"Profile"} viewport={props.viewport} onClickHandler={() => onClickHandler("/" + props.user.data.handle)} theme={props.theme} active={Boolean(router.query.profile === props.user.data.handle && !props.create && !props.search && !props.more)} />
               </div>
-              {/* <div id="Header-Mobile-View-Items" className={"top-0-0 fixed mt-[4px] grid h-12 w-screen grid-flow-col place-items-center border-b " + props.theme.primary + (props.viewport != "Mobile" && " hidden ")}>
+              <div id="Header-Mobile-View-Items" className={"top-0-0 fixed mt-[4px] grid h-12 w-screen grid-flow-col place-items-center border-b " + props.theme.primary + (props.viewport != "Mobile" && " hidden ") + (router.pathname !== "/home" && " hidden ")}>
                 <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} viewport={props.viewport} theme={props.theme} />
-              </div> */}
+              </div>
               <div id="Footer-Mobile-View-Items" className={"fixed bottom-0 mt-[4px] grid h-12 w-screen grid-flow-col place-items-center border-t " + props.theme.primary + (props.viewport != "Mobile" && " hidden ")}>
                 <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} ID={"M-Home"} viewport={props.viewport} onClickHandler={() => onClickHandler("/home")} active={Boolean(router.pathname == "/home" && !props.create && !props.search && !props.more)} theme={props.theme} />
                 <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} ID={"M-Explore"} viewport={props.viewport} theme={props.theme} />
@@ -93,13 +93,13 @@ const Layout = (props: itemType) => {
                 <NavBarItem Icon={<HiOutlineMenu />} IconOnClick={<HiMenu />} Text={"More"} ID={"More"} viewport={props.viewport} theme={props.theme} onClickHandler={() => props.setMore(!props.more)} active={props.more} />
                 {props.more && (
                   <div id="Sidebar-More-Items" className={"fixed bottom-16 left-6 z-10 w-fit rounded-lg py-1 text-sm " + (props.theme.type === "dark" ? " shadow-[0px_0px_10px_rgba(255,255,255,0.2)] " : " shadow-[0px_0px_10px_rgba(0,0,0,0.2)] ") + props.theme.secondary}>
-                    <MoreItem Icon={<IoMdSettings />} Text="Settings" theme={props.theme} />
-                    <MoreItem Icon={<RxBookmark />} Text="Saved" theme={props.theme} />
-                    <MoreItem Icon={<RxTimer />} Text="Your Activity" theme={props.theme} />
-                    <MoreItem Icon={<HiOutlineMoon />} Text="Switch Appearence" theme={props.theme} onClickHandler={switchLayout} />
-                    <MoreItem Icon={<BiMessageAltError />} Text="Report a problem" theme={props.theme} />
-                    <MoreItem Icon={<AiOutlineUserSwitch />} Text="Switch accounts" theme={props.theme} />
-                    <MoreItem Icon={<MdLogout />} Text="Log out" onClickHandler={signout} theme={props.theme} last={true} />
+                    <MoreItem Icon={<IoMdSettings />} Text="Settings" theme={props.theme} setMore={props.setMore} onClickHandler={() => router.push("/settings")} />
+                    <MoreItem Icon={<RxBookmark />} Text="Saved" theme={props.theme} setMore={props.setMore} onClickHandler={() => {}} />
+                    <MoreItem Icon={<RxTimer />} Text="Your Activity" theme={props.theme} setMore={props.setMore} onClickHandler={() => {}} />
+                    <MoreItem Icon={<HiOutlineMoon />} Text="Switch Appearence" theme={props.theme} setMore={props.setMore} onClickHandler={switchLayout} />
+                    <MoreItem Icon={<BiMessageAltError />} Text="Report a problem" theme={props.theme} setMore={props.setMore} onClickHandler={() => {}} />
+                    <MoreItem Icon={<AiOutlineUserSwitch />} Text="Switch accounts" theme={props.theme} setMore={props.setMore} onClickHandler={() => {}} />
+                    <MoreItem Icon={<MdLogout />} Text="Log out" theme={props.theme} setMore={props.setMore} last={true} onClickHandler={signout} />
                   </div>
                 )}
               </div>
