@@ -85,7 +85,7 @@ const EditProfile = (props: itemType) => {
   }, [image]);
 
   return (
-    <div className="h-auto w-[400px]">
+    <div className="h-auto w-[350px] m-2">
       <div className="grid grid-flow-col">
         <div className="ml-6 grid w-fit grid-flow-col place-items-center"></div>
       </div>

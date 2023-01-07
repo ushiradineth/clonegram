@@ -49,7 +49,7 @@ const BlockedUsers = (props: itemType) => {
 
   return (
     <div className="select-none">
-      <div className={"w-[400px] rounded-2xl " + props.theme.tertiary}>
+      <div className="w-[350px] m-2 rounded-2xl">
         <>
           {props.user.data.blocking.length > 0 ? (
             props.user.data.blocking.map((user, index) => {
@@ -80,7 +80,7 @@ const BlockedUsers = (props: itemType) => {
               );
             })
           ) : (
-            <div className={"flex flex-col items-center justify-center rounded-2xl p-8 " + props.theme.tertiary}>
+            <div className="flex flex-col items-center justify-center rounded-2xl">
               <div className="flex flex-col items-center justify-center p-4">
                 <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
                   <BiUserX className="scale-x-[-6] scale-y-[6] transform" />
