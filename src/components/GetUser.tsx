@@ -29,7 +29,7 @@ const GetUser = (props: itemType) => {
     }
   }, [user]);
 
-  props.enabled && status === "loading" && <Spinner theme={props.theme} />;
+  if (status === "loading" || props.status === "loading" || user.isLoading ) return <Spinner theme={props.theme} />;
   return <></>;
 };
 
