@@ -1,4 +1,6 @@
+import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
+import { env } from "../../../env/client.mjs";
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 
 export const userRouter = router({
@@ -20,7 +22,7 @@ export const userRouter = router({
         followers: true,
         following: true,
         blockedby: true,
-        blocking: true
+        blocking: true,
       },
     });
   }),
@@ -35,7 +37,7 @@ export const userRouter = router({
         followers: true,
         following: true,
         blockedby: true,
-        blocking: true
+        blocking: true,
       },
     });
   }),
@@ -76,7 +78,10 @@ export const userRouter = router({
     });
   }),
 
-  deleteUser: protectedProcedure.input(z.object({ id: z.string() })).query(({ input, ctx }) => {
+  deleteUser: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
+    const supabase = createClient("https://" + env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY);
+    const { data, error } = await supabase.storage.from("clonegram").remove([`Users/${input.id}`]);
+
     return ctx.prisma.user.delete({
       where: {
         id: input.id,
