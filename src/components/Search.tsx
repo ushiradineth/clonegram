@@ -78,7 +78,6 @@ const Search = (props: itemType) => {
     });
 
     localStorage.setItem("clonegram.recentSearch", JSON.stringify(tempRecentSearches));
-
     setRecentSearches(tempRecentSearches);
   };
 
@@ -115,15 +114,14 @@ const Search = (props: itemType) => {
           {recentSearches.length > 0 ? (
             recentSearches.map((user, index) => {
               return (
-                <div key={index} className={"flex h-12 w-full items-center justify-center p-10"}>
+                <a href={user.userHandle} onClick={(e) => e.preventDefault()} key={index} className={"mt-6 flex h-12 w-fit items-center justify-center"}>
                   <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
                   <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => onClickProfile(user)}>
                     <div>{user.userHandle}</div>
                     <div>{user.userName}</div>
                   </div>
-
                   <AiOutlineClose className={"scale-150 cursor-pointer " + (props.theme.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")} onClick={() => removeRecentSearch(user)} />
-                </div>
+                </a>
               );
             })
           ) : (
@@ -140,20 +138,20 @@ const Search = (props: itemType) => {
       </div>
     );
   };
-  
+
   const SearchResults = () => {
     return (
-      <div>
+      <div className="flex flex-col items-start">
         {users.length > 0 ? (
           users.map((user, index) => {
             return (
-              <div key={index} className={"flex h-12 w-full items-center justify-center p-10"}>
+              <a href={user.userHandle} onClick={(e) => e.preventDefault()} key={index} className={"mt-6 ml-10 flex h-12 w-fit items-center justify-center"}>
                 <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
                 <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => onClickProfile(user)}>
                   <div>{user.userHandle}</div>
                   <div>{user.userName}</div>
                 </div>
-              </div>
+              </a>
             );
           })
         ) : (
@@ -178,7 +176,7 @@ const Search = (props: itemType) => {
             <div className="grid w-full items-center border-b-[1px] font-semibold">
               <p className="mt-4 ml-4 text-xl">Search</p>
               <div className={"my-4 ml-4 flex h-[35px] w-[90%] items-center justify-center gap-2 rounded-lg " + props.theme.tertiary}>
-                <input type="text" id="search" className={"h-full w-[86%] placeholder:text-gray-500 focus:outline-none " + props.theme.tertiary} placeholder="Search" maxLength={50}></input>
+                <input autoComplete="off" type="text" id="search" className={"h-full w-[86%] placeholder:text-gray-500 focus:outline-none " + props.theme.tertiary} placeholder="Search" maxLength={50}></input>
                 <AiFillCloseCircle
                   color="gray"
                   onClick={() => {

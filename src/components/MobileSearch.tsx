@@ -113,15 +113,14 @@ const MobileSearch = (props: itemType) => {
           {recentSearches.length > 0 ? (
             recentSearches.map((user, index) => {
               return (
-                <div key={index} className={"flex h-12 w-full items-center justify-center p-10"}>
+                <a href={user.userHandle} onClick={(e) => e.preventDefault()} key={index} className={" flex h-12 w-full p-10 items-center justify-center"}>
                   <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
                   <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => onClickProfile(user)}>
                     <div>{user.userHandle}</div>
                     <div>{user.userName}</div>
                   </div>
-
                   <AiOutlineClose className={"scale-150 cursor-pointer " + (props.theme.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")} onClick={() => removeRecentSearch(user)} />
-                </div>
+                </a>
               );
             })
           ) : (
@@ -143,13 +142,13 @@ const MobileSearch = (props: itemType) => {
         {users.length > 0 ? (
           users.map((user, index) => {
             return (
-              <div key={index} className={"flex h-12 w-full items-center justify-center p-10"}>
+              <a href={user.userHandle} onClick={(e) => e.preventDefault()} key={index} className={" flex h-12 w-full items-center justify-center p-10"}>
                 <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
                 <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => onClickProfile(user)}>
                   <div>{user.userHandle}</div>
                   <div>{user.userName}</div>
                 </div>
-              </div>
+              </a>
             );
           })
         ) : (

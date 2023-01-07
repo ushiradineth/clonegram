@@ -108,7 +108,7 @@ const ListOfUsers = (props: itemType) => {
               }, [user]);
 
               return (
-                <div key={index} className={"flex h-12 w-full items-center justify-center p-10 " + (index !== props.users.length - 1 && " border-b ")}>
+                <a href={user.UserHandle} onClick={(e) => e.preventDefault()} key={index} className={"flex h-12 w-full items-center justify-center p-10 " + (index !== props.users.length - 1 && " border-b ")}>
                   <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => router.push({ pathname: "/" + user.UserHandle })} src={user.UserImage} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
                   <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => router.push({ pathname: "/" + user.UserHandle })}>
                     <div>{user.UserHandle}</div>
@@ -117,7 +117,7 @@ const ListOfUsers = (props: itemType) => {
                   <button id={user.UserHandle} disabled={user.UserRemoved} className={"rounded-[4px] border py-1 px-2 text-xs font-semibold " + (user.UserRemoved ? " cursor-not-allowed bg-gray-300 text-gray-500 " : " cursor-pointer ")} onClick={() => !user.UserRemoved && (user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? removeFunc(user, setText) : user.UserFollowing ? unfollowFunc(user, setText) : followFunc(user, setText)) : router.push({ pathname: "/" + user.UserHandle }))}>
                     {user.UserRemoved ? "Removed" : text}
                   </button>
-                </div>
+                </a>
               );
             })
           ) : (

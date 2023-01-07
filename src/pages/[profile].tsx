@@ -56,6 +56,7 @@ const Profile = (props: itemType) => {
   const follow = trpc.user.follow.useMutation({
     onSuccess: () => {
       page.refetch();
+      props.user.refetch();
       setIsFollowing(true);
     },
   });
@@ -63,6 +64,7 @@ const Profile = (props: itemType) => {
   const unfollow = trpc.user.unfollow.useMutation({
     onSuccess: () => {
       page.refetch();
+      props.user.refetch();
       setIsFollowing(false);
     },
   });
@@ -119,9 +121,9 @@ const Profile = (props: itemType) => {
     return <Spinner theme={props.theme} viewport={props.viewport} />;
   }
 
-  if (status === "unauthenticated" ? page.isError : session?.user?.handle === String(profile) ? page.isError : page.data?.handle === String(profile) ? false : page.data?.handle !== String(profile)) return <Error error="User does not exist" session={Boolean(session)} theme={props.theme} viewport={props.viewport} />
-  if (isBlocking) return  <Error error="You have blocked this user" session={Boolean(session)} theme={props.theme} viewport={props.viewport} />
-  if (isBlockedBy) return <Error error="This user has blocked you" session={Boolean(session)} theme={props.theme} viewport={props.viewport} />
+  if (status === "unauthenticated" ? page.isError : session?.user?.handle === String(profile) ? page.isError : page.data?.handle === String(profile) ? false : page.data?.handle !== String(profile)) return <Error error="User does not exist" session={Boolean(session)} theme={props.theme} viewport={props.viewport} />;
+  if (isBlocking) return <Error error="You have blocked this user" session={Boolean(session)} theme={props.theme} viewport={props.viewport} />;
+  if (isBlockedBy) return <Error error="This user has blocked you" session={Boolean(session)} theme={props.theme} viewport={props.viewport} />;
 
   if (!isBlockedBy && !isBlocking)
     return (
