@@ -44,7 +44,7 @@ const EditProfile = (props: itemType) => {
     if (!e.target.files) {
       return;
     }
-
+    setEdited(true)
     setImage(e.target.files[0]);
   };
 
@@ -56,12 +56,12 @@ const EditProfile = (props: itemType) => {
 
     if (Name !== props.user.data.name || Handle !== props.user.data.handle || (props.user.data.bio ? Bio !== props.user.data.bio : Bio !== "") || typeof image !== "undefined") {
       if (typeof image !== "undefined") {
-        const { data, error } = await props.supabase.storage.from("clonegram").upload(props.user.data.id, imageURL, {
+        const { data, error } = await props.supabase.storage.from("clonegram").upload(`/Users/${props.user.data.id}/ProfilePicture`, imageURL, {
           cacheControl: "1",
           upsert: true,
         });
 
-        Image = env.NEXT_PUBLIC_SUPABASE_IMAGE_URL + props.user?.data.id;
+        Image = `${env.NEXT_PUBLIC_SUPABASE_IMAGE_URL}Users/${props.user.data.id}/ProfilePicture`;
       }
 
       updateUser.mutate({ id: session.user?.id || "", name: Name, handle: Handle, bio: { text: Bio, changed: Bio !== props.user.data.bio }, image: Image });
@@ -85,7 +85,7 @@ const EditProfile = (props: itemType) => {
   }, [image]);
 
   return (
-    <div className="h-auto w-[350px] m-2">
+    <div>
       <div className="grid grid-flow-col">
         <div className="ml-6 grid w-fit grid-flow-col place-items-center"></div>
       </div>
