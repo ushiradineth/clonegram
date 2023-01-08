@@ -1,13 +1,6 @@
 interface itemType {
   Text: string;
   ID: string;
-  theme: {
-    type: string;
-    primary: string;
-    secondary: string;
-    tertiary: string;
-    accent: string;
-  };
   active?: string;
   setActive: any;
 }

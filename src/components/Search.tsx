@@ -1,5 +1,4 @@
-import router from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { AiFillCloseCircle, AiOutlineClose } from "react-icons/ai";
 import { BiUserPlus } from "react-icons/bi";
 import Image from "next/image";
@@ -7,18 +6,11 @@ import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
 import { useSession } from "next-auth/react";
 import Spinner from "./Spinner";
+import { DataContext } from "../pages/_app";
 
 interface itemType {
   search: boolean;
   setSearch: (params: any) => any;
-  viewport: string;
-  theme: {
-    type: string;
-    primary: string;
-    secondary: string;
-    tertiary: string;
-    accent: string;
-  };
 }
 
 const Search = (props: itemType) => {
@@ -28,6 +20,7 @@ const Search = (props: itemType) => {
   const [users, setUsers] = useState<{ userID: string; userName: string; userImage: string; userHandle: string }[]>([]);
   const router = useRouter();
   const { data: session } = useSession();
+  const data = useContext(DataContext);
 
   const usersList = trpc.user.getUsersSearch.useMutation({
     onSuccess: (data) => {
@@ -115,17 +108,17 @@ const Search = (props: itemType) => {
             recentSearches.map((user, index) => {
               return (
                 <a href={user.userHandle} onClick={(e) => e.preventDefault()} key={index} className={"mt-6 flex h-12 w-fit items-center justify-center"}>
-                  <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
+                  <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
                   <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => onClickProfile(user)}>
                     <div>{user.userHandle}</div>
                     <div>{user.userName}</div>
                   </div>
-                  <AiOutlineClose className={"scale-150 cursor-pointer " + (props.theme.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")} onClick={() => removeRecentSearch(user)} />
+                  <AiOutlineClose className={"scale-150 cursor-pointer " + (data?.theme?.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")} onClick={() => removeRecentSearch(user)} />
                 </a>
               );
             })
           ) : (
-            <div className={"flex flex-col items-center justify-center rounded-2xl p-8 " + props.theme.secondary}>
+            <div className={"flex flex-col items-center justify-center rounded-2xl p-8 " + data?.theme?.secondary}>
               <div className="flex flex-col items-center justify-center p-4">
                 <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
                   <BiUserPlus className="scale-x-[-6] scale-y-[6] transform" />
@@ -146,7 +139,7 @@ const Search = (props: itemType) => {
           users.map((user, index) => {
             return (
               <a href={user.userHandle} onClick={(e) => e.preventDefault()} key={index} className={"mt-6 ml-10 flex h-12 w-fit items-center justify-center"}>
-                <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
+                <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
                 <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => onClickProfile(user)}>
                   <div>{user.userHandle}</div>
                   <div>{user.userName}</div>
@@ -155,7 +148,7 @@ const Search = (props: itemType) => {
             );
           })
         ) : (
-          <div className={"flex flex-col items-center justify-center rounded-2xl p-8 " + props.theme.secondary}>
+          <div className={"flex flex-col items-center justify-center rounded-2xl p-8 " + data?.theme?.secondary}>
             <div className="flex flex-col items-center justify-center p-4">
               <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
                 <BiUserPlus className="scale-x-[-6] scale-y-[6] transform" />
@@ -170,13 +163,13 @@ const Search = (props: itemType) => {
 
   return (
     <>
-      <div className={"fixed top-0 left-16 z-30 h-screen rounded-r-xl transition-all duration-1000 " + (props.theme.type === "dark" ? " shadow-[5px_0px_50px_rgba(255,255,255,0.1)] " : " shadow-[25px_0px_50px_rgba(0,0,0,0.2)] ") + (props.search ? " z-10 w-[350px] border-l-2 " : " z-0 w-0 ") + (props.viewport == "Mobile" && " hidden ") + props.theme.secondary}>
-        <div className={"rounded-r-xl transition-all " + (props.search ? " opacity-100 " : " opacity-0 ") + props.theme.secondary}>
+      <div className={"fixed top-0 left-16 z-30 h-screen rounded-r-xl transition-all duration-1000 " + (data?.theme?.type === "dark" ? " shadow-[5px_0px_50px_rgba(255,255,255,0.1)] " : " shadow-[25px_0px_50px_rgba(0,0,0,0.2)] ") + (props.search ? " z-10 w-[350px] border-l-2 " : " z-0 w-0 ") + (data?.viewport == "Mobile" && " hidden ") + data?.theme?.secondary}>
+        <div className={"rounded-r-xl transition-all " + (props.search ? " opacity-100 " : " opacity-0 ") + data?.theme?.secondary}>
           <div className={"h-screen transition-all duration-200"}>
             <div className="grid w-full items-center border-b-[1px] font-semibold">
               <p className="mt-4 ml-4 text-xl">Search</p>
-              <div className={"my-4 ml-4 flex h-[35px] w-[90%] items-center justify-center gap-2 rounded-lg " + props.theme.tertiary}>
-                <input autoComplete="off" type="text" id="search" className={"h-full w-[86%] placeholder:text-gray-500 focus:outline-none " + props.theme.tertiary} placeholder="Search" maxLength={50}></input>
+              <div className={"my-4 ml-4 flex h-[35px] w-[90%] items-center justify-center gap-2 rounded-lg " + data?.theme?.tertiary}>
+                <input autoComplete="off" type="text" id="search" className={"h-full w-[86%] placeholder:text-gray-500 focus:outline-none " + data?.theme?.tertiary} placeholder="Search" maxLength={50}></input>
                 <AiFillCloseCircle
                   color="gray"
                   onClick={() => {
@@ -187,7 +180,7 @@ const Search = (props: itemType) => {
                 />
               </div>
             </div>
-            {usersList.isLoading && <Spinner theme={props.theme} removeBackground={true} />}
+            {usersList.isLoading && <Spinner removeBackground={true} />}
             {isEmpty ? <RecentSearches /> : <SearchResults />}
           </div>
         </div>

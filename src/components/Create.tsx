@@ -5,18 +5,12 @@ import { TbRectangle, TbRectangleVertical } from "react-icons/tb";
 import { FiSquare } from "react-icons/fi";
 import OptionMenu from "./OptionMenu";
 import Image from "next/image";
+import { DataContext } from "../pages/_app";
+import { useContext } from "react";
 
 interface itemType {
   create: boolean;
   setCreate: (params: unknown) => unknown;
-  supabase: unknown;
-  theme: {
-    type: string;
-    primary: string;
-    secondary: string;
-    tertiary: string;
-    accent: string;
-  };
 }
 
 const Create = (props: itemType) => {
@@ -26,11 +20,12 @@ const Create = (props: itemType) => {
   const [discard, setDiscard] = useState(false);
   const [ratioMenu, setRatioMenu] = useState(false);
   const [ratio, setRatio] = useState("16/9");
+  const data = useContext(DataContext);
 
   const SelectImage = () => {
     return (
       <div className="fixed top-0 left-0 z-20 h-screen w-screen bg-black bg-opacity-30">
-        <div className={"absolute top-1/2 left-1/2 h-[500px] w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl transition-all duration-700 md:h-[500px] md:w-[500px] lg:h-[700px] lg:w-[700px] " + props.theme.tertiary}>
+        <div className={"absolute top-1/2 left-1/2 h-[500px] w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl transition-all duration-700 md:h-[500px] md:w-[500px] lg:h-[700px] lg:w-[700px] " + data?.theme?.tertiary}>
           <div className="flex h-12 w-full items-center justify-center border-b-[1px] border-black font-semibold">Create new post</div>
           <div className="flex h-[93.7%] items-center justify-center">
             <div className="grid place-items-center gap-4">
@@ -59,7 +54,7 @@ const Create = (props: itemType) => {
 
   const Crop = () => {
     return (
-      <div className={"absolute top-1/2 left-1/2 z-10 h-[500px] w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl transition-all duration-700 md:h-[500px] md:w-[500px] lg:h-[700px] lg:w-[700px] " + props.theme.tertiary}>
+      <div className={"absolute top-1/2 left-1/2 z-10 h-[500px] w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl transition-all duration-700 md:h-[500px] md:w-[500px] lg:h-[700px] lg:w-[700px] " + data?.theme?.tertiary}>
         <div className="flex h-12 w-full items-center justify-center font-semibold">
           <div className="grid w-full grid-flow-col grid-cols-3 border-b-[2px] py-2">
             <div className="flex cursor-pointer items-center" onClick={() => setDiscard(true)}>
@@ -144,11 +139,10 @@ const Create = (props: itemType) => {
             onClickNegative={() => {
               setDiscard(false);
             }}
-            theme={props.theme}
           />
         )}
         <AiOutlineClose
-          className={"fixed top-8 right-8 z-50 scale-150 cursor-pointer " + (props.theme.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")}
+          className={"fixed top-8 right-8 z-50 scale-150 cursor-pointer " + (data?.theme?.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")}
           onClick={() => {
             setDiscard(true);
             setFileList(null);

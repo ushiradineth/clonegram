@@ -1,40 +1,29 @@
-import React, { useState, useRef, type ChangeEvent, useEffect } from "react";
+import React, { useState, useRef, type ChangeEvent, useEffect, useContext } from "react";
 import { useSession } from "next-auth/react";
 import NextImage from "next/image";
 import { trpc } from "../utils/trpc";
 import { env } from "../env/client.mjs";
 import Spinner from "./Spinner";
 import { useRouter } from "next/router";
-import { UserType } from "../types/types";
+import { DataContext } from "../pages/_app";
 
-interface itemType {
-  viewport: string;
-  supabase: any;
-  theme: {
-    type: string;
-    primary: string;
-    secondary: string;
-    tertiary: string;
-    accent: string;
-  };
-  user: UserType;
-}
-
-const EditProfile = (props: itemType) => {
+const EditProfile = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const imageRef = useRef<HTMLInputElement | null>(null);
   const [image, setImage] = useState<File>();
   const [imageURL, setImageURL] = useState<File>();
   const [edited, setEdited] = useState(false);
+  const data = useContext(DataContext);
+
   const updateUser = trpc.user.updateUser.useMutation({
-    onSuccess: async (data) => {
-      props.user.refetch();
-      router.push({ pathname: data.handle, query: { user: "true" } });
+    onSuccess: async (result) => {
+      data?.user?.refetch();
+      router.push({ pathname: result.handle, query: { user: "true" } });
     },
   });
 
-  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} theme={props.theme} />;
+  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
 
   const handleUploadClick = () => {
     imageRef.current?.click();
@@ -44,33 +33,33 @@ const EditProfile = (props: itemType) => {
     if (!e.target.files) {
       return;
     }
-    setEdited(true)
+    setEdited(true);
     setImage(e.target.files[0]);
   };
 
   const onSave = async () => {
-    let Image;
     const Name = (document.getElementById("Name") as HTMLInputElement).value;
     const Handle = (document.getElementById("Handle") as HTMLInputElement).value;
     const Bio = (document.getElementById("Bio") as HTMLInputElement).value;
+    let Image;
 
-    if (Name !== props.user.data.name || Handle !== props.user.data.handle || (props.user.data.bio ? Bio !== props.user.data.bio : Bio !== "") || typeof image !== "undefined") {
+    if (Name !== data?.user?.data.name || Handle !== data?.user?.data.handle || (data?.user?.data.bio ? Bio !== data?.user?.data.bio : Bio !== "") || typeof image !== "undefined") {
       if (typeof image !== "undefined") {
-        const { data, error } = await props.supabase.storage.from("clonegram").upload(`/Users/${props.user.data.id}/ProfilePicture`, imageURL, {
+        const upload = await data?.supabase.storage.from("clonegram").upload(`/Users/${data?.user?.data.id}/ProfilePicture`, imageURL, {
           cacheControl: "1",
           upsert: true,
         });
 
-        Image = `${env.NEXT_PUBLIC_SUPABASE_IMAGE_URL}Users/${props.user.data.id}/ProfilePicture`;
+        Image = `${env.NEXT_PUBLIC_SUPABASE_IMAGE_URL}Users/${data?.user?.data.id}/ProfilePicture`;
       }
 
-      updateUser.mutate({ id: session.user?.id || "", name: Name, handle: Handle, bio: { text: Bio, changed: Bio !== props.user.data.bio }, image: Image });
+      updateUser.mutate({ id: session.user?.id || "", name: Name, handle: Handle, bio: { text: Bio, changed: Bio !== data?.user?.data.bio }, image: Image });
     }
   };
 
   useEffect(() => {
     var img = new (Image as any)();
-    img.src = image ? URL.createObjectURL(image) : props.user?.data.image;
+    img.src = image ? URL.createObjectURL(image) : data?.user?.data.image;
     img.onload = async function () {
       var canvas = document.createElement("canvas");
       var ctx = canvas.getContext("2d");
@@ -101,15 +90,15 @@ const EditProfile = (props: itemType) => {
             <input type="file" accept=".png, .jpg, .jpeg" ref={imageRef} onChange={handleFileChange} style={{ display: "none" }} />
             <div className="mb-4 h-fit w-fit">
               <div id="user-handle" className="text-white">
-                {props.user?.data.handle}
+                {data?.user?.data.handle}
               </div>
               <button className="cursor-pointer text-sm text-blue-400" onClick={handleUploadClick}>
                 Change profile picture
               </button>
             </div>
-            <input type="text" id="Name" className="border-2 pl-2" onChange={(e) => setEdited(e.target.value !== props.user.data.name)} defaultValue={props.user.data.name || ""} minLength={1} maxLength={20} />
-            <input type="text" id="Handle" className="border-2 pl-2" onChange={(e) => setEdited(e.target.value !== props.user.data.handle)} defaultValue={props.user.data.handle} minLength={1} maxLength={20} />
-            <input type="text" id="Bio" className="border-2 pl-2" onChange={(e) => setEdited(e.target.value !== props.user.data.bio)} defaultValue={props.user.data.bio || ""} maxLength={150} />
+            <input type="text" id="Name" className="border-2 pl-2" onChange={(e) => setEdited(e.target.value !== data?.user?.data.name)} defaultValue={data?.user?.data.name || ""} minLength={1} maxLength={20} />
+            <input type="text" id="Handle" className="border-2 pl-2" onChange={(e) => setEdited(e.target.value !== data?.user?.data.handle)} defaultValue={data?.user?.data.handle} minLength={1} maxLength={20} />
+            <input type="text" id="Bio" className="border-2 pl-2" onChange={(e) => setEdited(e.target.value !== data?.user?.data.bio)} defaultValue={data?.user?.data.bio || ""} maxLength={150} />
             <button disabled={!edited} id="Submit" className={"mt-2 flex h-12 w-[50%] cursor-pointer items-center justify-center rounded-2xl disabled:cursor-not-allowed disabled:bg-zinc-400 " + (updateUser.isError && " bg-red-400 ") + (edited && "  bg-blue-400 ")} onClick={() => onSave()}>
               {updateUser.isLoading ? (
                 <svg aria-hidden="true" className="h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">

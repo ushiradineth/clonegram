@@ -1,21 +1,16 @@
 import Head from "next/head";
 import { useSession } from "next-auth/react";
+import { DataContext } from "../pages/_app";
+import { useContext } from "react";
 
 interface itemType {
   removeBackground?: boolean;
-  viewport?: string;
-  theme: {
-    type: string;
-    primary: string;
-    secondary: string;
-    tertiary: string;
-    accent: string;
-  };
 }
 
 const Spinner = (props: itemType) => {
   const { data: session } = useSession();
-  
+  const data = useContext(DataContext);
+
   return (
     <>
       <Head>
@@ -23,7 +18,7 @@ const Spinner = (props: itemType) => {
         <meta name="description" content="Clonegram by Ushira Dineth" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={"flex min-h-screen flex-col items-center justify-center " + (!props.removeBackground && props.theme.secondary) + (props.viewport == "Web" && session && " ml-72 ") + (props.viewport == "Tab" && session && " ml-16 ")}>
+      <main className={"flex min-h-screen flex-col items-center justify-center " + (!props.removeBackground && data?.theme?.secondary) + (data?.viewport == "Web" && session && " ml-72 ") + (data?.viewport == "Tab" && session && " ml-16 ")}>
         <div className="container flex flex-col items-center justify-center gap-6 px-4 py-16">
           <div className="flex flex-col items-center">
             <div role="status">

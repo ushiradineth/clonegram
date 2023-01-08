@@ -1,63 +1,52 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { trpc } from "../utils/trpc";
 import Spinner from "./Spinner";
 import { useRouter } from "next/router";
-import { UserType } from "../types/types";
 import { BiUserX } from "react-icons/bi";
+import { DataContext } from "../pages/_app";
 
-interface itemType {
-  viewport: string;
-  supabase: any;
-  theme: {
-    type: string;
-    primary: string;
-    secondary: string;
-    tertiary: string;
-    accent: string;
-  };
-  user: UserType;
-}
-
-const BlockedUsers = (props: itemType) => {
+const BlockedUsers = () => {
   const { data: session } = useSession();
   const router = useRouter();
+  const data = useContext(DataContext);
 
   const block = trpc.user.block.useMutation({
-    onSuccess: () => props.user.refetch(),
+    onSuccess: () => data?.user?.refetch(),
   });
+
   const unblock = trpc.user.unblock.useMutation({
-    onSuccess: () => props.user.refetch(),
+    onSuccess: () => data?.user?.refetch(),
   });
 
   const blockFunc = (page: any, setBlocking: (arg0: any) => any) => {
-    if (props.user.data.id && page.id) {
-      block.mutate({ userid: props.user.data.id, pageid: page.id });
+    if (data?.user?.data.id && page.id) {
+      block.mutate({ userid: data?.user?.data.id, pageid: page.id });
       setBlocking(true);
     }
   };
 
   const unblockFunc = (page: any, setBlocking: (arg0: any) => any) => {
-    if (props.user.data.id && page.id) {
-      unblock.mutate({ userid: props.user.data.id, pageid: page.id });
+    if (data?.user?.data.id && page.id) {
+      unblock.mutate({ userid: data?.user?.data.id, pageid: page.id });
       setBlocking(false);
     }
   };
 
-  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner viewport={props.viewport} theme={props.theme} />;
+  if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
 
   return (
     <>
-      {props.user.data.blocking.length > 0 ? (
-        props.user.data.blocking.map((user, index) => {
+      {data?.user?.data.blocking.length || 0 > 0 ? (
+        data?.user?.data.blocking.map((user, index) => {
           const [blocking, setBlocking] = useState(true);
 
           useEffect(() => {}, [user]);
 
           return (
-            <div key={index} className={"flex h-12 w-full items-center justify-center p-10 " + (index !== props.user.data.blocking.length - 1 && " border-b ")}>
-              <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => router.push({ pathname: "/" + user.handle })} src={user.image || ""} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
+            <div key={index} className={"flex h-12 w-full items-center justify-center p-10 " + (index !== data?.user?.data.blocking.length || (0 - 1 && " border-b "))}>
+              <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => router.push({ pathname: "/" + user.handle })} src={user.image || ""} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
               <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => router.push({ pathname: "/" + user.handle })}>
                 <div>{user.handle}</div>
                 <div>{user.name}</div>

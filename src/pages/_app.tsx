@@ -3,13 +3,15 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import "../styles/globals.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import Layout from "../components/Layout";
 import { createClient } from "@supabase/supabase-js";
 import { env } from "../env/client.mjs";
 import themeObject from "../components/Theme";
 import GetUser from "../components/GetUser";
-import { UserType } from "../types/types";
+import { MemoType } from "../types/types";
+
+export const DataContext = createContext<MemoType | undefined | null>(null);
 
 const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   const [viewport, setViewport] = useState("");
@@ -82,14 +84,25 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
     setlsTheme(localStorage.getItem("theme") || window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   }, []);
 
+  const value = React.useMemo(() => {
+    return {
+      user,
+      theme,
+      viewport,
+      supabase
+    };
+  }, [user, theme, viewport, supabase]);
+
   return (
     <SessionProvider session={session}>
       <>
         {status === "authenticated" || status === "unauthenticated" ? (
           <>
             <GetUser user={user} setUser={setUser} theme={theme} status={status} setStatus={setStatus} enabled={false} />
-            <Layout create={create} setCreate={setCreate} viewport={viewport} search={search} setSearch={setSearch} more={more} setMore={setMore} supabase={supabase} theme={theme} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} hideSideComponents={hideSideComponents} setHideSideComponents={setHideSideComponents} user={user as unknown as UserType} />
-            <Component {...pageProps} viewport={viewport} supabase={supabase} theme={theme} user={user} setUser={setUser} />
+            <DataContext.Provider value={value}>
+              <Layout create={create} setCreate={setCreate} search={search} setSearch={setSearch} more={more} setMore={setMore} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} hideSideComponents={hideSideComponents} setHideSideComponents={setHideSideComponents} />
+              <Component {...pageProps} />
+            </DataContext.Provider>
           </>
         ) : (
           <GetUser user={user} setUser={setUser} theme={theme} status={status} setStatus={setStatus} enabled={true} />

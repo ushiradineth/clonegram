@@ -5,29 +5,17 @@ import Spinner from "../components/Spinner";
 import { env } from "../env/client.mjs";
 import { AiFillGithub, AiFillGoogleCircle, AiOutlineTwitter } from "react-icons/ai";
 
-interface itemType {
-  viewport: string;
-  supabase: unknown;
-  theme: {
-    type: string;
-    primary: string;
-    secondary: string;
-    tertiary: string;
-    accent: string;
-  };
-}
-
-const Index = (props: itemType) => {
+const Index = () => {
   const { status } = useSession();
   const router = useRouter();
 
   if (status == "loading") {
-    return <Spinner theme={props.theme} />;
+    return <Spinner />;
   }
 
   if (status == "authenticated") {
     router.push("/home");
-    return <div className={"h-screen w-screen " + props.theme.secondary}></div>;
+    return <div className="h-screen w-screen bg-zinc-700"></div>;
   }
 
   return (
@@ -51,15 +39,15 @@ const Index = (props: itemType) => {
               <h1>Hosted on Vercel</h1>
             </div>
             <div>
-              <div className="flex flex-col items-center justify-center gap-4 text-base w-[423px]">
-                <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20 flex items-center justify-center gap-2" onClick={() => signIn("google", { callbackUrl: env.NEXT_PUBLIC_NEXTAUTH_URL })}>
-                <AiFillGoogleCircle size={30} /> Sign in with Google (waiting for approval)
+              <div className="flex w-[423px] flex-col items-center justify-center gap-4 text-base">
+                <button className="flex items-center justify-center gap-2 rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("google", { callbackUrl: env.NEXT_PUBLIC_NEXTAUTH_URL })}>
+                  <AiFillGoogleCircle size={30} /> Sign in with Google (waiting for approval)
                 </button>
-                <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20 flex items-center justify-center gap-2" onClick={() => signIn("twitter", { callbackUrl: env.NEXT_PUBLIC_NEXTAUTH_URL })}>
-                <AiOutlineTwitter size={30} /> Sign in with Twitter (waiting for approval)
+                <button className="flex items-center justify-center gap-2 rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("twitter", { callbackUrl: env.NEXT_PUBLIC_NEXTAUTH_URL })}>
+                  <AiOutlineTwitter size={30} /> Sign in with Twitter (waiting for approval)
                 </button>
-                <button className="rounded-full w-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20 flex items-center justify-center gap-2" onClick={() => signIn("github", { callbackUrl: env.NEXT_PUBLIC_NEXTAUTH_URL })}>
-                <AiFillGithub size={30} />  Sign in with GitHub
+                <button className="flex w-full items-center justify-center gap-2 rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("github", { callbackUrl: env.NEXT_PUBLIC_NEXTAUTH_URL })}>
+                  <AiFillGithub size={30} /> Sign in with GitHub
                 </button>
               </div>
             </div>

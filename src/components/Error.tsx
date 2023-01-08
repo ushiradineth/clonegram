@@ -1,19 +1,15 @@
 import Head from "next/head";
+import { DataContext } from "../pages/_app";
+import { useContext } from "react";
 
 interface itemType {
-  viewport: string;
-  theme: {
-    type: string;
-    primary: string;
-    secondary: string;
-    tertiary: string;
-    accent: string;
-  };
   error: string;
   session: boolean;
 }
 
 const Error = (props: itemType) => {
+  const data = useContext(DataContext);
+
   return (
     <>
       <Head>
@@ -21,7 +17,7 @@ const Error = (props: itemType) => {
         <meta name="description" content="Clonegram by Ushira Dineth" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={"grid h-screen place-items-center text-3xl font-light " + props.theme.secondary + (props.viewport == "Web" && props.session && " ml-72 ") + (props.viewport == "Tab" && props.session && " ml-16 ")}>{props.error}</main>
+      <main className={"grid h-screen place-items-center text-3xl font-light " + data?.theme?.secondary + (data?.viewport == "Web" && props.session && " ml-72 ") + (data?.viewport == "Tab" && props.session && " ml-16 ")}>{props.error}</main>
     </>
   );
 };

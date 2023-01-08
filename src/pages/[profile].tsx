@@ -12,21 +12,10 @@ import ProfileOptions from "../components/ProfileOptions";
 import Error from "../components/Error";
 import { UserType } from "../types/types";
 import Head from "next/head";
+import { DataContext } from "../pages/_app";
+import { useContext } from "react";
 
-interface itemType {
-  viewport: string;
-  supabase: unknown;
-  theme: {
-    type: string;
-    primary: string;
-    secondary: string;
-    tertiary: string;
-    accent: string;
-  };
-  user: UserType;
-}
-
-const Profile = (props: itemType) => {
+const Profile = () => {
   const [options, setOptions] = useState(false);
   const [isBlockedBy, setIsBlockedBy] = useState(false);
   const [isBlocking, setIsBlocking] = useState(false);
@@ -39,9 +28,10 @@ const Profile = (props: itemType) => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const profile = router.query.profile as string;
+  const data = useContext(DataContext);
 
   const query = trpc.user.getUserByHandle.useQuery({ handle: String(profile) }, { retry: false, refetchOnWindowFocus: false, enabled: Boolean(((status === "authenticated" && session?.user?.handle !== String(profile)) || status === "unauthenticated") && !router.query.user) });
-  const page = session?.user?.handle !== String(profile) ? query : props.user;
+  const page = session?.user?.handle !== String(profile) ? query : data?.user;
 
   useEffect(() => {
     setIsFollowing(false);
@@ -55,59 +45,59 @@ const Profile = (props: itemType) => {
 
   const follow = trpc.user.follow.useMutation({
     onSuccess: () => {
-      page.refetch();
-      props.user.refetch();
+      page?.refetch();
+      data?.user?.refetch();
       setIsFollowing(true);
     },
   });
 
   const unfollow = trpc.user.unfollow.useMutation({
     onSuccess: () => {
-      page.refetch();
-      props.user.refetch();
+      page?.refetch();
+      data?.user?.refetch();
       setIsFollowing(false);
     },
   });
 
   const followFunc = () => {
-    if (session?.user?.id && page.data?.id) {
-      follow.mutate({ userid: session.user?.id, pageid: page.data?.id });
+    if (session?.user?.id && page?.data?.id) {
+      follow.mutate({ userid: session.user?.id, pageid: page?.data?.id });
     }
   };
 
   const unfollowFunc = () => {
-    if (session?.user?.id && page.data?.id) {
-      unfollow.mutate({ userid: session?.user?.id, pageid: page.data?.id });
+    if (session?.user?.id && page?.data?.id) {
+      unfollow.mutate({ userid: session?.user?.id, pageid: page?.data?.id });
     }
   };
 
   useEffect(() => {
-    if (page.isSuccess) {
+    if (page?.isSuccess) {
       const userfollowing: Array<string> = [];
       const followersArray: Array<{ UserID: string; UserName: string; UserHandle: string; UserImage: string; UserFollowing: boolean; UserRemoved: boolean }> = [];
       const followingArray: Array<{ UserID: string; UserName: string; UserHandle: string; UserImage: string; UserFollowing: boolean; UserRemoved: boolean }> = [];
 
       if (session) {
-        props.user?.data.following.forEach((element: { handle: string }) => {
+        data?.user?.data.following.forEach((element: { handle: string }) => {
           userfollowing.push(element.handle);
         });
 
-        if (props.user.data.handle !== String(profile)) {
-          props.user.data.blockedby.forEach((element: { id: string | undefined }) => {
-            if (element.id === page.data.id && !isBlocking && !isBlockedBy) setIsBlockedBy(true);
+        if (data?.user?.data.handle !== String(profile)) {
+          data?.user?.data.blockedby.forEach((element: { id: string | undefined }) => {
+            if (element.id === page?.data?.id && !isBlocking && !isBlockedBy) setIsBlockedBy(true);
           });
 
-          props.user?.data.blocking.forEach((element: { id: string | undefined }) => {
-            if (element.id === page.data.id && !isBlockedBy && !isBlocking) setIsBlocking(true);
+          data?.user?.data.blocking.forEach((element: { id: string | undefined }) => {
+            if (element.id === page?.data?.id && !isBlockedBy && !isBlocking) setIsBlocking(true);
           });
         }
       }
 
-      page.data?.following.forEach((element: { name: any; image: any; id: any; handle: string }) => {
+      page?.data?.following.forEach((element: { name: any; image: any; id: any; handle: string }) => {
         if (element.name && element.image) followingArray.push({ UserID: element.id, UserName: element.name, UserHandle: element.handle, UserImage: element.image, UserFollowing: userfollowing.indexOf(element.handle) > -1 || false, UserRemoved: false });
       });
 
-      page.data?.followers.forEach((element: { name: any; image: any; id: string; handle: string }) => {
+      page?.data?.followers.forEach((element: { name: any; image: any; id: string; handle: string }) => {
         if (element.name && element.image) followersArray.push({ UserID: element.id, UserName: element.name, UserHandle: element.handle, UserImage: element.image, UserFollowing: userfollowing.indexOf(element.handle) > -1 || false, UserRemoved: false });
         if (element.id === session?.user?.id && !isFollowing) setIsFollowing(true);
       });
@@ -115,49 +105,46 @@ const Profile = (props: itemType) => {
       setFollowing(followingArray);
       setFollowers(followersArray);
     }
-  }, [page.data]);
+  }, [page?.data]);
 
-  if (page.isLoading) {
-    return <Spinner theme={props.theme} viewport={props.viewport} />;
-  }
-
-  if (status === "unauthenticated" ? page.isError : session?.user?.handle === String(profile) ? page.isError : page.data?.handle === String(profile) ? false : page.data?.handle !== String(profile)) return <Error error="User does not exist" session={Boolean(session)} theme={props.theme} viewport={props.viewport} />;
-  if (isBlocking) return <Error error="You have blocked this user" session={Boolean(session)} theme={props.theme} viewport={props.viewport} />;
-  if (isBlockedBy) return <Error error="This user has blocked you" session={Boolean(session)} theme={props.theme} viewport={props.viewport} />;
+  if (page?.isLoading) return <Spinner />;
+  if (status === "unauthenticated" ? page?.isError : session?.user?.handle === String(profile) ? page?.isError : page?.data?.handle === String(profile) ? false : page?.data?.handle !== String(profile)) return <Error error="User does not exist" session={Boolean(session)} />;
+  if (isBlocking) return <Error error="You have blocked this user" session={Boolean(session)} />;
+  if (isBlockedBy) return <Error error="This user has blocked you" session={Boolean(session)} />;
 
   if (!isBlockedBy && !isBlocking)
     return (
       <>
         <Head>
-          <title>{`${page.data?.name} (@${page.data?.handle})	• Clonegram`}</title>
+          <title>{`${page?.data?.name} (@${page?.data?.handle})	• Clonegram`}</title>
           <meta name="description" content="Clonegram by Ushira Dineth" />
           <link rel="icon" href={"/favicon.ico"} />
         </Head>
         <main>
-          {followersMenu && <ListOfUsers viewport={props.viewport} users={followers} userSetter={() => setFollowers} theme={props.theme} onClickNegative={() => setFollowersMenu(false)} title="Followers" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page.data?.id ? page.data.id : "0"} />}
-          {followingMenu && <ListOfUsers viewport={props.viewport} users={following} userSetter={() => setFollowing} theme={props.theme} onClickNegative={() => setFollowingMenu(false)} title="Following" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page.data?.id ? page.data.id : "0"} />}
-          {options && <ProfileOptions onClickNegative={() => setOptions(false)} theme={props.theme} page={page as UserType} refetch={props.user.refetch} setIsBlocking={setIsBlocking} />}
+          {followersMenu && <ListOfUsers users={followers} userSetter={() => setFollowers} onClickNegative={() => setFollowersMenu(false)} title="Followers" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page?.data?.id ? page?.data.id : "0"} />}
+          {followingMenu && <ListOfUsers users={following} userSetter={() => setFollowing} onClickNegative={() => setFollowingMenu(false)} title="Following" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page?.data?.id ? page?.data.id : "0"} />}
+          {options && <ProfileOptions onClickNegative={() => setOptions(false)} page={page as UserType} refetch={data?.user?.refetch} setIsBlocking={setIsBlocking} />}
           {!session && (
-            <div className={"fixed bottom-0 left-0 flex h-12 w-screen items-center justify-center gap-2 " + props.theme.primary}>
+            <div className={"fixed bottom-0 left-0 flex h-12 w-screen items-center justify-center gap-2 " + data?.theme?.primary}>
               Sign in to Clonegram to see more!
-              <button className={"rounded-full px-4 py-2 font-semibold no-underline transition " + props.theme.tertiary} onClick={() => router.push("/")}>
+              <button className={"rounded-full px-4 py-2 font-semibold no-underline transition " + data?.theme?.tertiary} onClick={() => router.push("/")}>
                 Sign in
               </button>
             </div>
           )}
-          <div className={" " + (props.viewport == "Web" && session && " ml-72 ") + (props.viewport == "Tab" && session && " ml-16 ")}>
-            <div id="Background" className={"flex min-h-screen flex-col items-center justify-center " + props.theme.secondary}>
-              <div className={"grid w-fit " + (props.viewport && " place-items-center ")}>
-                <div id="user-details" className={"flex h-fit py-5 " + (props.viewport == "Mobile" && " w-[400px] ") + (props.viewport == "Web" && " w-[700px] items-center justify-center ") + (props.viewport == "Tab" && " w-[500px] items-center justify-center ")}>
-                  <Image className={"rounded-full " + (props.viewport == "Mobile" ? " mr-2 ml-2 mt-4 h-24 w-24 " : " mr-10 flex w-24 scale-125 justify-center ")} src={page.data?.image ? page.data?.image : ""} height={96} width={96} alt="Profile Picture" priority />
-                  <div id="headline" className={"mb-4 mt-6 ml-4 grid grid-flow-row " + (props.viewport != "Mobile" && " h-fit gap-3 ")}>
+          <div className={" " + (data?.viewport == "Web" && session && " ml-72 ") + (data?.viewport == "Tab" && session && " ml-16 ")}>
+            <div id="Background" className={"flex min-h-screen flex-col items-center justify-center " + data?.theme?.secondary}>
+              <div className={"grid w-fit " + (data?.viewport && " place-items-center ")}>
+                <div id="user-details" className={"flex h-fit py-5 " + (data?.viewport == "Mobile" && " w-[400px] ") + (data?.viewport == "Web" && " w-[700px] items-center justify-center ") + (data?.viewport == "Tab" && " w-[500px] items-center justify-center ")}>
+                  <Image className={"rounded-full " + (data?.viewport == "Mobile" ? " mr-2 ml-2 mt-4 h-24 w-24 " : " mr-10 flex w-24 scale-125 justify-center ")} src={page?.data?.image ? page?.data?.image : ""} height={96} width={96} alt="Profile Picture" priority />
+                  <div id="headline" className={"mb-4 mt-6 ml-4 grid grid-flow-row " + (data?.viewport != "Mobile" && " h-fit gap-3 ")}>
                     <div id="user-info">
                       <div className="flex items-center gap-3">
                         <div id="id" className="max-w-[200px] overflow-hidden text-ellipsis text-xl">
-                          {page.data?.handle}
+                          {page?.data?.handle}
                         </div>
-                        <button id="cta" disabled={follow.isLoading || unfollow.isLoading} className={"cursor-pointer text-xs font-semibold disabled:cursor-not-allowed " + (props.viewport === "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page.data?.id ? router.push("/settings") : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))}>
-                          {session?.user?.id === page.data?.id ? (
+                        <button id="cta" disabled={follow.isLoading || unfollow.isLoading} className={"cursor-pointer text-xs font-semibold disabled:cursor-not-allowed " + (data?.viewport === "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page?.data?.id ? router.push("/settings") : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))}>
+                          {session?.user?.id === page?.data?.id ? (
                             "Edit profile"
                           ) : follow.isLoading || unfollow.isLoading ? (
                             <svg aria-hidden="true" className="h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -170,11 +157,11 @@ const Profile = (props: itemType) => {
                             "Follow"
                           )}
                         </button>
-                        {session?.user?.id === page.data?.id ? <IoMdSettings id="settings" className="scale-150 cursor-pointer" onClick={() => router.push("/settings")} /> : <BsThreeDots className="scale-150 cursor-pointer" onClick={() => (session ? setOptions(true) : router.push("/"))} />}
+                        {session?.user?.id === page?.data?.id ? <IoMdSettings id="settings" className="scale-150 cursor-pointer" onClick={() => router.push("/settings")} /> : <BsThreeDots className="scale-150 cursor-pointer" onClick={() => (session ? setOptions(true) : router.push("/"))} />}
                       </div>
                     </div>
-                    <button id="cta-mobile" disabled={follow.isLoading || unfollow.isLoading} className={"z-10 mt-2 flex h-fit w-[235px] cursor-pointer items-center justify-center rounded-[4px] border-2 p-2 text-xs font-semibold " + (props.viewport != "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page.data?.id ? router.push("/settings") : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))}>
-                      {session?.user?.id === page.data?.id ? (
+                    <button id="cta-mobile" disabled={follow.isLoading || unfollow.isLoading} className={"z-10 mt-2 flex h-fit w-[235px] cursor-pointer items-center justify-center rounded-[4px] border-2 p-2 text-xs font-semibold " + (data?.viewport != "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page?.data?.id ? router.push("/settings") : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))}>
+                      {session?.user?.id === page?.data?.id ? (
                         "Edit profile"
                       ) : follow.isLoading || unfollow.isLoading ? (
                         <svg aria-hidden="true" className="h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -188,55 +175,55 @@ const Profile = (props: itemType) => {
                       )}
                     </button>
 
-                    <div id="stats" className={"grid grid-flow-col gap-2 text-sm font-normal " + (props.viewport == "Mobile" && " hidden ")}>
+                    <div id="stats" className={"grid grid-flow-col gap-2 text-sm font-normal " + (data?.viewport == "Mobile" && " hidden ")}>
                       <div className="flex gap-1">
-                        <p className="font-semibold">{page.data?.posts.length}</p>
-                        <p className={props.theme.type === "dark" ? "text-gray-300" : "text-black"}>posts</p>
+                        <p className="font-semibold">{page?.data?.posts.length}</p>
+                        <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>posts</p>
                       </div>
                       <div className="flex cursor-pointer gap-1" onClick={() => (session ? setFollowersMenu(true) : router.push("/"))}>
-                        <p className="font-semibold">{page.data?.followers.length}</p>
-                        <p className={props.theme.type === "dark" ? "text-gray-300" : "text-black"}>followers</p>
+                        <p className="font-semibold">{page?.data?.followers.length}</p>
+                        <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>followers</p>
                       </div>
                       <div className="flex cursor-pointer gap-1" onClick={() => (session ? setFollowingMenu(true) : router.push("/"))}>
-                        <p className="font-semibold">{page.data?.following.length}</p>
-                        <p className={props.theme.type === "dark" ? "text-gray-300" : "text-black"}>following</p>
+                        <p className="font-semibold">{page?.data?.following.length}</p>
+                        <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>following</p>
                       </div>
                     </div>
-                    <div id="details" className={"text-sm font-semibold " + (props.viewport == "Mobile" && " hidden ")}>
-                      <div id="name">{page.data?.name}</div>
-                      <div id="bio" className={"mr-2 grid w-72 grid-flow-col break-all " + (page.data?.bio ? "" : " hidden ")}>
-                        {page.data?.bio}
+                    <div id="details" className={"text-sm font-semibold " + (data?.viewport == "Mobile" && " hidden ")}>
+                      <div id="name">{page?.data?.name}</div>
+                      <div id="bio" className={"mr-2 grid w-72 grid-flow-col break-all " + (page?.data?.bio ? "" : " hidden ")}>
+                        {page?.data?.bio}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div id="details-mobile" className={"mb-5 w-[460px] px-8 text-sm font-semibold " + (props.viewport != "Mobile" && " hidden ")}>
+                <div id="details-mobile" className={"mb-5 w-[460px] px-8 text-sm font-semibold " + (data?.viewport != "Mobile" && " hidden ")}>
                   <div id="name" className="">
-                    {page.data?.name}
+                    {page?.data?.name}
                   </div>
-                  <div id="bio" className={"grid grid-flow-col break-all " + (page.data?.bio ? "" : " hidden ")}>
-                    {page.data?.bio}
+                  <div id="bio" className={"grid grid-flow-col break-all " + (page?.data?.bio ? "" : " hidden ")}>
+                    {page?.data?.bio}
                   </div>
                 </div>
-                <div id="stats-mobile" className={"z-10 grid w-screen grid-flow-col place-items-center border-y border-gray-500 py-2 text-sm font-normal " + (props.viewport != "Mobile" && " hidden ")}>
+                <div id="stats-mobile" className={"z-10 grid w-screen grid-flow-col place-items-center border-y border-gray-500 py-2 text-sm font-normal " + (data?.viewport != "Mobile" && " hidden ")}>
                   <div className="grid place-items-center">
-                    <p className="font-semibold">{page.data?.posts.length}</p>
-                    <p className={props.theme.type === "dark" ? "text-gray-300" : "text-black"}>posts</p>
+                    <p className="font-semibold">{page?.data?.posts.length}</p>
+                    <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>posts</p>
                   </div>
                   <div className="grid cursor-pointer place-items-center" onClick={() => (session ? setFollowersMenu(true) : router.push("/"))}>
-                    <p className="font-semibold">{page.data?.followers.length}</p>
-                    <p className={props.theme.type === "dark" ? "text-gray-300" : "text-black"}>followers</p>
+                    <p className="font-semibold">{page?.data?.followers.length}</p>
+                    <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>followers</p>
                   </div>
                   <div className="grid cursor-pointer place-items-center" onClick={() => (session ? setFollowingMenu(true) : router.push("/"))}>
-                    <p className="font-semibold">{page.data?.following.length}</p>
-                    <p className={props.theme.type === "dark" ? "text-gray-300" : "text-black"}>following</p>
+                    <p className="font-semibold">{page?.data?.following.length}</p>
+                    <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>following</p>
                   </div>
                 </div>
-                <div id="posts" className={"grid grid-cols-3 place-items-center py-10 " + (props.viewport == "Mobile" && " gap-2 ") + (props.viewport == "Web" && " w-[832px] gap-4 border-t border-gray-500 px-24 ") + (props.viewport == "Tab" && " w-[600px] border-t border-gray-500 ")}>
-                  {page.data?.posts.length && page.data?.posts.length > 0 ? (
-                    <div className={"flex items-center justify-center " + (props.viewport == "Mobile" && " h-36 w-36 ") + (props.viewport == "Web" && " h-52 w-52 ") + (props.viewport == "Tab" && " m-2 mb-0 h-48 w-48 ")} />
+                <div id="posts" className={"grid grid-cols-3 place-items-center py-10 " + (data?.viewport == "Mobile" && " gap-2 ") + (data?.viewport == "Web" && " w-[832px] gap-4 border-t border-gray-500 px-24 ") + (data?.viewport == "Tab" && " w-[600px] border-t border-gray-500 ")}>
+                  {page?.data?.posts.length && page?.data?.posts.length > 0 ? (
+                    <div className={"flex items-center justify-center " + (data?.viewport == "Mobile" && " h-36 w-36 ") + (data?.viewport == "Web" && " h-52 w-52 ") + (data?.viewport == "Tab" && " m-2 mb-0 h-48 w-48 ")} />
                   ) : (
-                    <div className={"col-span-3 flex items-center justify-center " + (props.viewport == "Mobile" ? " h-[392px] w-[392px] " : " h-[624px] w-full ")}>
+                    <div className={"col-span-3 flex items-center justify-center " + (data?.viewport == "Mobile" ? " h-[392px] w-[392px] " : " h-[624px] w-full ")}>
                       <div className="flex flex-col items-center justify-center p-4">
                         <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
                           <FiCamera className="scale-x-[-5] scale-y-[5] transform" />

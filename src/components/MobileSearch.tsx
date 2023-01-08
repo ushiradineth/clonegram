@@ -1,4 +1,3 @@
-import { UserType } from "../types/types";
 import { AiFillCloseCircle, AiOutlineClose } from "react-icons/ai";
 import Spinner from "./Spinner";
 import { useEffect, useState } from "react";
@@ -7,20 +6,10 @@ import { useSession } from "next-auth/react";
 import { BiUserPlus } from "react-icons/bi";
 import Image from "next/image";
 import { trpc } from "../utils/trpc";
+import { DataContext } from "../pages/_app";
+import { useContext } from "react";
 
-interface itemType {
-  theme: {
-    type: string;
-    primary: string;
-    secondary: string;
-    tertiary: string;
-    accent: string;
-  };
-  user: UserType;
-  viewport: string;
-}
-
-const MobileSearch = (props: itemType) => {
+const MobileSearch = () => {
   const [isEmpty, setisEmpty] = useState(true);
   const [focus, setFocus] = useState(false);
   const [recentSearches, setRecentSearches] = useState<{ userID: string; userName: string; userImage: string; userHandle: string }[]>([]);
@@ -28,10 +17,11 @@ const MobileSearch = (props: itemType) => {
   const [users, setUsers] = useState<{ userID: string; userName: string; userImage: string; userHandle: string }[]>([]);
   const router = useRouter();
   const { data: session } = useSession();
+  const data = useContext(DataContext);
 
   const usersList = trpc.user.getUsersSearch.useMutation({
     onSuccess: (data) => {
-      let dataArr: { userID: string; userName: string; userImage: string; userHandle: string }[] = [];
+      const dataArr: { userID: string; userName: string; userImage: string; userHandle: string }[] = [];
       data.forEach((user) => {
         if (user.name && user.image) dataArr.push({ userID: user.id, userName: user.name, userImage: user.image, userHandle: user.handle });
       });
@@ -40,7 +30,7 @@ const MobileSearch = (props: itemType) => {
   });
 
   const onClickProfile = (user: { userID: string; userName: string; userImage: string; userHandle: any }) => {
-    var tempRecentSearches = recentSearches;
+    const tempRecentSearches = recentSearches;
 
     tempRecentSearches.forEach((element, index) => {
       if (element.userID === user.userID) {
@@ -55,6 +45,7 @@ const MobileSearch = (props: itemType) => {
 
     router.push({ pathname: "/" + user.userHandle });
   };
+
   if (typeof document !== "undefined" || typeof window !== "undefined") {
     (document.getElementById("search") as HTMLInputElement) &&
       (document.getElementById("search") as HTMLInputElement).addEventListener("keyup", () => {
@@ -67,7 +58,7 @@ const MobileSearch = (props: itemType) => {
   }
 
   const removeRecentSearch = (user: { userID: string; userName: string; userImage: string; userHandle: any }) => {
-    var tempRecentSearches = recentSearches;
+    const tempRecentSearches = recentSearches;
 
     tempRecentSearches.forEach((element, index) => {
       if (element.userID === user.userID) {
@@ -76,7 +67,6 @@ const MobileSearch = (props: itemType) => {
     });
 
     localStorage.setItem("clonegram.recentSearch", JSON.stringify(tempRecentSearches));
-
     setRecentSearches(tempRecentSearches);
   };
 
@@ -93,8 +83,8 @@ const MobileSearch = (props: itemType) => {
       if (session?.user?.id) localStorage.setItem("clonegram.userID", session?.user?.id);
     }
 
-    var tempRecentSearches: any[] = [];
-    var oldRecentSearch = JSON.parse(localStorage.getItem("clonegram.recentSearch") || "{}");
+    const tempRecentSearches: any[] = [];
+    const oldRecentSearch = JSON.parse(localStorage.getItem("clonegram.recentSearch") || "{}");
 
     if (oldRecentSearch.forEach) {
       oldRecentSearch.forEach((element: any) => {
@@ -113,13 +103,13 @@ const MobileSearch = (props: itemType) => {
           {recentSearches.length > 0 ? (
             recentSearches.map((user, index) => {
               return (
-                <a href={user.userHandle} onClick={(e) => e.preventDefault()} key={index} className={" flex h-12 w-full p-10 items-center justify-center"}>
-                  <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
+                <a href={user.userHandle} onClick={(e) => e.preventDefault()} key={index} className={" flex h-12 w-full items-center justify-center p-10"}>
+                  <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
                   <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => onClickProfile(user)}>
                     <div>{user.userHandle}</div>
                     <div>{user.userName}</div>
                   </div>
-                  <AiOutlineClose className={"scale-150 cursor-pointer " + (props.theme.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")} onClick={() => removeRecentSearch(user)} />
+                  <AiOutlineClose className={"scale-150 cursor-pointer " + (data?.theme?.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")} onClick={() => removeRecentSearch(user)} />
                 </a>
               );
             })
@@ -143,7 +133,7 @@ const MobileSearch = (props: itemType) => {
           users.map((user, index) => {
             return (
               <a href={user.userHandle} onClick={(e) => e.preventDefault()} key={index} className={" flex h-12 w-full items-center justify-center p-10"}>
-                <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={props.viewport == "Mobile" ? 96 : 160} width={props.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
+                <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
                 <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => onClickProfile(user)}>
                   <div>{user.userHandle}</div>
                   <div>{user.userName}</div>
@@ -165,9 +155,9 @@ const MobileSearch = (props: itemType) => {
 
   return (
     <>
-      <div onFocus={() => setFocus(true)} className={"z-30 h-10 w-full rounded-xl " + (props.theme.type === "dark" ? " shadow-[5px_0px_50px_rgba(255,255,255,0.1)] " : " shadow-[0px_0px_25px_rgba(0,0,0,0.2)] ") + props.theme.secondary}>
-        <div className={"flex flex-row items-center gap-1 rounded-xl px-2 py-[2px] " + props.theme.secondary}>
-          <input autoComplete={"off"} type="text" id="search" className={"w-full text-zinc-300 placeholder:text-gray-500 focus:outline-none " + props.theme.secondary} placeholder="Search" maxLength={50}></input>
+      <div onFocus={() => setFocus(true)} className={"z-30 h-10 w-full rounded-xl " + (data?.theme?.type === "dark" ? " shadow-[5px_0px_50px_rgba(255,255,255,0.1)] " : " shadow-[0px_0px_25px_rgba(0,0,0,0.2)] ") + data?.theme?.secondary}>
+        <div className={"flex flex-row items-center gap-1 rounded-xl px-2 py-[2px] " + data?.theme?.secondary}>
+          <input autoComplete={"off"} type="text" id="search" className={"w-full text-zinc-300 placeholder:text-gray-500 focus:outline-none " + data?.theme?.secondary} placeholder="Search" maxLength={50}></input>
           <AiFillCloseCircle
             color="gray"
             onClick={() => {
@@ -181,8 +171,8 @@ const MobileSearch = (props: itemType) => {
       </div>
 
       {focus && (
-        <div onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} className={"fixed top-20 flex h-fit max-h-72 w-fit min-w-[250px] max-w-[450px] items-center justify-center rounded-2xl pt-2 " + props.theme.primary + (isEmpty ? " pb-8 " : " pb-4 ")}>
-          {usersList.isLoading ? <Spinner theme={props.theme} removeBackground={true} /> : isEmpty ? <RecentSearches /> : <SearchResults />}
+        <div onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} className={"fixed top-20 flex h-fit max-h-72 w-fit min-w-[250px] max-w-[450px] items-center justify-center rounded-2xl pt-2 " + data?.theme?.primary + (isEmpty ? " pb-8 " : " pb-4 ")}>
+          {usersList.isLoading ? <Spinner removeBackground={true} /> : isEmpty ? <RecentSearches /> : <SearchResults />}
         </div>
       )}
     </>
