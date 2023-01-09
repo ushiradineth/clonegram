@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { BiUserPlus } from "react-icons/bi";
-import Image from "next/image";
 import { trpc } from "../utils/trpc";
 import { DataContext } from "../pages/_app";
 import { useContext } from "react";
+import ProfileLink from "./ProfileLink";
 
 const MobileSearch = () => {
   const [isEmpty, setisEmpty] = useState(true);
@@ -95,60 +95,13 @@ const MobileSearch = () => {
     }
   }, []);
 
-  const RecentSearches = () => {
+  const NoResults = (props: { text: string }) => {
     return (
-      <div>
-        <p className="mt-4 ml-4 text-lg ">Recent</p>
-        <div className={"flex h-[80%] flex-col items-center justify-center"}>
-          {recentSearches.length > 0 ? (
-            recentSearches.map((user, index) => {
-              return (
-                <a href={user.userHandle} onClick={(e) => e.preventDefault()} key={index} className={" flex h-12 w-full items-center justify-center p-10"}>
-                  <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
-                  <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => onClickProfile(user)}>
-                    <div>{user.userHandle}</div>
-                    <div>{user.userName}</div>
-                  </div>
-                  <AiOutlineClose className={"scale-150 cursor-pointer " + (data?.theme?.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")} onClick={() => removeRecentSearch(user)} />
-                </a>
-              );
-            })
-          ) : (
-            <div className="flex flex-col items-center justify-center p-4">
-              <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
-                <BiUserPlus className="scale-x-[-4] scale-y-[4] transform" />
-              </div>
-              <div className="text-sm">No recent searches.</div>
-            </div>
-          )}
+      <div className="flex flex-col items-center justify-center p-4 pt-8">
+        <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
+          <BiUserPlus className="scale-x-[-4] scale-y-[4] transform" />
         </div>
-      </div>
-    );
-  };
-
-  const SearchResults = () => {
-    return (
-      <div>
-        {users.length > 0 ? (
-          users.map((user, index) => {
-            return (
-              <a href={user.userHandle} onClick={(e) => e.preventDefault()} key={index} className={" flex h-12 w-full items-center justify-center p-10"}>
-                <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
-                <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => onClickProfile(user)}>
-                  <div>{user.userHandle}</div>
-                  <div>{user.userName}</div>
-                </div>
-              </a>
-            );
-          })
-        ) : (
-          <div className="flex flex-col items-center justify-center p-4">
-            <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
-              <BiUserPlus className="scale-x-[-4] scale-y-[4] transform" />
-            </div>
-            <div className="text-sm">No results found</div>
-          </div>
-        )}
+        <div className="text-sm">{props.text}</div>
       </div>
     );
   };
@@ -171,8 +124,19 @@ const MobileSearch = () => {
       </div>
 
       {focus && (
-        <div onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} className={"fixed top-20 flex h-fit max-h-72 w-fit min-w-[250px] max-w-[450px] items-center justify-center rounded-2xl pt-2 " + data?.theme?.primary + (isEmpty ? " pb-8 " : " pb-4 ")}>
-          {usersList.isLoading ? <Spinner removeBackground={true} /> : isEmpty ? <RecentSearches /> : <SearchResults />}
+        <div onFocus={() => setFocus(true)} onBlur={() => setFocus(false)} className={"fixed top-20 flex h-fit max-h-72 w-fit min-w-[250px] max-w-[450px] items-center justify-center rounded-2xl pt-2 pb-8 " + data?.theme?.primary}>
+          {usersList.isLoading ? (
+            <div className="mt-6 grid place-items-center">
+              <Spinner SpinnerOnly={true} />
+            </div>
+          ) : isEmpty ? (
+            <div>
+              <p className="mt-4 ml-4 text-lg ">Recent</p>
+              <div className={"grid place-items-center"}>{recentSearches.length > 0 ? recentSearches.map((user, index) => <ProfileLink user={user} index={index} onClickHandler={() => onClickProfile(user)} action={<AiOutlineClose className={"scale-150 cursor-pointer " + (data?.theme?.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")} onClick={() => removeRecentSearch(user)} />} />) : <NoResults text={"No recent searches"} />}</div>
+            </div>
+          ) : (
+            <div className="grid place-items-center">{users.length > 0 ? users.map((user, index) => <ProfileLink user={user} index={index} onClickHandler={() => onClickProfile(user)} />) : <NoResults text={"No results found"} />}</div>
+          )}
         </div>
       )}
     </>

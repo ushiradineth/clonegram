@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AiFillCloseCircle, AiOutlineClose } from "react-icons/ai";
 import { BiUserPlus } from "react-icons/bi";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
 import { useSession } from "next-auth/react";
 import Spinner from "./Spinner";
 import { DataContext } from "../pages/_app";
+import ProfileLink from "./ProfileLink";
+import InputBox from "./InputBox";
 
 interface itemType {
   search: boolean;
@@ -99,64 +100,15 @@ const Search = (props: itemType) => {
     }
   }, []);
 
-  const RecentSearches = () => {
+  const NoResults = (props: { text: string }) => {
     return (
-      <div>
-        <p className="mt-4 ml-4 text-lg ">Recent</p>
-        <div className={"flex h-[80%] flex-col items-center justify-center"}>
-          {recentSearches.length > 0 ? (
-            recentSearches.map((user, index) => {
-              return (
-                <a href={user.userHandle} onClick={(e) => e.preventDefault()} key={index} className={"mt-6 flex h-12 w-fit items-center justify-center"}>
-                  <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
-                  <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => onClickProfile(user)}>
-                    <div>{user.userHandle}</div>
-                    <div>{user.userName}</div>
-                  </div>
-                  <AiOutlineClose className={"scale-150 cursor-pointer " + (data?.theme?.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")} onClick={() => removeRecentSearch(user)} />
-                </a>
-              );
-            })
-          ) : (
-            <div className={"flex flex-col items-center justify-center rounded-2xl p-8 " + data?.theme?.secondary}>
-              <div className="flex flex-col items-center justify-center p-4">
-                <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
-                  <BiUserPlus className="scale-x-[-6] scale-y-[6] transform" />
-                </div>
-                <div className="text-sm">No recent searches.</div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const SearchResults = () => {
-    return (
-      <div className="flex flex-col items-start">
-        {users.length > 0 ? (
-          users.map((user, index) => {
-            return (
-              <a href={user.userHandle} onClick={(e) => e.preventDefault()} key={index} className={"mt-6 ml-10 flex h-12 w-fit items-center justify-center"}>
-                <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => onClickProfile(user)} src={user.userImage} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
-                <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => onClickProfile(user)}>
-                  <div>{user.userHandle}</div>
-                  <div>{user.userName}</div>
-                </div>
-              </a>
-            );
-          })
-        ) : (
-          <div className={"flex flex-col items-center justify-center rounded-2xl p-8 " + data?.theme?.secondary}>
-            <div className="flex flex-col items-center justify-center p-4">
-              <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
-                <BiUserPlus className="scale-x-[-6] scale-y-[6] transform" />
-              </div>
-              <div className="text-sm">No results found</div>
-            </div>
+      <div className={"flex flex-col items-center justify-center rounded-2xl p-8 " + data?.theme?.secondary}>
+        <div className="flex flex-col items-center justify-center p-4">
+          <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
+            <BiUserPlus className="scale-x-[-6] scale-y-[6] transform" />
           </div>
-        )}
+          <div className="text-sm">{props.text}</div>
+        </div>
       </div>
     );
   };
@@ -168,20 +120,36 @@ const Search = (props: itemType) => {
           <div className={"h-screen transition-all duration-200"}>
             <div className="grid w-full items-center border-b-[1px] font-semibold">
               <p className="mt-4 ml-4 text-xl">Search</p>
-              <div className={"my-4 ml-4 flex h-[35px] w-[90%] items-center justify-center gap-2 rounded-lg " + data?.theme?.tertiary}>
-                <input autoComplete="off" type="text" id="search" className={"h-full w-[86%] placeholder:text-gray-500 focus:outline-none " + data?.theme?.tertiary} placeholder="Search" maxLength={50}></input>
-                <AiFillCloseCircle
-                  color="gray"
-                  onClick={() => {
-                    (document.getElementById("search") as HTMLInputElement).value = "";
-                    setisEmpty(true);
-                  }}
-                  className="cursor-pointer"
+              <div className="m-4">
+                <InputBox
+                  id="search"
+                  maxlength={50}
+                  placeholder="Search"
+                  action={
+                    <AiFillCloseCircle
+                      color="gray"
+                      onClick={() => {
+                        (document.getElementById("search") as HTMLInputElement).value = "";
+                        setisEmpty(true);
+                      }}
+                      className="cursor-pointer"
+                    />
+                  }
                 />
               </div>
             </div>
-            {usersList.isLoading && <Spinner removeBackground={true} />}
-            {isEmpty ? <RecentSearches /> : <SearchResults />}
+            {usersList.isLoading ? (
+              <div className="mt-6 grid place-items-center">
+                <Spinner SpinnerOnly={true} />
+              </div>
+            ) : isEmpty ? (
+              <div>
+                <p className="mt-4 ml-4 text-lg ">Recent</p>
+                <div className={"grid place-items-center"}>{recentSearches.length > 0 ? recentSearches.map((user, index) => <ProfileLink user={user} index={index} onClickHandler={() => onClickProfile(user)} action={<AiOutlineClose className={"scale-150 cursor-pointer " + (data?.theme?.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")} onClick={() => removeRecentSearch(user)} />} />) : <NoResults text={"No recent searches"} />}</div>
+              </div>
+            ) : (
+              <div className="grid place-items-center">{users.length > 0 ? users.map((user, index) => <ProfileLink user={user} index={index} onClickHandler={() => onClickProfile(user)} />) : <NoResults text={"No results found"} />}</div>
+            )}
           </div>
         </div>
       </div>
