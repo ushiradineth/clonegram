@@ -88,15 +88,15 @@ const EditProfile = () => {
     (document.getElementById("Handle") as HTMLInputElement) &&
       (document.getElementById("Handle") as HTMLInputElement).addEventListener("keyup", () => {
         clearTimeout(0);
+        setEdited(false);
         if ((document.getElementById("Handle") as HTMLInputElement).value) {
           setTimeout(() => setHandle((document.getElementById("Handle") as HTMLInputElement).value), 1000);
         }
       });
   }
-  
+
   useEffect(() => {
     const reservedPaths = ["tos", "about", "post", "home", "settings"];
-
     if (handle !== data?.user?.data.handle && handle) {
       if (reservedPaths.includes(handle)) {
         setIsHandleUnique(false);
@@ -134,10 +134,10 @@ const EditProfile = () => {
               </button>
             </div>
             <InputBox id="Name" maxlength={50} minlength={1} placeholder="Name" onChange={(e: any) => setEdited(e.target.value !== data?.user?.data.name)} defaultValue={data?.user?.data.name || ""} />
-            <InputBox id="Handle" maxlength={50} minlength={6} placeholder="Handle" defaultValue={data?.user?.data.handle || ""} action={handleAction()} />
+            <InputBox id="Handle" maxlength={50} minlength={6} placeholder="Handle" onChange={(e: any) => setEdited(!isHandleUnique || checkIfHandleUnique.isLoading || e.target.value === data?.user?.data.handle)} defaultValue={data?.user?.data.handle || ""} action={handleAction()} />
             <InputBox id="Bio" maxlength={150} placeholder="Bio" onChange={(e: any) => setEdited(e.target.value !== data?.user?.data.bio)} defaultValue={data?.user?.data.bio || ""} />
-            <button disabled={!edited || !isHandleUnique || checkIfHandleUnique.isLoading || handle === data?.user?.data.handle} id="Submit" className={"mt-2 flex h-12 w-[50%] cursor-pointer items-center justify-center rounded-2xl disabled:cursor-not-allowed disabled:bg-zinc-400 " + (updateUser.isError && " bg-red-400 ") + (edited && "  bg-blue-400 ")} onClick={() => (updateUser.isLoading || checkIfHandleUnique.isLoading ? {} : (updateUser.isIdle || edited) && onSave())}>
-              {updateUser.isLoading || checkIfHandleUnique.isLoading ? <Spinner SpinnerOnly={true} /> : (updateUser.isIdle || edited) && <p>Submit</p>}
+            <button disabled={!edited || checkIfHandleUnique.isLoading} id="Submit" className={"mt-2 flex h-12 w-[50%] cursor-pointer items-center justify-center rounded-2xl disabled:cursor-not-allowed disabled:bg-zinc-400 " + (updateUser.isError && " bg-red-400 ") + " bg-blue-400 "} onClick={() => (updateUser.isLoading || checkIfHandleUnique.isLoading ? {} : (updateUser.isIdle || edited) && onSave())}>
+              {updateUser.isLoading || checkIfHandleUnique.isLoading ? <Spinner SpinnerOnly={true} /> : <p>Submit</p>}
             </button>
           </div>
         </div>
