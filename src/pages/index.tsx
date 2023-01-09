@@ -4,6 +4,7 @@ import { signIn, useSession } from "next-auth/react";
 import Spinner from "../components/Spinner";
 import { env } from "../env/client.mjs";
 import { AiFillGithub, AiFillGoogleCircle, AiOutlineTwitter } from "react-icons/ai";
+import Link from "next/link";
 
 const Index = () => {
   const { status } = useSession();
@@ -28,16 +29,11 @@ const Index = () => {
       </Head>
       <main className="grid min-h-screen place-items-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <div className="grid grid-flow-col place-items-center">
-          <div className="grid place-items-center gap-6 text-sm text-white sm:text-2xl">
+          <div className="grid place-items-center w-full gap-6 text-lg text-white sm:text-2xl">
             <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
               Clone<span className="text-[hsl(280,100%,70%)]">gram</span>
             </h1>
             <h1 className="font-semibold">IN DEVELOPMENT</h1>
-            <div className="grid place-items-center">
-              <h1>Made with NextJS, TypeScript, NextAuth, tRPC, Zod and TailwindCSS</h1>
-              <h1>Database and storage on Supabase</h1>
-              <h1>Hosted on Vercel</h1>
-            </div>
             <div>
               <div className="flex w-[423px] flex-col items-center justify-center gap-4 text-base">
                 <button className="flex items-center justify-center gap-2 rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={() => signIn("google", { callbackUrl: env.NEXT_PUBLIC_NEXTAUTH_URL })}>
@@ -53,9 +49,9 @@ const Index = () => {
             </div>
           </div>
         </div>
-        <div className="fixed bottom-0 grid h-20 w-screen grid-flow-col place-items-center px-[45%] text-white  ">
-          <div>Privacy</div>
-          <div>About</div>
+        <div className="fixed bottom-0 grid gap-4 h-20 w-screen grid-flow-col place-items-center px-[45%] text-white font-semibold">
+          <Link href={"/about"}>About</Link>
+          <Link href={"/privacy"}>Privacy</Link>
         </div>
       </main>
     </>
