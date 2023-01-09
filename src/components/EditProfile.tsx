@@ -90,13 +90,13 @@ const EditProfile = () => {
         clearTimeout(0);
         setEdited(false);
         if ((document.getElementById("Handle") as HTMLInputElement).value) {
-          setTimeout(() => setHandle((document.getElementById("Handle") as HTMLInputElement).value), 1000);
+          setTimeout(() => setHandle((document.getElementById("Handle") as HTMLInputElement)?.value || ""), 1000);
         }
       });
   }
 
   useEffect(() => {
-    const reservedPaths = ["tos", "about", "post", "home", "settings"];
+    const reservedPaths = ["tos", "about", "post", "home", "settings", "privacy"];
     if (handle !== data?.user?.data.handle && handle) {
       if (reservedPaths.includes(handle)) {
         setIsHandleUnique(false);
@@ -111,7 +111,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div>
+    <div className="z-50">
       <div className="grid grid-flow-col">
         <div className="ml-6 grid w-fit grid-flow-col place-items-center"></div>
       </div>
@@ -123,7 +123,7 @@ const EditProfile = () => {
             <p className="mt-[26px]">Handle</p>
             <p className="mt-[28px]">Bio</p>
           </div>
-          <div className="mt-2 grid w-72 grid-flow-row gap-4 font-semibold text-black">
+          <div className="w-54 mt-2 grid grid-flow-row gap-4 font-semibold text-black">
             <input type="file" accept=".png, .jpg, .jpeg" ref={imageRef} onChange={handleFileChange} style={{ display: "none" }} />
             <div className="mb-4 h-fit w-fit">
               <div id="user-handle" className="text-white">

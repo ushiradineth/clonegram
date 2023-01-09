@@ -39,7 +39,7 @@ const BlockedUsers = () => {
   const [blocking, setBlocking] = useState([]);
 
   return (
-    <>
+    <div className="z-50">
       {data?.user?.data.blocking.length || 0 > 0 ? (
         data?.user?.data.blocking.map((user, index) => {
 
@@ -72,7 +72,7 @@ const BlockedUsers = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

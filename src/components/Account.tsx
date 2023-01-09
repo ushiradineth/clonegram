@@ -27,7 +27,7 @@ const Account = () => {
   };
 
   return (
-    <>
+    <div className="z-50">
       {deleteMenu && <OptionMenu title="Delete your account?" description="If you delete your account, your data won't be recoverable" buttonPositive="Delete" buttonNegative="Cancel" onClickPositive={() => deleteUserFunc()} onClickNegative={() => setDeleteMenu(false)} />}
       <div className="flex flex-col items-center justify-center rounded-2xl">
         <div className="flex w-44 flex-col items-center justify-center p-4 font-semibold">
@@ -39,7 +39,7 @@ const Account = () => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
