@@ -17,7 +17,7 @@ const Error = (props: itemType) => {
         <meta name="description" content="Clonegram by Ushira Dineth" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={"grid h-screen place-items-center text-3xl font-light " + data?.theme?.secondary + (data?.viewport == "Web" && props.session && " ml-72 ") + (data?.viewport == "Tab" && props.session && " ml-16 ")}>{props.error}</main>
+      <main className={"grid h-screen place-items-center bg-zinc-900 text-3xl font-light text-white " + (data?.viewport == "Web" && props.session && " ml-72 ") + (data?.viewport == "Tab" && props.session && " ml-16 ")}>{props.error}</main>
     </>
   );
 };
