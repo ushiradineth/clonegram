@@ -4,14 +4,6 @@ import { env } from "../../../env/client.mjs";
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 
 export const userRouter = router({
-  getUsersSearch: protectedProcedure.input(z.object({ key: z.string() })).mutation(({ input, ctx }) => {
-    return ctx.prisma.user.findMany({
-      where: {
-        OR: [{ handle: { contains: input.key } }, { name: { contains: input.key } }],
-      },
-    });
-  }),
-
   getUser: publicProcedure.input(z.object({ id: z.string() })).query(({ input, ctx }) => {
     return ctx.prisma.user.findFirstOrThrow({
       where: {
@@ -107,6 +99,7 @@ export const userRouter = router({
       where: { id: input.userid },
       data: { following: { disconnect: { id: input.pageid } } },
     });
+    
     const q2 = await ctx.prisma.user.update({
       where: { id: input.pageid },
       data: { followers: { disconnect: { id: input.userid } } },
@@ -147,5 +140,21 @@ export const userRouter = router({
     });
 
     return { q1, q2 };
+  }),
+
+  getUsersSearch: protectedProcedure.input(z.object({ key: z.string() })).mutation(({ input, ctx }) => {
+    return ctx.prisma.user.findMany({
+      where: {
+        OR: [{ handle: { contains: input.key } }, { name: { contains: input.key } }],
+      },
+    });
+  }),
+
+  checkIfHandleUnique: protectedProcedure.input(z.object({ key: z.string() })).mutation(({ input, ctx }) => {
+    return ctx.prisma.user.findFirst({
+      where: {
+        handle: input.key,
+      },
+    });
   }),
 });

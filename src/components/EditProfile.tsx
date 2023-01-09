@@ -6,6 +6,8 @@ import { env } from "../env/client.mjs";
 import Spinner from "./Spinner";
 import { useRouter } from "next/router";
 import { DataContext } from "../pages/_app";
+import InputBox from "./InputBox";
+import { FcCheckmark, FcCancel } from "react-icons/fc";
 
 const EditProfile = () => {
   const { data: session } = useSession();
@@ -15,11 +17,20 @@ const EditProfile = () => {
   const [imageURL, setImageURL] = useState<File>();
   const [edited, setEdited] = useState(false);
   const data = useContext(DataContext);
+  const [isHandleUnique, setIsHandleUnique] = useState(true);
+  const [handle, setHandle] = useState(data?.user?.data.handle);
 
   const updateUser = trpc.user.updateUser.useMutation({
     onSuccess: async (result) => {
       data?.user?.refetch();
       router.push({ pathname: result.handle, query: { user: "true" } });
+    },
+  });
+
+  const checkIfHandleUnique = trpc.user.checkIfHandleUnique.useMutation({
+    onSuccess: (d) => {
+      setIsHandleUnique(!Boolean(d));
+      if (handle) setEdited(handle !== data?.user?.data.handle && handle?.length > 5 && (handle?.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/) ? false : true));
     },
   });
 
@@ -73,6 +84,32 @@ const EditProfile = () => {
     img.setAttribute("crossorigin", "anonymous");
   }, [image]);
 
+  if (typeof document !== "undefined" || typeof window !== "undefined") {
+    (document.getElementById("Handle") as HTMLInputElement) &&
+      (document.getElementById("Handle") as HTMLInputElement).addEventListener("keyup", () => {
+        clearTimeout(0);
+        if ((document.getElementById("Handle") as HTMLInputElement).value) {
+          setTimeout(() => setHandle((document.getElementById("Handle") as HTMLInputElement).value), 1000);
+        }
+      });
+  }
+  
+  useEffect(() => {
+    const reservedPaths = ["tos", "about", "post", "home", "settings"];
+
+    if (handle !== data?.user?.data.handle && handle) {
+      if (reservedPaths.includes(handle)) {
+        setIsHandleUnique(false);
+      } else {
+        checkIfHandleUnique.mutate({ key: handle });
+      }
+    }
+  }, [handle]);
+
+  const handleAction = () => {
+    if (handle) return data?.user?.data.handle === handle || handle.length < 6 ? <></> : isHandleUnique && !handle?.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/) ? <FcCheckmark /> : <FcCancel />;
+  };
+
   return (
     <div>
       <div className="grid grid-flow-col">
@@ -80,13 +117,13 @@ const EditProfile = () => {
       </div>
       <div className="grid grid-flow-row place-items-center font-semibold">
         <div className="my-4 mb-8 grid w-fit grid-flow-col place-items-start gap-8">
-          <div className="grid grid-flow-row place-items-end gap-3">
-            <div className="mb-4 mt-2 h-12 w-12 rounded-full">{imageURL && <NextImage className={"rounded-full"} src={URL.createObjectURL(imageURL)} height={48} width={48} alt="Profile Picture" />}</div>
-            <p>Name</p>
-            <p>Handle</p>
-            <p>Bio</p>
+          <div className="grid grid-flow-row place-items-end">
+            <div className="mt-2 h-12 w-12 rounded-full">{imageURL && <NextImage className={"rounded-full"} src={URL.createObjectURL(imageURL)} height={48} width={48} alt="Profile Picture" />}</div>
+            <p className="mt-[36px]">Name</p>
+            <p className="mt-[26px]">Handle</p>
+            <p className="mt-[28px]">Bio</p>
           </div>
-          <div className="mt-2 grid grid-flow-row gap-2 font-semibold text-black">
+          <div className="mt-2 grid w-72 grid-flow-row gap-4 font-semibold text-black">
             <input type="file" accept=".png, .jpg, .jpeg" ref={imageRef} onChange={handleFileChange} style={{ display: "none" }} />
             <div className="mb-4 h-fit w-fit">
               <div id="user-handle" className="text-white">
@@ -96,18 +133,11 @@ const EditProfile = () => {
                 Change profile picture
               </button>
             </div>
-            <input type="text" id="Name" className="border-2 pl-2" onChange={(e) => setEdited(e.target.value !== data?.user?.data.name)} defaultValue={data?.user?.data.name || ""} minLength={1} maxLength={20} />
-            <input type="text" id="Handle" className="border-2 pl-2" onChange={(e) => setEdited(e.target.value !== data?.user?.data.handle)} defaultValue={data?.user?.data.handle} minLength={1} maxLength={20} />
-            <input type="text" id="Bio" className="border-2 pl-2" onChange={(e) => setEdited(e.target.value !== data?.user?.data.bio)} defaultValue={data?.user?.data.bio || ""} maxLength={150} />
-            <button disabled={!edited} id="Submit" className={"mt-2 flex h-12 w-[50%] cursor-pointer items-center justify-center rounded-2xl disabled:cursor-not-allowed disabled:bg-zinc-400 " + (updateUser.isError && " bg-red-400 ") + (edited && "  bg-blue-400 ")} onClick={() => onSave()}>
-              {updateUser.isLoading ? (
-                <svg aria-hidden="true" className="h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
-                  <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
-                </svg>
-              ) : (
-                (updateUser.isIdle || edited) && <p>Submit</p>
-              )}
+            <InputBox id="Name" maxlength={50} minlength={1} placeholder="Name" onChange={(e: any) => setEdited(e.target.value !== data?.user?.data.name)} defaultValue={data?.user?.data.name || ""} />
+            <InputBox id="Handle" maxlength={50} minlength={6} placeholder="Handle" defaultValue={data?.user?.data.handle || ""} action={handleAction()} />
+            <InputBox id="Bio" maxlength={150} placeholder="Bio" onChange={(e: any) => setEdited(e.target.value !== data?.user?.data.bio)} defaultValue={data?.user?.data.bio || ""} />
+            <button disabled={!edited || !isHandleUnique || checkIfHandleUnique.isLoading || handle === data?.user?.data.handle} id="Submit" className={"mt-2 flex h-12 w-[50%] cursor-pointer items-center justify-center rounded-2xl disabled:cursor-not-allowed disabled:bg-zinc-400 " + (updateUser.isError && " bg-red-400 ") + (edited && "  bg-blue-400 ")} onClick={() => (updateUser.isLoading || checkIfHandleUnique.isLoading ? {} : (updateUser.isIdle || edited) && onSave())}>
+              {updateUser.isLoading || checkIfHandleUnique.isLoading ? <Spinner SpinnerOnly={true} /> : (updateUser.isIdle || edited) && <p>Submit</p>}
             </button>
           </div>
         </div>
