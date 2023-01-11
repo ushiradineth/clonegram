@@ -88,10 +88,12 @@ const Layout = (props: itemType) => {
                 <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} ID={"M-Messages"} />
                 <NavBarItem Icon={data?.user?.data.image} ID={"M-Profile"} onClickHandler={() => onClickHandler("/" + data?.user?.data.handle)} active={Boolean(router.query.profile === data?.user?.data.handle && !props.create && !props.search && !props.more)} />
               </div>
-              <div id="Sidebar-More" className={"fixed bottom-5 left-2 z-0 " + (data?.viewport == "Mobile" && " hidden ")}>
-                <NavBarItem Icon={<HiOutlineMenu />} IconOnClick={<HiMenu />} Text={"More"} ID={"More"} onClickHandler={() => props.setMore(!props.more)} active={props.more} />
+              <div id="Sidebar-More" className={"group fixed bottom-5 left-2 z-0 " + (data?.viewport == "Mobile" && " hidden ")}>
+                <button type="button" aria-haspopup="true">
+                  <NavBarItem Icon={<HiOutlineMenu />} IconOnClick={<HiMenu />} Text={"More"} ID={"More"} onClickHandler={() => props.setMore(true)} active={props.more} />
+                </button>
                 {props.more && (
-                  <div id="Sidebar-More-Items" className={"fixed bottom-16 left-6 z-10 w-fit rounded-lg py-1 text-sm " + (data?.theme?.type === "dark" ? " shadow-[0px_0px_10px_rgba(255,255,255,0.2)] " : " shadow-[0px_0px_10px_rgba(0,0,0,0.2)] ") + data?.theme?.secondary}>
+                  <div id="Sidebar-More-Items" className={"invisible fixed bottom-16 left-6 z-10 w-fit origin-bottom-left scale-95 transform rounded-lg py-1 text-sm opacity-0 transition-all duration-300 group-focus-within:visible group-focus-within:scale-100 group-focus-within:opacity-100 " + (data?.theme?.type === "dark" ? " shadow-[0px_0px_10px_rgba(255,255,255,0.2)] " : " shadow-[0px_0px_10px_rgba(0,0,0,0.2)] ") + data?.theme?.secondary}>
                     <MoreItem Icon={<IoMdSettings />} Text="Settings" setMore={props.setMore} onClickHandler={() => router.push("/settings")} />
                     <MoreItem Icon={<RxBookmark />} Text="Saved" setMore={props.setMore} onClickHandler={() => {}} />
                     <MoreItem Icon={<RxTimer />} Text="Your Activity" setMore={props.setMore} onClickHandler={() => {}} />
