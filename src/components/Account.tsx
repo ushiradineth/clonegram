@@ -4,6 +4,7 @@ import { trpc } from "../utils/trpc";
 import OptionMenu from "./OptionMenu";
 import { DataContext } from "../pages/_app";
 import Spinner from "./Spinner";
+import { env } from "../env/client.mjs";
 
 const Account = () => {
   const [deleteMenu, setDeleteMenu] = useState(false);
@@ -23,7 +24,8 @@ const Account = () => {
 
   const onLogout = () => {
     setLogout(true);
-    signOut();
+    signOut({ callbackUrl: env.NEXT_PUBLIC_NEXTAUTH_URL });
+    localStorage.removeItem("clonegram.recentSearch");
   };
 
   return (
