@@ -111,7 +111,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="z-50">
+    <div className="z-10">
       <div className="grid grid-flow-col">
         <div className="ml-6 grid w-fit grid-flow-col place-items-center"></div>
       </div>

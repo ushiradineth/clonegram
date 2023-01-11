@@ -13,13 +13,14 @@ const privacy = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <h1 className="flex w-full justify-center border-b-2 p-4 font-semibold">
+      <h1 className="flex w-full justify-center border-b-2 p-4 font-semibold fixed top-0 bg-white">
           <p>Privacy Policy for clonegram</p>
           <Link href="/">
             <HiChevronLeft className="fixed right-8 mt-1 scale-150" />
           </Link>
         </h1>
-        <div className="grid h-full place-items-start bg-zinc-900 px-4 text-3xl font-light text-white">
+        <div className="grid h-full place-items-start bg-zinc-900 px-4 text-3xl font-light text-white mt-14">
+        
           <h1 className="py-4 font-semibold">Privacy Policy</h1>
           <p className="text-lg">Last updated: January 09, 2023</p>
           <p className="text-lg">This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.</p>
