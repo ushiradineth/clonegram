@@ -143,29 +143,29 @@ const Profile = () => {
                         <div id="id" className="max-w-[200px] overflow-hidden text-ellipsis text-xl">
                           {page?.data?.handle}
                         </div>
-                        <button id="cta" disabled={follow.isLoading || unfollow.isLoading} className={"cursor-pointer text-xs font-semibold disabled:cursor-not-allowed " + (data?.viewport === "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page?.data?.id ? router.push("/settings") : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))}>
+                        <button id="cta" disabled={follow.isLoading || unfollow.isLoading} className={"text-xs font-semibold disabled:cursor-not-allowed " + (data?.viewport === "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page?.data?.id ? router.push("/settings") : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))}>
                           {session?.user?.id === page?.data?.id ? "Edit profile" : follow.isLoading || unfollow.isLoading ? <Spinner SpinnerOnly={true} /> : isFollowing ? "Following" : "Follow"}
                         </button>
-                        {session?.user?.id === page?.data?.id ? <IoMdSettings id="settings" className="scale-150 cursor-pointer" onClick={() => router.push("/settings")} /> : <BsThreeDots className="scale-150 cursor-pointer" onClick={() => (session ? setOptions(true) : router.push("/"))} />}
+                        {session?.user?.id === page?.data?.id ? <IoMdSettings id="settings" className="scale-150" onClick={() => router.push("/settings")} /> : <BsThreeDots className="scale-150 cursor-pointer" onClick={() => (session ? setOptions(true) : router.push("/"))} />}
                       </div>
                     </div>
-                    <button id="cta-mobile" disabled={follow.isLoading || unfollow.isLoading} className={"z-10 mt-2 flex h-fit w-[235px] cursor-pointer items-center justify-center p-2 text-xs font-semibold disabled:cursor-not-allowed " + (data?.viewport != "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border-2 py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page?.data?.id ? router.push("/settings") : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))}>
+                    <button id="cta-mobile" disabled={follow.isLoading || unfollow.isLoading} className={"z-10 mt-2 flex h-fit w-[235px] items-center justify-center p-2 text-xs font-semibold disabled:cursor-not-allowed " + (data?.viewport != "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border-2 py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page?.data?.id ? router.push("/settings") : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))}>
                       {session?.user?.id === page?.data?.id ? "Edit profile" : follow.isLoading || unfollow.isLoading ? <Spinner SpinnerOnly={true} /> : isFollowing ? "Following" : "Follow"}
                     </button>
 
-                    <div id="stats" className={"grid grid-flow-col gap-2 text-sm font-normal " + (data?.viewport == "Mobile" && " hidden ")}>
+                    <div id="stats" className={"grid grid-flow-col gap-2 text-sm font-normal  " + (data?.viewport == "Mobile" && " hidden ")}>
                       <div className="flex gap-1">
                         <p className="font-semibold">{page?.data?.posts.length}</p>
                         <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>posts</p>
                       </div>
-                      <div className="flex cursor-pointer gap-1" onClick={() => (session ? setFollowersMenu(true) : router.push("/"))}>
+                      <button className="flex gap-1" onClick={() => (session ? setFollowersMenu(true) : router.push("/"))}>
                         <p className="font-semibold">{page?.data?.followers.length}</p>
                         <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>followers</p>
-                      </div>
-                      <div className="flex cursor-pointer gap-1" onClick={() => (session ? setFollowingMenu(true) : router.push("/"))}>
+                      </button>
+                      <button className="flex gap-1" onClick={() => (session ? setFollowingMenu(true) : router.push("/"))}>
                         <p className="font-semibold">{page?.data?.following.length}</p>
                         <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>following</p>
-                      </div>
+                      </button>
                     </div>
                     <div id="details" className={"text-sm font-semibold " + (data?.viewport == "Mobile" && " hidden ")}>
                       <div id="name">{page?.data?.name}</div>
@@ -188,14 +188,14 @@ const Profile = () => {
                     <p className="font-semibold">{page?.data?.posts.length}</p>
                     <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>posts</p>
                   </div>
-                  <div className="grid cursor-pointer place-items-center" onClick={() => (session ? setFollowersMenu(true) : router.push("/"))}>
+                  <button className="grid place-items-center" onClick={() => (session ? setFollowersMenu(true) : router.push("/"))}>
                     <p className="font-semibold">{page?.data?.followers.length}</p>
                     <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>followers</p>
-                  </div>
-                  <div className="grid cursor-pointer place-items-center" onClick={() => (session ? setFollowingMenu(true) : router.push("/"))}>
+                  </button>
+                  <button className="grid place-items-center" onClick={() => (session ? setFollowingMenu(true) : router.push("/"))}>
                     <p className="font-semibold">{page?.data?.following.length}</p>
                     <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>following</p>
-                  </div>
+                  </button>
                 </div>
                 <div id="posts" className={"grid grid-cols-3 place-items-center py-10 " + (data?.viewport == "Mobile" && " gap-2 ") + (data?.viewport == "Web" && " w-[832px] gap-4 border-t border-gray-500 px-24 ") + (data?.viewport == "Tab" && " w-[600px] border-t border-gray-500 ")}>
                   {page?.data?.posts.length && page?.data?.posts.length > 0 ? (
