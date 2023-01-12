@@ -4,9 +4,10 @@ import { BiArrowBack, BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { TbRectangle, TbRectangleVertical } from "react-icons/tb";
 import { FiSquare } from "react-icons/fi";
 import OptionMenu from "./OptionMenu";
-import Image from "next/image";
+import NextImage from "next/image";
 import { DataContext } from "../pages/_app";
 import { useContext } from "react";
+import { trpc } from "../utils/trpc";
 
 interface itemType {
   create: boolean;
@@ -19,7 +20,10 @@ const Create = (props: itemType) => {
   const files = fileList ? [...fileList] : [];
   const [discard, setDiscard] = useState(false);
   const [caption, setCaption] = useState(false);
+  const options: number[] = [];
   const data = useContext(DataContext);
+
+  const setPost = trpc.post.setPost.useMutation();
 
   const SelectImage = () => {
     return (
@@ -49,8 +53,6 @@ const Create = (props: itemType) => {
     );
   };
 
-  const options: string[] = [];
-
   const Crop = () => {
     const [imageIndex, setImageIndex] = useState(0);
     const [ratio, setRatio] = useState("Original");
@@ -62,10 +64,34 @@ const Create = (props: itemType) => {
     };
 
     useEffect(() => {
-      options[imageIndex] = ratio;
+      switch (ratio) {
+        case "Original":
+          options[imageIndex] = 0;
+          break;
+        case "16/9":
+          options[imageIndex] = 1.77;
+          break;
+        case "4/5":
+          options[imageIndex] = 0.8;
+          break;
+        case "1/1":
+          options[imageIndex] = 1;
+          break;
+        default:
+          break;
+      }
     }, [ratio]);
 
-    console.log(options);
+    useEffect(() => {
+      if (options[imageIndex]) {
+        options[imageIndex] === 0 && setRatio("Original");
+        options[imageIndex] === 1.77 && setRatio("16/9");
+        options[imageIndex] === 0.8 && setRatio("4/5");
+        options[imageIndex] === 1 && setRatio("1/1");
+      } else {
+        setRatio("Original");
+      }
+    }, [imageIndex]);
 
     return (
       <div className={"absolute top-1/2 left-1/2 z-30 h-fit w-[450px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl transition-all duration-700 " + data?.theme?.tertiary}>
@@ -81,9 +107,9 @@ const Create = (props: itemType) => {
           </div>
         </div>
         <div className={`relative flex items-center justify-center transition-all duration-300 ${ratioCFG[ratio]}`}>
-          <BiChevronRight onClick={() => imageIndex < files.length - 1 && setImageIndex(imageIndex + 1)} className={"fixed right-4 top-[53%] z-20 h-4 w-4 ml-auto scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex < files.length - 1 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
+          <BiChevronRight onClick={() => imageIndex < files.length - 1 && setImageIndex(imageIndex + 1)} className={"fixed right-4 top-[53%] z-20 ml-auto h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex < files.length - 1 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
           <BiChevronLeft onClick={() => imageIndex > 0 && setImageIndex(imageIndex - 1)} className={"fixed left-4 top-[53%] z-20 h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex > 0 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
-          <Image src={URL.createObjectURL(files[imageIndex] || new Blob())} key="image" className={"h-full w-full rounded-b-2xl object-cover "} height={1000} width={1000} alt={"images"} />
+          <NextImage src={URL.createObjectURL(files[imageIndex] || new Blob())} key="image" className={"h-full w-full rounded-b-2xl object-cover "} height={1000} width={1000} alt={"images"} />
           <div className="group">
             <button type="button" aria-haspopup="true" className="fixed bottom-3 left-4 cursor-pointer rounded-full bg-black p-2 text-white shadow-[0px_0px_10px_rgba(0,0,0,0.2)] transition-all duration-300 focus-within:bg-white focus-within:text-black hover:text-gray-500 hover:shadow-[0px_0px_10px_rgba(0,0,0,0.4)]">
               <AiOutlineExpand />
@@ -109,8 +135,26 @@ const Create = (props: itemType) => {
   };
 
   const upload = () => {
-    const dataForm = new FormData();
-    files.forEach((file, i) => dataForm.append(`file-${i}`, file, file.name));
+    const croppedFile: any[] = [];
+    const Links: string[] = [];
+
+    files.forEach(async (element, index) => {
+      if (options[index] && options[index] === 0) {
+        croppedFile.push(element);
+      } else {
+        const t = await crop(URL.createObjectURL(element), options[index] || 0);
+        console.log("t");
+        croppedFile.push(t);
+      }
+
+      Links.push(`/Users/${data?.user?.data.id}/Posts/${(data?.user?.data.posts.length || 0) + 1}/${index}`);
+      await data?.supabase.storage.from("clonegram").upload(`/Users/${data?.user?.data.id}/Posts/${(data?.user?.data.posts.length || 0) + 1}/${index}`, element, {
+        cacheControl: "1",
+        upsert: true,
+      });
+    });
+
+    setPost.mutate({ id: data?.user?.data.id || "", links: Links, caption: (document.getElementById("post-caption") as HTMLInputElement).value || null });
   };
 
   const Caption = () => {
@@ -129,14 +173,14 @@ const Create = (props: itemType) => {
         </div>
         <div className="mr-4 flex">
           <div className="flex h-[90%] w-[50%] items-center justify-center">
-            <Image src={URL.createObjectURL(files[0] || new Blob())} key="image" className="h-full w-full rounded-bl-2xl object-cover" height={500} width={400} alt={"image"} />
+            <NextImage src={URL.createObjectURL(files[0] || new Blob())} key="image" className="h-full w-full rounded-bl-2xl object-cover" height={500} width={400} alt={"image"} />
           </div>
           <div className="ml-4 mt-2 h-12">
             <div className="flex gap-2">
-              <Image src={data?.user?.data.image || ""} key="image" className="h-8 w-8 rounded-full" height={100} width={100} alt={"image"} />
+              <NextImage src={data?.user?.data.image || ""} key="image" className="h-8 w-8 rounded-full" height={100} width={100} alt={"image"} />
               {data?.user?.data.handle}
             </div>
-            <input placeholder="Write a caption..." className={"h-full w-full focus:outline-none " + data?.theme?.tertiary} />
+            <input id="post-caption" placeholder="Write a caption..." className={"m-2 mt-4 focus:outline-none " + data?.theme?.tertiary} />
           </div>
         </div>
       </div>
@@ -152,6 +196,7 @@ const Create = (props: itemType) => {
           buttonPositive="Discard"
           buttonNegative="Cancel"
           onClickPositive={() => {
+            setCaption(false);
             setFileList(null);
             setDiscard(false);
           }}
@@ -172,3 +217,49 @@ const Create = (props: itemType) => {
 };
 
 export default Create;
+
+function crop(url: any, aspectRatio: number) {
+  // we return a Promise that gets resolved with our canvas element
+  return new Promise((resolve) => {
+    // this image will hold our source image data
+    const inputImage = new Image();
+
+    // we want to wait for our image to load
+    inputImage.onload = () => {
+      // let's store the width and height of our image
+      const inputWidth = inputImage.naturalWidth;
+      const inputHeight = inputImage.naturalHeight;
+
+      // get the aspect ratio of the input image
+      const inputImageAspectRatio = inputWidth / inputHeight;
+
+      // if it's bigger than our target aspect ratio
+      let outputWidth = inputWidth;
+      let outputHeight = inputHeight;
+      if (inputImageAspectRatio > aspectRatio) {
+        outputWidth = inputHeight * aspectRatio;
+      } else if (inputImageAspectRatio < aspectRatio) {
+        outputHeight = inputWidth / aspectRatio;
+      }
+
+      // calculate the position to draw the image at
+      const outputX = (outputWidth - inputWidth) * 0.5;
+      const outputY = (outputHeight - inputHeight) * 0.5;
+
+      // create a canvas that will present the output image
+      const outputImage = document.createElement("canvas");
+
+      // set it to the same size as the image
+      outputImage.width = outputWidth;
+      outputImage.height = outputHeight;
+
+      // draw our image at position 0, 0 on the canvas
+      const ctx = outputImage.getContext("2d");
+      ctx?.drawImage(inputImage, outputX, outputY);
+      resolve(outputImage);
+    };
+
+    // start loading our image
+    inputImage.src = url;
+  });
+}
