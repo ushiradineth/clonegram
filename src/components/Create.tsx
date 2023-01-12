@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { AiOutlineClose, AiOutlineExpand } from "react-icons/ai";
 import { BiArrowBack, BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { TbRectangle, TbRectangleVertical } from "react-icons/tb";
@@ -19,7 +19,6 @@ const Create = (props: itemType) => {
   const files = fileList ? [...fileList] : [];
   const [discard, setDiscard] = useState(false);
   const [caption, setCaption] = useState(false);
-  const [ratio, setRatio] = useState("16/9");
   const data = useContext(DataContext);
 
   const SelectImage = () => {
@@ -52,9 +51,20 @@ const Create = (props: itemType) => {
 
   const Crop = () => {
     const [imageIndex, setImageIndex] = useState(0);
+    const [ratio, setRatio] = useState("Original");
+    const ratioCFG: { [char: string]: string } = {
+      Original: "aspect-none",
+      "16/9": "aspect-h-9 aspect-w-16",
+      "4/5": "aspect-h-5 aspect-w-4",
+      "1/1": "aspect-h-1 aspect-w-1",
+    };
+
+    useEffect(() => {
+      console.log(ratioCFG[ratio]);
+    }, [ratio]);
 
     return (
-      <div className={"absolute top-1/2 left-1/2 z-30 h-[500px] w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl transition-all duration-700 " + data?.theme?.tertiary}>
+      <div className={"absolute top-1/2 left-1/2 z-30 h-fit w-[450px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl transition-all duration-700 " + data?.theme?.tertiary}>
         <div className="flex h-12 w-full items-center justify-center font-semibold">
           <div className="grid w-full grid-flow-col grid-cols-3 border-b-[2px] py-2">
             <div className="flex cursor-pointer items-center">
@@ -66,15 +76,18 @@ const Create = (props: itemType) => {
             </button>
           </div>
         </div>
-        <div className="flex h-[90%] items-center justify-center">
+        <div className={`relative flex items-center justify-center transition-all duration-300 ${ratioCFG[ratio]}`}>
           <BiChevronLeft onClick={() => imageIndex > 0 && setImageIndex(imageIndex - 1)} className={"fixed left-4 top-[53%] scale-150 rounded-full bg-zinc-600 " + (imageIndex > 0 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
           <BiChevronRight onClick={() => imageIndex < files.length - 1 && setImageIndex(imageIndex + 1)} className={"fixed right-4 top-[53%] scale-150 rounded-full bg-zinc-600 " + (imageIndex < files.length - 1 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
-          <Image src={URL.createObjectURL(files[imageIndex] || new Blob())} key="image" className="h-full w-full object-contain" height={500} width={400} alt={"images"} />
+          <Image src={URL.createObjectURL(files[imageIndex] || new Blob())} key="image" className={"h-full w-full rounded-b-2xl object-cover "} height={1000} width={1000} alt={"images"} />
           <div className="group">
-            <button type="button" aria-haspopup="true" className="fixed bottom-2 left-4 cursor-pointer rounded-full bg-black p-2 text-white shadow-[0px_0px_10px_rgba(0,0,0,0.7)] transition-all duration-300 focus-within:bg-white focus-within:text-black hover:text-gray-500 hover:shadow-[0px_0px_10px_rgba(0,0,0,0.4)]">
+            <button type="button" aria-haspopup="true" className="fixed bottom-3 left-4 cursor-pointer rounded-full bg-black p-2 text-white shadow-[0px_0px_10px_rgba(0,0,0,0.2)] transition-all duration-300 focus-within:bg-white focus-within:text-black hover:text-gray-500 hover:shadow-[0px_0px_10px_rgba(0,0,0,0.4)]">
               <AiOutlineExpand />
             </button>
-            <div className="invisible fixed bottom-12 left-4 grid origin-bottom -translate-x-2 scale-95 transform cursor-pointer grid-flow-row rounded-lg bg-black bg-opacity-70 font-semibold text-gray-400 opacity-0 transition-all duration-300 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:scale-100 group-focus-within:opacity-100">
+            <div className="fixed bottom-12 left-4 grid origin-bottom -translate-x-2 scale-95 transform cursor-pointer grid-flow-row rounded-lg bg-black bg-opacity-70 font-semibold text-gray-400 opacity-0 transition-all duration-300 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:scale-100 group-focus-within:opacity-100">
+              <div onClick={() => setRatio("Original")} className={"grid grid-flow-col place-items-center gap-2 border-b-[1px] py-2 px-4 " + (ratio === "Original" && " text-white ")}>
+                Original
+              </div>
               <div onClick={() => setRatio("1/1")} className={"grid grid-flow-col place-items-center gap-2 border-b-[1px] py-2 px-4 " + (ratio === "1/1" && " text-white ")}>
                 1:1 <FiSquare />
               </div>
@@ -110,7 +123,7 @@ const Create = (props: itemType) => {
             </button>
           </div>
         </div>
-        <div className="flex mr-4">
+        <div className="mr-4 flex">
           <div className="flex h-[90%] w-[50%] items-center justify-center">
             <Image src={URL.createObjectURL(files[0] || new Blob())} key="image" className="h-full w-full rounded-bl-2xl object-cover" height={500} width={400} alt={"image"} />
           </div>
@@ -146,7 +159,7 @@ const Create = (props: itemType) => {
       <AiOutlineClose
         className={"fixed top-8 right-8 z-50 scale-150 cursor-pointer " + (data?.theme?.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")}
         onClick={() => {
-          setDiscard(true);
+          fileList ? setDiscard(true) : props.setCreate(false);
         }}
       />
       <div>{caption ? <Caption /> : fileList ? <Crop /> : <SelectImage />}</div>
