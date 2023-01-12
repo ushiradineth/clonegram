@@ -49,6 +49,8 @@ const Create = (props: itemType) => {
     );
   };
 
+  const options: string[] = [];
+
   const Crop = () => {
     const [imageIndex, setImageIndex] = useState(0);
     const [ratio, setRatio] = useState("Original");
@@ -60,8 +62,10 @@ const Create = (props: itemType) => {
     };
 
     useEffect(() => {
-      console.log(ratioCFG[ratio]);
+      options[imageIndex] = ratio;
     }, [ratio]);
+
+    console.log(options);
 
     return (
       <div className={"absolute top-1/2 left-1/2 z-30 h-fit w-[450px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl transition-all duration-700 " + data?.theme?.tertiary}>
@@ -77,8 +81,8 @@ const Create = (props: itemType) => {
           </div>
         </div>
         <div className={`relative flex items-center justify-center transition-all duration-300 ${ratioCFG[ratio]}`}>
-          <BiChevronLeft onClick={() => imageIndex > 0 && setImageIndex(imageIndex - 1)} className={"fixed left-4 top-[53%] scale-150 rounded-full bg-zinc-600 " + (imageIndex > 0 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
-          <BiChevronRight onClick={() => imageIndex < files.length - 1 && setImageIndex(imageIndex + 1)} className={"fixed right-4 top-[53%] scale-150 rounded-full bg-zinc-600 " + (imageIndex < files.length - 1 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
+          <BiChevronRight onClick={() => imageIndex < files.length - 1 && setImageIndex(imageIndex + 1)} className={"fixed right-4 top-[53%] z-20 h-4 w-4 ml-auto scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex < files.length - 1 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
+          <BiChevronLeft onClick={() => imageIndex > 0 && setImageIndex(imageIndex - 1)} className={"fixed left-4 top-[53%] z-20 h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex > 0 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
           <Image src={URL.createObjectURL(files[imageIndex] || new Blob())} key="image" className={"h-full w-full rounded-b-2xl object-cover "} height={1000} width={1000} alt={"images"} />
           <div className="group">
             <button type="button" aria-haspopup="true" className="fixed bottom-3 left-4 cursor-pointer rounded-full bg-black p-2 text-white shadow-[0px_0px_10px_rgba(0,0,0,0.2)] transition-all duration-300 focus-within:bg-white focus-within:text-black hover:text-gray-500 hover:shadow-[0px_0px_10px_rgba(0,0,0,0.4)]">
