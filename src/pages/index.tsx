@@ -29,7 +29,7 @@ const Index = () => {
       </Head>
       <main className="grid min-h-screen place-items-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <div className="grid grid-flow-col place-items-center">
-          <div className="grid place-items-center w-full gap-6 text-lg text-white sm:text-2xl">
+          <div className="grid w-full place-items-center gap-6 text-lg text-white sm:text-2xl">
             <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
               Clone<span className="text-[hsl(280,100%,70%)]">gram</span>
             </h1>
@@ -49,7 +49,7 @@ const Index = () => {
             </div>
           </div>
         </div>
-        <div className="fixed bottom-0 grid gap-4 h-20 w-screen grid-flow-col place-items-center px-[45%] text-white font-semibold">
+        <div className="fixed bottom-0 grid h-fit w-fit grid-flow-col place-items-center gap-4 p-4 font-semibold text-white">
           <Link href={"/about"}>About</Link>
           <Link href={"/privacy"}>Privacy</Link>
         </div>
