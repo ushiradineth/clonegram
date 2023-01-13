@@ -143,7 +143,6 @@ const Create = (props: itemType) => {
         croppedFile.push(element);
       } else {
         const t = await crop(URL.createObjectURL(element), options[index] || 0);
-        console.log("t");
         croppedFile.push(t);
       }
 
