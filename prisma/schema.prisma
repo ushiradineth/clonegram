@@ -84,12 +84,12 @@ model Post {
   imageURLs String[]
   comments  Comment[]
 
-  user  User   @relation("PostUser", fields: [userId], references: [id])
+  user  User   @relation("UserPosts", fields: [userId], references: [id], onDelete: Cascade)
   likes User[] @relation("PostLikes")
   saved User[] @relation("PostSaved")
 
   //relations for same table refs or cross table refs
-  UserPostsRelation User[] @relation("UserPosts")
+  UserPostsRelation User[] @relation("PostUser")
   UserLikesRelation User[] @relation("UserLikes")
   UserSavedRelation User[] @relation("UserSaved")
 }
