@@ -1,10 +1,10 @@
-import { type User } from "@prisma/client";
+import { type User, type Post } from "@prisma/client";
 
 export interface UserType {
   data: User & {
     followers: User[];
     following: User[];
-    posts: User[];
+    posts: Post[];
     blockedby: User[];
     blocking: User[];
   };
