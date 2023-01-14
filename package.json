@@ -21,6 +21,7 @@
         "next": "^13.0.6",
         "next-auth": "4.17.0",
         "react": "^18.2.0",
+        "react-cropper": "^2.1.8",
         "react-dom": "^18.2.0",
         "react-icons": "^4.7.1",
         "superjson": "1.9.1",
