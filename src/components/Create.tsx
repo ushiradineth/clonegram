@@ -8,7 +8,7 @@ import NextImage from "next/image";
 import { DataContext } from "../pages/_app";
 import { useContext } from "react";
 import { trpc } from "../utils/trpc";
-import { Coordinates, Cropper, CropperRef } from "react-advanced-cropper";
+import { Cropper, CropperRef } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
 
 interface itemType {
@@ -25,11 +25,10 @@ const Create = (props: itemType) => {
   const [options, setOptions] = useState<{ ratio: number; coordinates: {} }[]>([]);
   const [imageIndex, setImageIndex] = useState(0);
   const [ratioSetting, setRatioSetting] = useState("Original");
-  const [images, SetImages] = useState<File[]>([]);
   const data = useContext(DataContext);
   const setPost = trpc.post.setPost.useMutation();
-  let croppedImages = useRef([...images]);
-  let imgCoordinates = useRef(new Array(images.length));
+  let croppedImages = useRef(new Array());
+  let imgCoordinates = useRef(new Array());
 
   useEffect(() => {
     if (options.length === files.length) return;
@@ -39,7 +38,7 @@ const Create = (props: itemType) => {
       obj.push({ ratio: 0, coordinates: {} });
       imageArr.push(e);
     });
-    SetImages(imageArr);
+    croppedImages.current = imageArr;
     setOptions(obj);
   }, [fileList]);
 
@@ -123,14 +122,14 @@ const Create = (props: itemType) => {
     const onInteractionEnd = async (cropper: CropperRef) => {
       const blob = await (await fetch(cropper.getCanvas()?.toDataURL() || "")).blob();
       const file = new File([blob], `${imageIndex}.jpg`, { type: "image/jpeg" });
-
+      
       const temp = [...croppedImages.current];
       temp[imageIndex] = file;
       croppedImages.current = [...temp];
-
+      
       imgCoordinates.current[imageIndex] = cropper.getCoordinates();
     };
-
+    
     const onReady = async (cropper: CropperRef) => {
       if (!imgCoordinates.current[imageIndex]) {
         imgCoordinates.current[imageIndex] = cropper.getCoordinates();
@@ -145,13 +144,7 @@ const Create = (props: itemType) => {
               <BiArrowBack className="z-10 ml-5 scale-150 cursor-pointer" onClick={() => setDiscard(true)} />
             </div>
             <div className="grid place-items-center">Preview</div>
-            <button
-              className="mr-5 grid place-items-end text-blue-400"
-              onClick={() => {
-                SetImages([...croppedImages.current]);
-                setCaption(true);
-              }}
-            >
+            <button className="mr-5 grid place-items-end text-blue-400" onClick={() => setCaption(true)}>
               Next
             </button>
           </div>
@@ -160,23 +153,7 @@ const Create = (props: itemType) => {
           <BiChevronRight onClick={() => imageIndex < files.length - 1 && setImageIndex(imageIndex + 1)} className={"fixed right-4 top-[53%] z-20 ml-auto h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex < files.length - 1 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
           <BiChevronLeft onClick={() => imageIndex > 0 && setImageIndex(imageIndex - 1)} className={"fixed left-4 top-[53%] z-20 h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex > 0 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
           <div className={"h-full w-full rounded-b-2xl object-cover"}>
-            <Cropper
-              src={URL.createObjectURL(files[imageIndex] || new Blob())}
-              onInteractionEnd={onInteractionEnd}
-              onReady={onReady}
-              className={"cropper"}
-              defaultCoordinates={
-                imgCoordinates.current[imageIndex]
-                  ? imgCoordinates.current[imageIndex]
-                  : {
-                      left: 0,
-                      top: 0,
-                      width: 999999,
-                      height: 999999,
-                    }
-              }
-              stencilProps={options[imageIndex]?.ratio ? { aspectRatio: options[imageIndex]?.ratio || 1 } : {}}
-            />
+            <Cropper src={URL.createObjectURL(files[imageIndex] || new Blob())} onInteractionEnd={onInteractionEnd} onReady={onReady} className={"cropper"} defaultCoordinates={imgCoordinates.current[imageIndex]} stencilProps={options[imageIndex]?.ratio ? { aspectRatio: options[imageIndex]?.ratio || 1 } : {}} />
           </div>
           {/* <NextImage src={URL.createObjectURL(files[imageIndex] || new Blob())} key="image" className={"h-full w-full rounded-b-2xl object-cover "} height={1000} width={1000} alt={"images"} /> */}
           <div className="group">
@@ -262,9 +239,12 @@ const Create = (props: itemType) => {
           onClickPositive={() => {
             setCaption(false);
             setFileList(null);
-            imgCoordinates.current = new Array(images.length);
             setDiscard(false);
             setImageIndex(0);
+            setOptions([]);
+            setRatioSetting("Original");
+            croppedImages.current = [];
+            imgCoordinates.current = [];
           }}
           onClickNegative={() => {
             setDiscard(false);
