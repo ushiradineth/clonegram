@@ -8,8 +8,8 @@ import NextImage from "next/image";
 import { DataContext } from "../pages/_app";
 import { useContext } from "react";
 import { trpc } from "../utils/trpc";
-import Cropper from "react-cropper";
-import "cropperjs/dist/cropper.css";
+import { Cropper, CropperRef } from "react-advanced-cropper";
+import "react-advanced-cropper/dist/style.css";
 
 interface itemType {
   create: boolean;
@@ -27,8 +27,8 @@ const Create = (props: itemType) => {
   const [ratioSetting, setRatioSetting] = useState("Original");
   const [images, SetImages] = useState<File[]>([]);
   const data = useContext(DataContext);
-
   const setPost = trpc.post.setPost.useMutation();
+  let croppedImages = useRef([...images]);
 
   useEffect(() => {
     if (options.length === files.length) return;
@@ -38,7 +38,7 @@ const Create = (props: itemType) => {
       obj.push({ ratio: 0 });
       imageArr.push(e);
     });
-    SetImages(images);
+    SetImages(imageArr);
     setOptions(obj);
   }, [fileList]);
 
@@ -90,21 +90,6 @@ const Create = (props: itemType) => {
     }
   }, [imageIndex]);
 
-  const cropperRef = useRef<HTMLImageElement>(null);
-  const onCrop = async () => {
-    const imageElement: any = cropperRef?.current;
-    const cropper: any = imageElement?.cropper;
-    const blob = await (await fetch(cropper.getCroppedCanvas().toDataURL())).blob();
-    const file = new File([blob], `${imageIndex}.jpg`, { type: "image/jpeg" });
-
-    // if (images) {      
-    //   const temp = [...images];
-    //   temp[imageIndex] = file;
-    //   SetImages(temp);
-    //   console.log(URL.createObjectURL(temp[imageIndex]!));
-    // }
-  };
-
   const SelectImage = () => {
     return (
       <div className={"absolute top-1/2 left-1/2 z-30 h-[500px] w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl transition-all duration-700 " + data?.theme?.tertiary}>
@@ -134,6 +119,15 @@ const Create = (props: itemType) => {
   };
 
   const Crop = () => {
+    const onChange = async (cropper: CropperRef) => {
+      const blob = await (await fetch(cropper.getCanvas()?.toDataURL() || "")).blob();
+      const file = new File([blob], `${imageIndex}.jpg`, { type: "image/jpeg" });
+
+      const temp = [...croppedImages.current];
+      temp[imageIndex] = file;
+      croppedImages.current = [...temp];
+    };
+
     return (
       <div className={"absolute top-1/2 left-1/2 z-30 h-fit w-[450px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl transition-all duration-700 " + data?.theme?.tertiary}>
         <div className="flex h-12 w-full items-center justify-center font-semibold">
@@ -142,7 +136,13 @@ const Create = (props: itemType) => {
               <BiArrowBack className="z-10 ml-5 scale-150 cursor-pointer" onClick={() => setDiscard(true)} />
             </div>
             <div className="grid place-items-center">Preview</div>
-            <button className="mr-5 grid place-items-end text-blue-400" onClick={() => setCaption(true)}>
+            <button
+              className="mr-5 grid place-items-end text-blue-400"
+              onClick={() => {
+                SetImages([...croppedImages.current]);
+                setCaption(true);
+              }}
+            >
               Next
             </button>
           </div>
@@ -150,14 +150,13 @@ const Create = (props: itemType) => {
         <div className="relative flex items-center justify-center transition-all duration-300">
           <BiChevronRight onClick={() => imageIndex < files.length - 1 && setImageIndex(imageIndex + 1)} className={"fixed right-4 top-[53%] z-20 ml-auto h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex < files.length - 1 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
           <BiChevronLeft onClick={() => imageIndex > 0 && setImageIndex(imageIndex - 1)} className={"fixed left-4 top-[53%] z-20 h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex > 0 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
-          <Cropper src={URL.createObjectURL(files[imageIndex] || new Blob())} initialAspectRatio={options[imageIndex]?.ratio} guides={false} crop={onCrop} ref={cropperRef} />
-
+          <Cropper src={URL.createObjectURL(files[imageIndex] || new Blob())} onInteractionEnd={onChange} className={"cropper"} stencilProps={options[imageIndex]?.ratio ? { aspectRatio: options[imageIndex]?.ratio || 1 } : {}} />
           {/* <NextImage src={URL.createObjectURL(files[imageIndex] || new Blob())} key="image" className={"h-full w-full rounded-b-2xl object-cover "} height={1000} width={1000} alt={"images"} /> */}
           <div className="group">
             <button type="button" aria-haspopup="true" className="fixed bottom-3 left-4 cursor-pointer rounded-full bg-black p-2 text-white shadow-[0px_0px_10px_rgba(0,0,0,0.2)] transition-all duration-300 focus-within:bg-white focus-within:text-black hover:text-gray-500 hover:shadow-[0px_0px_10px_rgba(0,0,0,0.4)]">
               <AiOutlineExpand />
             </button>
-            <div className="fixed bottom-12 left-4 grid origin-bottom -translate-x-2 scale-95 transform cursor-pointer grid-flow-row rounded-lg bg-black bg-opacity-70 font-semibold text-gray-400 opacity-0 transition-all duration-300 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:scale-100 group-focus-within:opacity-100">
+            <div className="invisible fixed bottom-12 left-4 grid origin-bottom -translate-x-2 scale-95 transform cursor-pointer grid-flow-row rounded-lg bg-black bg-opacity-70 font-semibold text-gray-400 opacity-0 transition-all duration-300 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:scale-100 group-focus-within:opacity-100">
               <div onClick={() => setRatioSetting("Original")} className={"grid grid-flow-col place-items-center gap-2 border-b-[1px] py-2 px-4 " + (ratioSetting === "Original" && " text-white ")}>
                 Original
               </div>
@@ -179,17 +178,9 @@ const Create = (props: itemType) => {
 
   const upload = () => {
     if (!options) return;
-    const croppedFiles: any[] = [];
     const Links: string[] = [];
 
-    files.forEach(async (element, index) => {
-      if (options[index] && options[index]?.ratio === 0) {
-        croppedFiles.push(element);
-      } else {
-        const image = document.getElementById("imageCrop");
-        croppedFiles.push();
-      }
-
+    croppedImages.current.forEach(async (element, index) => {
       Links.push(`/Users/${data?.user?.data.id}/Posts/${(data?.user?.data.posts.length || 0) + 1}/${index}`);
       await data?.supabase.storage.from("clonegram").upload(`/Users/${data?.user?.data.id}/Posts/${(data?.user?.data.posts.length || 0) + 1}/${index}`, element, {
         cacheControl: "1",
@@ -197,7 +188,7 @@ const Create = (props: itemType) => {
       });
     });
 
-    // if (Links.length === files.length) setPost.mutate({ id: data?.user?.data.id || "", links: Links, caption: (document.getElementById("post-caption") as HTMLInputElement).value || null });
+    if (Links.length === files.length) setPost.mutate({ id: data?.user?.data.id || "", links: Links, caption: (document.getElementById("post-caption") as HTMLInputElement).value || null });
   };
 
   const Caption = () => {
