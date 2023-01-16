@@ -133,7 +133,7 @@ const Profile = () => {
             </div>
           )}
           <div className={" " + (data?.viewport == "Web" && session && " ml-72 ") + (data?.viewport == "Tab" && session && " ml-16 ")}>
-            <div id="Background" className={"flex min-h-screen flex-col items-center " + data?.theme?.secondary}>
+            <div id="Background" className={"flex h-fit flex-col items-center " + data?.theme?.secondary}>
               <div className="mt-8 grid w-fit place-items-center">
                 <div id="user-details" className={"flex h-fit py-5 " + (data?.viewport == "Mobile" && " w-[400px] ") + (data?.viewport == "Web" && " w-[700px] items-center justify-center ") + (data?.viewport == "Tab" && " w-[500px] items-center justify-center ")}>
                   <Image className={"rounded-full " + (data?.viewport == "Mobile" ? " mr-2 ml-2 mt-4 h-24 w-24 " : " mr-10 flex w-24 scale-125 justify-center ")} src={page?.data?.image ? page?.data?.image : ""} height={96} width={96} alt="Profile Picture" priority />
@@ -183,7 +183,7 @@ const Profile = () => {
                     {page?.data?.bio}
                   </div>
                 </div>
-                <div id="stats-mobile" className={"z-10 grid w-screen grid-flow-col place-items-center border-y border-gray-500 py-2 text-sm font-normal " + (data?.viewport != "Mobile" && " hidden ")}>
+                <div id="stats-mobile" className={"z-10 grid w-[90%] grid-flow-col place-items-center border-y border-gray-500 py-2 text-sm font-normal " + (data?.viewport != "Mobile" && " hidden ")}>
                   <div className="grid place-items-center">
                     <p className="font-semibold">{page?.data?.posts.length}</p>
                     <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>posts</p>
@@ -197,17 +197,13 @@ const Profile = () => {
                     <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>following</p>
                   </button>
                 </div>
-                <div id="posts" className={"grid grid-cols-3 place-items-center py-10 " + (data?.viewport == "Mobile" && " gap-2 ") + (data?.viewport == "Web" && " w-[832px] gap-4 border-t border-gray-500 px-24 ") + (data?.viewport == "Tab" && " w-[600px] border-t border-gray-500 ")}>
-                  <div className={"col-span-3 grid grid-cols-3 place-items-start " + (data?.viewport == "Mobile" ? " h-[392px] w-[392px] " : " h-[624px] w-full ")}>
-                    {page?.data?.posts ? (
-                      page.data.posts.map((element, index) => {
-                        return (
-                          <div key={index} className={"flex flex-col items-center justify-center bg-red-300 " + (data?.viewport == "Mobile" && " h-32 w-32 ") + (data?.viewport == "Web" && " h-52 w-52 ") + (data?.viewport == "Tab" && " m-2 mb-0 h-48 w-48 ")}>
-                            <p>{element.caption}</p>
-                            <p>{element.id}</p>
-                          </div>
-                        );
-                      })
+                <div id="posts" className={"grid h-fit grid-cols-3 place-items-center py-10 " + (data?.viewport == "Web" && " w-[832px] border-t border-gray-500 px-24 ") + (data?.viewport == "Tab" && " w-[600px] border-t border-gray-500 ")}>
+                  <div className={"col-span-3 grid w-[90%] grid-cols-3 place-items-start gap-1 " + (data?.viewport == "Mobile" && " mb-10 ")}>
+                    {page?.data?.posts.length ? (
+                      page.data.posts
+                        .slice(0)
+                        .reverse()
+                        .map((element, index) => <Image src={element.imageURLs[0] || ""} height={500} width={500} onClick={() => router.push("/post/" + element.id)} alt={element.id} key={index} className={"cursor-pointer bg-red-300 object-cover " + (data?.viewport == "Mobile" && " h-40 w-40 ") + (data?.viewport == "Web" && " h-48 w-48 ") + (data?.viewport == "Tab" && " h-48 w-48 ")} />)
                     ) : (
                       <div className="col-span-3 flex h-full w-full flex-col items-center justify-center p-4">
                         <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
