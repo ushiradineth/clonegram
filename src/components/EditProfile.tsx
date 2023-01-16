@@ -107,7 +107,7 @@ const EditProfile = () => {
   }
 
   const handleAction = () => {
-    if (handle) return data?.user?.data.handle === handle || handle.length < 6 ? <></> : isHandleUnique && !handle?.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/) ? <FcCheckmark /> : <FcCancel />;
+    if (handle) return <div className="">{data?.user?.data.handle === handle || handle.length < 6 ? <></> : isHandleUnique && !handle?.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/) ? <FcCheckmark /> : <FcCancel />}</div>;
   };
 
   return (

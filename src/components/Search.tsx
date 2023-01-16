@@ -132,7 +132,7 @@ const Search = (props: itemType) => {
                         (document.getElementById("search") as HTMLInputElement).value = "";
                         setisEmpty(true);
                       }}
-                      className="cursor-pointer"
+                      className="ml-16 cursor-pointer"
                     />
                   }
                 />
