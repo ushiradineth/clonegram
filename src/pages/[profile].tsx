@@ -10,7 +10,7 @@ import Spinner from "../components/Spinner";
 import ListOfUsers from "../components/ListOfUsers";
 import ProfileOptions from "../components/ProfileOptions";
 import Error from "../components/Error";
-import { UserType } from "../types/types";
+import { type UserType } from "../types/types";
 import Head from "next/head";
 import { DataContext } from "../pages/_app";
 import { useContext } from "react";
@@ -205,7 +205,7 @@ const Profile = () => {
                         .reverse()
                         .map((element, index) => <Image src={element.imageURLs[0] || ""} height={500} width={500} onClick={() => router.push("/post/" + element.id)} alt={element.id} key={index} className={"cursor-pointer bg-red-300 object-cover " + (data?.viewport == "Mobile" && " h-40 w-40 ") + (data?.viewport == "Web" && " h-48 w-48 ") + (data?.viewport == "Tab" && " h-48 w-48 ")} />)
                     ) : (
-                      <div className="col-span-3 flex h-full w-full flex-col items-center justify-center p-4">
+                      <div className="col-span-3 flex h-full min-h-screen w-full flex-col items-center justify-center p-4">
                         <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
                           <FiCamera className="scale-x-[-5] scale-y-[5] transform" />
                         </div>
