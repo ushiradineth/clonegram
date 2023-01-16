@@ -5,7 +5,7 @@ import { DataContext } from "../pages/_app";
 import { useContext } from "react";
 
 const Home = () => {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const data = useContext(DataContext);
 
   if (status === "unauthenticated") {

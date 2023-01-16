@@ -8,6 +8,8 @@ import { BiUserX } from "react-icons/bi";
 import { DataContext } from "../pages/_app";
 
 const BlockedUsers = () => {
+  const [blocking, setBlocking] = useState([]);
+
   const { data: session } = useSession();
   const router = useRouter();
   const data = useContext(DataContext);
@@ -36,7 +38,6 @@ const BlockedUsers = () => {
 
   if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
 
-  const [blocking, setBlocking] = useState([]);
 
   return (
     <div className="z-50">
@@ -68,7 +69,7 @@ const BlockedUsers = () => {
             <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
               <BiUserX className="scale-x-[-6] scale-y-[6] transform" />
             </div>
-            <div className="text-sm">You'll see all the people you have blocked</div>
+            <div className="text-sm">You&lsquo;ll see all the people you have blocked</div>
           </div>
         </div>
       )}

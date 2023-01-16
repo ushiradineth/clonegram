@@ -34,6 +34,33 @@ const EditProfile = () => {
     },
   });
 
+  useEffect(() => {
+    const img = new (Image as any)();
+    img.src = image ? URL.createObjectURL(image) : data?.user?.data.image;
+    img.onload = async function () {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = 240;
+      canvas.height = 240;
+      ctx?.drawImage(img, 0, 0, 240, 240);
+      const blob = await (await fetch(canvas.toDataURL("image/jpeg"))).blob();
+      const file = new File([blob], "fileName.jpg", { type: "image/jpeg" });
+      setImageURL(file);
+    };
+    img.setAttribute("crossorigin", "anonymous");
+  }, [image]);
+
+  useEffect(() => {
+    const reservedPaths = ["tos", "about", "post", "home", "settings", "privacy"];
+    if (handle !== data?.user?.data.handle && handle) {
+      if (reservedPaths.includes(handle)) {
+        setIsHandleUnique(false);
+      } else {
+        checkIfHandleUnique.mutate({ key: handle });
+      }
+    }
+  }, [handle]);
+
   if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
 
   const handleUploadClick = () => {
@@ -68,22 +95,6 @@ const EditProfile = () => {
     }
   };
 
-  useEffect(() => {
-    var img = new (Image as any)();
-    img.src = image ? URL.createObjectURL(image) : data?.user?.data.image;
-    img.onload = async function () {
-      var canvas = document.createElement("canvas");
-      var ctx = canvas.getContext("2d");
-      canvas.width = 240;
-      canvas.height = 240;
-      ctx?.drawImage(img, 0, 0, 240, 240);
-      const blob = await (await fetch(canvas.toDataURL("image/jpeg"))).blob();
-      const file = new File([blob], "fileName.jpg", { type: "image/jpeg" });
-      setImageURL(file);
-    };
-    img.setAttribute("crossorigin", "anonymous");
-  }, [image]);
-
   if (typeof document !== "undefined" || typeof window !== "undefined") {
     (document.getElementById("Handle") as HTMLInputElement) &&
       (document.getElementById("Handle") as HTMLInputElement).addEventListener("keyup", () => {
@@ -94,17 +105,6 @@ const EditProfile = () => {
         }
       });
   }
-
-  useEffect(() => {
-    const reservedPaths = ["tos", "about", "post", "home", "settings", "privacy"];
-    if (handle !== data?.user?.data.handle && handle) {
-      if (reservedPaths.includes(handle)) {
-        setIsHandleUnique(false);
-      } else {
-        checkIfHandleUnique.mutate({ key: handle });
-      }
-    }
-  }, [handle]);
 
   const handleAction = () => {
     if (handle) return data?.user?.data.handle === handle || handle.length < 6 ? <></> : isHandleUnique && !handle?.match(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/) ? <FcCheckmark /> : <FcCancel />;

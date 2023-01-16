@@ -14,7 +14,7 @@ const Post = () => {
   const postID = router.query.post as string;
   const data = useContext(DataContext);
   const post = trpc.post.getPost.useQuery({ id: postID });
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [imageIndex, setImageIndex] = useState(0);
 
   if (post.isSuccess) {

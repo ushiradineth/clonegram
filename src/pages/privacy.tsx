@@ -15,7 +15,7 @@ const privacy = () => {
       <main>
       <h1 className="flex w-full justify-center border-b-2 p-4 font-semibold fixed top-0 bg-white">
           <p>Privacy Policy for clonegram</p>
-          <Link href="/">
+          <Link href="/" passHref>
             <HiChevronLeft className="fixed right-8 mt-1 scale-150" />
           </Link>
         </h1>
@@ -44,7 +44,7 @@ const privacy = () => {
             </li>
             <li>
               <p className="text-lg">
-                <strong>Company</strong> (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to clonegram.
+                <strong>Company</strong> (referred to as either &quot;the Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in this Agreement) refers to clonegram.
               </p>
             </li>
             <li>
@@ -118,7 +118,7 @@ const privacy = () => {
           </ul>
           <h3 className="py-4 text-xl font-semibold">Usage Data</h3>
           <p className="text-lg">Usage Data is collected automatically when using the Service.</p>
-          <p className="text-lg">Usage Data may include information such as Your Device's Internet Protocol address (e.g. IP address), browser type, browser version, the pages of our Service that You visit, the time and date of Your visit, the time spent on those pages, unique device identifiers and other diagnostic data.</p>
+          <p className="text-lg">Usage Data may include information such as Your Device&lsquo;s Internet Protocol address (e.g. IP address), browser type, browser version, the pages of our Service that You visit, the time and date of Your visit, the time spent on those pages, unique device identifiers and other diagnostic data.</p>
           <p className="text-lg">When You access the Service by or through a mobile device, We may collect certain information automatically, including, but not limited to, the type of mobile device You use, Your mobile device unique ID, the IP address of Your mobile device, Your mobile operating system, the type of mobile Internet browser You use, unique device identifiers and other diagnostic data.</p>
           <p className="text-lg">We may also collect information that Your browser sends whenever You visit our Service or when You access the Service by or through a mobile device.</p>
           <h3 className="pb-4 pt-8 text-xl font-semibold">Information from Third-Party Social Media Services</h3>
@@ -129,8 +129,8 @@ const privacy = () => {
             <li className="text-lg">Twitter</li>
             <li className="text-lg">LinkedIn</li>
           </ul>
-          <p className="text-lg">If You decide to register through or otherwise grant us access to a Third-Party Social Media Service, We may collect Personal data that is already associated with Your Third-Party Social Media Service's account, such as Your name, Your email address, Your activities or Your contact list associated with that account.</p>
-          <p className="text-lg">You may also have the option of sharing additional information with the Company through Your Third-Party Social Media Service's account. If You choose to provide such information and Personal Data, during registration or otherwise, You are giving the Company permission to use, share, and store it in a manner consistent with this Privacy Policy.</p>
+          <p className="text-lg">If You decide to register through or otherwise grant us access to a Third-Party Social Media Service, We may collect Personal data that is already associated with Your Third-Party Social Media Service&lsquo;s account, such as Your name, Your email address, Your activities or Your contact list associated with that account.</p>
+          <p className="text-lg">You may also have the option of sharing additional information with the Company through Your Third-Party Social Media Service&lsquo;s account. If You choose to provide such information and Personal Data, during registration or otherwise, You are giving the Company permission to use, share, and store it in a manner consistent with this Privacy Policy.</p>
           <h3 className="pb-4 pt-8 text-xl font-semibold">Tracking Technologies and Cookies</h3>
           <p className="text-lg">We use Cookies and similar tracking technologies to track the activity on Our Service and store certain information. Tracking technologies used are beacons, tags, and scripts to collect and track information and to improve and analyze Our Service. The technologies We use may include:</p>
           <ul className="ml-10 mt-2 mb-6 list-disc text-sm">
@@ -142,7 +142,7 @@ const privacy = () => {
             </li>
           </ul>
           <p className="text-lg">
-            Cookies can be "Persistent" or "Session" Cookies. Persistent Cookies remain on Your personal computer or mobile device when You go offline, while Session Cookies are deleted as soon as You close Your web browser. Learn more about cookies on the{" "}
+            Cookies can be &quot;Persistent&quot; or &quot;Session&quot; Cookies. Persistent Cookies remain on Your personal computer or mobile device when You go offline, while Session Cookies are deleted as soon as You close Your web browser. Learn more about cookies on the{" "}
             <Link href="https://www.privacypolicies.com/blog/privacy-policy-template/#Use_Of_Cookies_Log_Files_And_Tracking" target="_blank">
               Privacy Policies website
             </Link>{" "}
@@ -202,7 +202,7 @@ const privacy = () => {
             </li>
             <li>
               <p className="text-lg">
-                <strong>To contact You:</strong> To contact You by email, telephone calls, SMS, or other equivalent forms of electronic communication, such as a mobile application's push notifications regarding updates or informative communications related to the functionalities, products or contracted services, including the security updates, when necessary or reasonable for their implementation.
+                <strong>To contact You:</strong> To contact You by email, telephone calls, SMS, or other equivalent forms of electronic communication, such as a mobile application&lsquo;s push notifications regarding updates or informative communications related to the functionalities, products or contracted services, including the security updates, when necessary or reasonable for their implementation.
               </p>
             </li>
             <li>
@@ -251,7 +251,7 @@ const privacy = () => {
           <p className="text-lg">The Company will retain Your Personal Data only for as long as is necessary for the purposes set out in this Privacy Policy. We will retain and use Your Personal Data to the extent necessary to comply with our legal obligations (for example, if we are required to retain your data to comply with applicable laws), resolve disputes, and enforce our legal agreements and policies.</p>
           <p className="text-lg">The Company will also retain Usage Data for internal analysis purposes. Usage Data is generally retained for a shorter period of time, except when this data is used to strengthen the security or to improve the functionality of Our Service, or We are legally obligated to retain this data for longer time periods.</p>
           <h2 className="pb-4 pt-8 text-2xl font-semibold">Transfer of Your Personal Data</h2>
-          <p className="text-lg">Your information, including Personal Data, is processed at the Company's operating offices and in any other places where the parties involved in the processing are located. It means that this information may be transferred to — and maintained on — computers located outside of Your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from Your jurisdiction.</p>
+          <p className="text-lg">Your information, including Personal Data, is processed at the Company&lsquo;s operating offices and in any other places where the parties involved in the processing are located. It means that this information may be transferred to — and maintained on — computers located outside of Your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from Your jurisdiction.</p>
           <p className="text-lg">Your consent to this Privacy Policy followed by Your submission of such information represents Your agreement to that transfer.</p>
           <p className="text-lg">The Company will take all steps reasonably necessary to ensure that Your data is treated securely and in accordance with this Privacy Policy and no transfer of Your Personal Data will take place to an organization or a country unless there are adequate controls in place including the security of Your data and other personal information.</p>
           <h2 className="pb-4 pt-8 text-2xl font-semibold">Delete Your Personal Data</h2>
@@ -275,15 +275,15 @@ const privacy = () => {
           </ul>
           <h2 className="py-4 text-2xl font-semibold">Security of Your Personal Data</h2>
           <p className="text-lg">The security of Your Personal Data is important to Us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While We strive to use commercially acceptable means to protect Your Personal Data, We cannot guarantee its absolute security.</p>
-          <h1 className="pb-4 pt-8 font-semibold">Children's Privacy</h1>
+          <h1 className="pb-4 pt-8 font-semibold">Children&lsquo;s Privacy</h1>
           <p className="text-lg">Our Service does not address anyone under the age of 13. We do not knowingly collect personally identifiable information from anyone under the age of 13. If You are a parent or guardian and You are aware that Your child has provided Us with Personal Data, please contact Us. If We become aware that We have collected Personal Data from anyone under the age of 13 without verification of parental consent, We take steps to remove that information from Our servers.</p>
-          <p className="text-lg">If We need to rely on consent as a legal basis for processing Your information and Your country requires consent from a parent, We may require Your parent's consent before We collect and use that information.</p>
+          <p className="text-lg">If We need to rely on consent as a legal basis for processing Your information and Your country requires consent from a parent, We may require Your parent&lsquo;s consent before We collect and use that information.</p>
           <h1 className="pb-4 pt-8 font-semibold">Links to Other Websites</h1>
-          <p className="text-lg">Our Service may contain links to other websites that are not operated by Us. If You click on a third party link, You will be directed to that third party's site. We strongly advise You to review the Privacy Policy of every site You visit.</p>
+          <p className="text-lg">Our Service may contain links to other websites that are not operated by Us. If You click on a third party link, You will be directed to that third party&lsquo;s site. We strongly advise You to review the Privacy Policy of every site You visit.</p>
           <p className="text-lg">We have no control over and assume no responsibility for the content, privacy policies or practices of any third party sites or services.</p>
           <h1 className="pb-4 pt-8 font-semibold">Changes to this Privacy Policy</h1>
           <p className="text-lg">We may update Our Privacy Policy from time to time. We will notify You of any changes by posting the new Privacy Policy on this page.</p>
-          <p className="text-lg">We will let You know via email and/or a prominent notice on Our Service, prior to the change becoming effective and update the "Last updated" date at the top of this Privacy Policy.</p>
+          <p className="text-lg">We will let You know via email and/or a prominent notice on Our Service, prior to the change becoming effective and update the &quot;Last updated&quot; date at the top of this Privacy Policy.</p>
           <p className="text-lg">You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
           <h1 className="pb-4 pt-8 font-semibold">Contact Us</h1>
           <p className="text-lg">If you have any questions about this Privacy Policy, You can contact us:</p>

@@ -81,7 +81,7 @@ const Layout = (props: itemType) => {
                 <MobileSearch />
                 <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} />
               </div>
-              <div id="Footer-Mobile-View-Items" className={"fixed bottom-0 mt-[4px] grid h-12 w-screen grid-flow-col place-items-center border-t border-zinc-600 " + data?.theme?.primary + (data?.viewport != "Mobile" && " hidden ")}>
+              <div id="Footer-Mobile-View-Items" className={"fixed bottom-0 z-20 mt-[4px] grid h-12 w-screen grid-flow-col place-items-center border-t border-zinc-600 " + data?.theme?.primary + (data?.viewport != "Mobile" && " hidden ")}>
                 <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} ID={"M-Home"} onClickHandler={() => onClickHandler("/home")} active={Boolean(router.pathname == "/home" && !props.create && !props.search && !props.more)} />
                 <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} ID={"M-Explore"} />
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} ID={"M-Create"} onClickHandler={() => props.setCreate(!props.create)} active={props.create} />
@@ -95,11 +95,11 @@ const Layout = (props: itemType) => {
                 {props.more && (
                   <div id="Sidebar-More-Items" className={"invisible fixed bottom-16 left-6 z-10 w-fit origin-bottom-left scale-95 transform rounded-lg py-1 text-sm opacity-0 transition-all duration-300 group-focus-within:visible group-focus-within:scale-100 group-focus-within:opacity-100 " + (data?.theme?.type === "dark" ? " shadow-[0px_0px_10px_rgba(255,255,255,0.2)] " : " shadow-[0px_0px_10px_rgba(0,0,0,0.2)] ") + data?.theme?.secondary}>
                     <MoreItem Icon={<IoMdSettings />} Text="Settings" setMore={props.setMore} onClickHandler={() => router.push("/settings")} />
-                    <MoreItem Icon={<RxBookmark />} Text="Saved" setMore={props.setMore} onClickHandler={() => {}} />
-                    <MoreItem Icon={<RxTimer />} Text="Your Activity" setMore={props.setMore} onClickHandler={() => {}} />
+                    <MoreItem Icon={<RxBookmark />} Text="Saved" setMore={props.setMore} />
+                    <MoreItem Icon={<RxTimer />} Text="Your Activity" setMore={props.setMore} />
                     <MoreItem Icon={<HiOutlineMoon />} Text="Switch Appearence" setMore={props.setMore} onClickHandler={switchLayout} />
-                    <MoreItem Icon={<BiMessageAltError />} Text="Report a problem" setMore={props.setMore} onClickHandler={() => {}} />
-                    <MoreItem Icon={<AiOutlineUserSwitch />} Text="Switch accounts" setMore={props.setMore} onClickHandler={() => {}} />
+                    <MoreItem Icon={<BiMessageAltError />} Text="Report a problem" setMore={props.setMore} />
+                    <MoreItem Icon={<AiOutlineUserSwitch />} Text="Switch accounts" setMore={props.setMore} />
                     <MoreItem Icon={<MdLogout />} Text="Log out" setMore={props.setMore} last={true} onClickHandler={signout} />
                   </div>
                 )}

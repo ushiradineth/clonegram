@@ -8,7 +8,7 @@ import NextImage from "next/image";
 import { DataContext } from "../pages/_app";
 import { useContext } from "react";
 import { trpc } from "../utils/trpc";
-import { Cropper, CropperRef } from "react-advanced-cropper";
+import { Cropper, type CropperRef } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
 import { env } from "../env/client.mjs";
 import { useRouter } from "next/router";
@@ -24,24 +24,25 @@ const Create = (props: itemType) => {
   const files = fileList ? [...fileList] : [];
   const [discard, setDiscard] = useState(false);
   const [caption, setCaption] = useState(false);
-  const [options, setOptions] = useState<{ ratio: number; coordinates: {} }[]>([]);
+  const [options, setOptions] = useState<{ ratio: number; coordinates: object }[]>([]);
   const [imageIndex, setImageIndex] = useState(0);
   const [ratioSetting, setRatioSetting] = useState("Original");
+  const croppedImages = useRef(new Array(0));
+  const imgCoordinates = useRef(new Array(0));
+
   const data = useContext(DataContext);
   const router = useRouter();
   const setPost = trpc.post.setPost.useMutation({
     onSuccess: () => {
       props.setCreate(false);
       data?.user?.refetch();
-      router.push(data?.user?.data.handle || "");
+      router.push("/" + data?.user?.data.handle);
     },
   });
-  let croppedImages = useRef(new Array());
-  let imgCoordinates = useRef(new Array());
 
   useEffect(() => {
     if (options.length === files.length) return;
-    const obj: { ratio: number; coordinates: {} }[] = [];
+    const obj: { ratio: number; coordinates: object }[] = [];
     const imageArr: File[] = [];
     files.forEach((e) => {
       obj.push({ ratio: 0, coordinates: {} });

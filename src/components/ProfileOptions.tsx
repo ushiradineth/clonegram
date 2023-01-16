@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import React, { useState, useContext } from "react";
 import { DataContext } from "../pages/_app";
-import { UserType } from "../types/types";
+import { type UserType } from "../types/types";
 import { trpc } from "../utils/trpc";
 import OptionMenu from "./OptionMenu";
 

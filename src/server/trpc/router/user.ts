@@ -72,7 +72,7 @@ export const userRouter = router({
 
   deleteUser: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
     const supabase = createClient("https://" + env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY);
-    const { data, error } = await supabase.storage.from("clonegram").remove([`Users/${input.id}`]);
+    await supabase.storage.from("clonegram").remove([`Users/${input.id}`]);
 
     return ctx.prisma.user.delete({
       where: {

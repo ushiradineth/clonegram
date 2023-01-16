@@ -14,7 +14,7 @@ export const postRouter = router({
     });
   }),
 
-  getPost: protectedProcedure.input(z.object({ id: z.string() })).query(({ input, ctx }) => {
+  getPost: publicProcedure.input(z.object({ id: z.string() })).query(({ input, ctx }) => {
     return ctx.prisma.post.findFirst({
       where: {
         id: input.id,

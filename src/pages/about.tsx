@@ -16,7 +16,7 @@ const about = () => {
       <main className="h-screen">
         <h1 className="flex justify-center w-full border-b-2 p-4 font-semibold">
           <p>About clonegram</p>
-          <Link href="/">
+          <Link href="/" passHref>
             <HiChevronLeft className="fixed right-8 mt-1 scale-150" />
           </Link>
         </h1>
@@ -50,13 +50,13 @@ const about = () => {
           </ul>
           <h1 className="fixed left-0 bottom-0 flex w-screen items-center justify-center gap-2 bg-white p-4 font-semibold text-black">
             Made by Ushira Dineth
-            <Link className="text-lg" href="https://www.github.com/ushiradineth" target="_blank">
+            <Link className="text-lg" href="https://www.github.com/ushiradineth" target="_blank" passHref>
               <AiFillGithub />
             </Link>
-            <Link className="text-lg" href="https://www.linkedin.com/in/ushiradineth/" target="_blank">
+            <Link className="text-lg" href="https://www.linkedin.com/in/ushiradineth/" target="_blank" passHref>
               <AiFillLinkedin />
             </Link>
-            <Link className="text-lg" href="https://ushiradineth.github.io" target="_blank">
+            <Link className="text-lg" href="https://ushiradineth.github.io" target="_blank" passHref>
               <AiOutlineLink />
             </Link>
             <Link href="mailto:ushiradineth@gmail.com" target="_blank">

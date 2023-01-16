@@ -9,7 +9,7 @@ import { createClient } from "@supabase/supabase-js";
 import { env } from "../env/client.mjs";
 import themeObject from "../components/Theme";
 import GetUser from "../components/GetUser";
-import { MemoType } from "../types/types";
+import { type MemoType } from "../types/types";
 
 export const DataContext = createContext<MemoType | undefined | null>(null);
 
@@ -58,16 +58,14 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
     if (viewport === "Mobile" && !create) {
       setHideSideComponents(true);
     }
-  }, [viewport, search, create, more]);
 
-  useEffect(() => {
     if (hideSideComponents) {
       create && setCreate(false);
       more && setMore(false);
       search && setSearch(false);
       setHideSideComponents(false);
     }
-  }, [hideSideComponents]);
+  }, [viewport, search, create, more, hideSideComponents]);
 
   useEffect(() => {
     if (lsTheme) {
