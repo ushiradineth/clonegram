@@ -10,6 +10,8 @@ import { useContext } from "react";
 import { trpc } from "../utils/trpc";
 import { Cropper, CropperRef } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
+import { env } from "../env/client.mjs";
+import { useRouter } from "next/router";
 
 interface itemType {
   create: boolean;
@@ -26,7 +28,14 @@ const Create = (props: itemType) => {
   const [imageIndex, setImageIndex] = useState(0);
   const [ratioSetting, setRatioSetting] = useState("Original");
   const data = useContext(DataContext);
-  const setPost = trpc.post.setPost.useMutation();
+  const router = useRouter();
+  const setPost = trpc.post.setPost.useMutation({
+    onSuccess: () => {
+      props.setCreate(false);
+      data?.user?.refetch();
+      router.push(data?.user?.data.handle || "");
+    },
+  });
   let croppedImages = useRef(new Array());
   let imgCoordinates = useRef(new Array());
 
@@ -122,14 +131,14 @@ const Create = (props: itemType) => {
     const onInteractionEnd = async (cropper: CropperRef) => {
       const blob = await (await fetch(cropper.getCanvas()?.toDataURL() || "")).blob();
       const file = new File([blob], `${imageIndex}.jpg`, { type: "image/jpeg" });
-      
+
       const temp = [...croppedImages.current];
       temp[imageIndex] = file;
       croppedImages.current = [...temp];
-      
+
       imgCoordinates.current[imageIndex] = cropper.getCoordinates();
     };
-    
+
     const onReady = async (cropper: CropperRef) => {
       if (!imgCoordinates.current[imageIndex]) {
         imgCoordinates.current[imageIndex] = cropper.getCoordinates();
@@ -155,7 +164,6 @@ const Create = (props: itemType) => {
           <div className={"h-full w-full rounded-b-2xl object-cover"}>
             <Cropper src={URL.createObjectURL(files[imageIndex] || new Blob())} onInteractionEnd={onInteractionEnd} onReady={onReady} className={"cropper"} defaultCoordinates={imgCoordinates.current[imageIndex]} stencilProps={options[imageIndex]?.ratio ? { aspectRatio: options[imageIndex]?.ratio || 1 } : {}} />
           </div>
-          {/* <NextImage src={URL.createObjectURL(files[imageIndex] || new Blob())} key="image" className={"h-full w-full rounded-b-2xl object-cover "} height={1000} width={1000} alt={"images"} /> */}
           <div className="group">
             <button type="button" aria-haspopup="true" className="fixed bottom-3 left-4 cursor-pointer rounded-full bg-black p-2 text-white shadow-[0px_0px_10px_rgba(0,0,0,0.2)] transition-all duration-300 focus-within:bg-white focus-within:text-black hover:text-gray-500 hover:shadow-[0px_0px_10px_rgba(0,0,0,0.4)]">
               <AiOutlineExpand />
@@ -185,14 +193,14 @@ const Create = (props: itemType) => {
     const Links: string[] = [];
 
     croppedImages.current.forEach(async (element, index) => {
-      Links.push(`/Users/${data?.user?.data.id}/Posts/${(data?.user?.data.posts.length || 0) + 1}/${index}`);
+      Links.push(`${env.NEXT_PUBLIC_SUPABASE_IMAGE_URL}Users/${data?.user?.data.id}/Posts/${(data?.user?.data.posts.length || 0) + 1}/${index}`);
       await data?.supabase.storage.from("clonegram").upload(`/Users/${data?.user?.data.id}/Posts/${(data?.user?.data.posts.length || 0) + 1}/${index}`, element, {
         cacheControl: "1",
         upsert: true,
       });
     });
 
-    if (Links.length === files.length) setPost.mutate({ id: data?.user?.data.id || "", links: Links, caption: (document.getElementById("post-caption") as HTMLInputElement).value || null });
+    if (Links.length === croppedImages.current.length) setPost.mutate({ id: data?.user?.data.id || "", links: Links, caption: (document.getElementById("post-caption") as HTMLInputElement).value || null });
   };
 
   const Caption = () => {
