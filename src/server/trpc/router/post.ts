@@ -19,14 +19,9 @@ export const postRouter = router({
       where: {
         id: input.id,
       },
-    });
-  }),
-
-  getAllUserPost: protectedProcedure.input(z.object({ userId: z.string() })).query(({ input, ctx }) => {
-    return ctx.prisma.post.findMany({
-      where: {
-        userId: input.userId,
-      },
+      include: {
+        user: true
+      }
     });
   }),
 
