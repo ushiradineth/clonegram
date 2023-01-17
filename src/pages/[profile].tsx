@@ -197,7 +197,7 @@ const Profile = () => {
                     <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>following</p>
                   </button>
                 </div>
-                <div id="posts" className={"grid h-fit grid-cols-3 place-items-center py-10 " + (data?.viewport == "Web" && " w-[832px] border-t border-gray-500 px-24 ") + (data?.viewport == "Tab" && " w-[600px] border-t border-gray-500 ")}>
+                <div id="posts" className={"grid h-fit min-h-screen grid-cols-3 place-items-start py-10 " + (data?.viewport == "Web" && " w-[832px] border-t border-gray-500 px-24 ") + (data?.viewport == "Tab" && " w-[600px] border-t border-gray-500 ")}>
                   <div className={"col-span-3 grid w-[90%] grid-cols-3 place-items-start gap-1 " + (data?.viewport == "Mobile" && " mb-10 ")}>
                     {page?.data?.posts.length ? (
                       page.data.posts
@@ -205,7 +205,7 @@ const Profile = () => {
                         .reverse()
                         .map((element, index) => <Image src={element.imageURLs[0] || ""} height={500} width={500} onClick={() => router.push("/post/" + element.id)} alt={element.id} key={index} className={"cursor-pointer bg-red-300 object-cover " + (data?.viewport == "Mobile" && " h-40 w-40 ") + (data?.viewport == "Web" && " h-48 w-48 ") + (data?.viewport == "Tab" && " h-48 w-48 ")} />)
                     ) : (
-                      <div className="col-span-3 flex h-full min-h-screen w-full flex-col items-center justify-center p-4">
+                      <div className="col-span-3 flex h-full min-h-screen w-full flex-col items-center p-4">
                         <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
                           <FiCamera className="scale-x-[-5] scale-y-[5] transform" />
                         </div>
