@@ -11,19 +11,26 @@ interface itemType {
     userHandle: string;
   };
   index: number;
-  onClickHandler: any;
+  onClickHandler?: any;
+  onClickHandlerPost?: any;
   action?: JSX.Element;
+  followState?: JSX.Element;
 }
 
 const ProfileLink = (props: itemType) => {
   const data = useContext(DataContext);
-  
+
   return (
-    <Link href={props.user.userHandle} onClick={(e) => e.preventDefault()} key={props.index} className={"mt-6 flex h-12 w-full px-6 items-center justify-center"} passHref>
-      <Image className={"w-12 cursor-pointer rounded-full"} onClick={props.onClickHandler} src={props.user.userImage} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
-      <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={props.onClickHandler}>
-        <div>{props.user.userHandle}</div>
-        <div>{props.user.userName}</div>
+    <Link href={props.user.userHandle} onClick={(e) => e.preventDefault()} key={props.index} className={"mt-6 flex h-12 w-full items-center justify-center px-6"} passHref>
+      <Image className={"w-12 cursor-pointer rounded-full"} onClick={props.onClickHandlerPost ? props.onClickHandlerPost : props.onClickHandler} src={props.user.userImage} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
+      <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={props.onClickHandlerPost ? () => {} : props.onClickHandler}>
+        <div onClick={props.onClickHandlerPost ? props.onClickHandlerPost : () => {}}>{props.user.userHandle}</div>
+        <div className="grid grid-flow-col place-items-start">
+          <div className="w-fit truncate" onClick={props.onClickHandlerPost ? props.onClickHandlerPost : () => {}}>
+            {props.user.userName}
+          </div>
+          {props.followState && props.followState}
+        </div>
       </div>
       {props.action && props.action}
     </Link>
