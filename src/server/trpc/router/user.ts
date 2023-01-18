@@ -34,21 +34,6 @@ export const userRouter = router({
     });
   }),
 
-  // getUsersByHandle: publicProcedure.input(z.object({ user: z.string(), page: z.string() })).query(({ input, ctx }) => {
-  //   return ctx.prisma.user.findMany({
-  //     where: {
-  //       OR: [{ handle: input.user }, { handle: input.page }],
-  //     },
-  //     include: {
-  //       posts: true,
-  //       followers: true,
-  //       following: true,
-  //       blockedby: true,
-  //       blocking: true
-  //     },
-  //   });
-  // }),
-
   updateUser: protectedProcedure.input(z.object({ id: z.string(), name: z.string().nullish(), image: z.string().nullish(), handle: z.string().nullish(), bio: z.object({ text: z.string().nullish(), changed: z.boolean() }) })).mutation(({ input, ctx }) => {
     type dataType = {
       [key: string]: string;
