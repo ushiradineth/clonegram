@@ -66,13 +66,14 @@ model User {
   recentSearches User[] @relation("UserRecentSearches")
 
   //relations for same table refs or cross table refs
-  followingRelation      User[] @relation("UserFollowing")
-  followersRelation      User[] @relation("UserFollowers")
-  blockingRelation       User[] @relation("UserBlocking")
-  blockedbyRelation      User[] @relation("UserBlockedby")
-  recentSearchesRelation User[] @relation("UserRecentSearches")
-  PostsLikesRelation     Post[] @relation("PostLikes")
-  PostsSavedRelation     Post[] @relation("PostSaved")
+  followingRelation      User[]    @relation("UserFollowing")
+  followersRelation      User[]    @relation("UserFollowers")
+  blockingRelation       User[]    @relation("UserBlocking")
+  blockedbyRelation      User[]    @relation("UserBlockedby")
+  recentSearchesRelation User[]    @relation("UserRecentSearches")
+  PostsLikesRelation     Post[]    @relation("PostLikes")
+  PostsSavedRelation     Post[]    @relation("PostSaved")
+  CommentsLikesRelation  Comment[] @relation("CommentLikes")
 }
 
 model Post {
@@ -93,15 +94,16 @@ model Post {
 }
 
 model Comment {
-  id          String    @id @unique @default(cuid())
-  createdAt   DateTime  @default(now()) @db.Timestamptz(3)
-  post        Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId      String
-  user        User      @relation(fields: [userId], references: [id])
-  userId      String
-  parentReply Comment?  @relation("parentReply", fields: [id], references: [id], onDelete: Cascade)
-  replies     Comment[] @relation("replies")
-
+  id                  String    @id @unique @default(cuid())
+  createdAt           DateTime  @default(now()) @db.Timestamptz(3)
+  post                Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId              String
+  user                User      @relation(fields: [userId], references: [id])
+  userId              String
+  parentReply         Comment?  @relation("parentReply", fields: [id], references: [id], onDelete: Cascade)
+  replies             Comment[] @relation("replies")
+  likes               User[]    @relation("CommentLikes")
+  
   //relations for same table refs or cross table refs
   parentReplyRelation Comment?  @relation("parentReply")
   repliesRelation     Comment[] @relation("replies")
