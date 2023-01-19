@@ -12,6 +12,7 @@ import { Cropper, type CropperRef } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
 import { env } from "../env/client.mjs";
 import { useRouter } from "next/router";
+import Spinner from "./Spinner";
 
 interface itemType {
   create: boolean;
@@ -31,12 +32,10 @@ const Create = (props: itemType) => {
   const imgCoordinates = useRef(new Array(0));
 
   const data = useContext(DataContext);
-  const router = useRouter();
   const setPost = trpc.post.setPost.useMutation({
     onSuccess: () => {
       props.setCreate(false);
       data?.user?.refetch();
-      router.push("/" + data?.user?.data.handle);
     },
   });
 
@@ -213,8 +212,8 @@ const Create = (props: itemType) => {
               <BiArrowBack className="z-10 ml-5 scale-150 cursor-pointer" onClick={() => setCaption(false)} />
             </div>
             <div className="grid place-items-center">Caption</div>
-            <button onClick={() => upload()} className="mr-5 grid place-items-end text-blue-400">
-              Share
+            <button id="Log out" className="flex h-8 w-full cursor-pointer items-center justify-end pr-5 text-blue-400" onClick={() => upload()}>
+              {setPost.isLoading ? <Spinner SpinnerOnly={true} fill={"fill-blue-300"} /> : "Share"}
             </button>
           </div>
         </div>
