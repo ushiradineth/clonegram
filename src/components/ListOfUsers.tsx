@@ -28,7 +28,6 @@ interface itemType {
 }
 
 const ListOfUsers = (props: itemType) => {
-  const router = useRouter();
   const data = useContext(DataContext);
   const follow = trpc.user.follow.useMutation();
   const unfollow = trpc.user.unfollow.useMutation();
@@ -65,29 +64,7 @@ const ListOfUsers = (props: itemType) => {
           </div>
           {props.users.length > 0 ? (
             props.users.map((user, index) => {
-              const [text, setText] = useState("");
-
-              useEffect(() => {
-                !user.UserRemoved && (user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? setText("Remove") : user.UserFollowing ? setText("Following") : setText("Follow")) : setText("Profile"));
-              });
-
-              useEffect(() => {
-                !user.UserRemoved && (user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? setText("Remove") : user.UserFollowing ? setText("Following") : setText("Follow")) : setText("Profile"));
-              }, [user]);
-
-              return (
-                <ProfileLink
-                  user={{ userHandle: user.UserHandle, userID: user.UserID, userImage: user.UserImage, userName: user.UserName }}
-                  index={index}
-                  key={index}
-                  onClickHandler={() => router.push({ pathname: "/" + user.UserHandle })}
-                  action={
-                    <button id={user.UserHandle} disabled={user.UserRemoved} className={"cursor-pointer text-xs font-semibold disabled:cursor-not-allowed " + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => !user.UserRemoved && (user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? removeFunc(user) : user.UserFollowing ? unfollowFunc(user) : followFunc(user)) : router.push({ pathname: "/" + user.UserHandle }))}>
-                      {follow.isLoading || unfollow.isLoading ? <Spinner SpinnerOnly={true} /> : user.UserRemoved ? "Removed" : text}
-                    </button>
-                  }
-                />
-              );
+              return <User user={user} index={index} key={index} userID={props.userID || ""} userHandle={props.userHandle || ""} pageID={props.pageID || ""} title={props.title} followFunc={followFunc} unfollowFunc={unfollowFunc} followIsLoading={follow.isLoading} unfollowIsLoading={unfollow.isLoading} removeFunc={removeFunc} />;
             })
           ) : (
             <div className={"flex flex-col items-center justify-center rounded-2xl p-8 " + data?.theme?.tertiary}>
@@ -108,3 +85,44 @@ const ListOfUsers = (props: itemType) => {
 };
 
 export default ListOfUsers;
+
+type UserType = {
+  user: user;
+  index: number;
+  userHandle: string;
+  title: string;
+  userID: string;
+  pageID: string;
+  followFunc: any;
+  unfollowFunc: any;
+  removeFunc: any;
+  followIsLoading: boolean;
+  unfollowIsLoading: boolean;
+};
+
+const User = (props: UserType) => {
+  const [text, setText] = useState("");
+  const router = useRouter();
+
+  useEffect(() => {
+    !props.user.UserRemoved && (props.user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? setText("Remove") : props.user.UserFollowing ? setText("Following") : setText("Follow")) : setText("Profile"));
+  });
+
+  useEffect(() => {
+    !props.user.UserRemoved && (props.user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? setText("Remove") : props.user.UserFollowing ? setText("Following") : setText("Follow")) : setText("Profile"));
+  }, [props.user]);
+
+  return (
+    <ProfileLink
+      user={{ userHandle: props.user.UserHandle, userID: props.user.UserID, userImage: props.user.UserImage, userName: props.user.UserName }}
+      index={props.index}
+      key={props.index}
+      onClickHandler={() => router.push({ pathname: "/" + props.user.UserHandle })}
+      action={
+        <button id={props.user.UserHandle} disabled={props.user.UserRemoved} className={"cursor-pointer text-xs font-semibold disabled:cursor-not-allowed " + (props.followIsLoading || props.unfollowIsLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => !props.user.UserRemoved && (props.user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? props.removeFunc(props.user) : props.user.UserFollowing ? props.unfollowFunc(props.user) : props.followFunc(props.user)) : router.push({ pathname: "/" + props.user.UserHandle }))}>
+          {props.followIsLoading || props.unfollowIsLoading ? <Spinner SpinnerOnly={true} /> : props.user.UserRemoved ? "Removed" : text}
+        </button>
+      }
+    />
+  );
+};
