@@ -55,7 +55,7 @@ const ListOfUsers = (props: itemType) => {
 
   return (
     <div className="fixed top-0 left-0 z-20 h-screen w-screen select-none bg-black bg-opacity-30" onClick={() => props.onClickNegative}>
-      <div className={"absolute top-1/2 left-1/2 z-20 w-[400px] -translate-x-1/2 -translate-y-1/2 transform rounded-2xl shadow-[0px_0px_10px_rgba(0,0,0,0.7)] " + data?.theme?.tertiary}>
+      <div className={"absolute top-1/2 left-1/2 z-20 grid w-[400px] -translate-x-1/2 -translate-y-1/2 transform place-items-center rounded-2xl shadow-[0px_0px_10px_rgba(0,0,0,0.7)] " + data?.theme?.tertiary}>
         <>
           <div className="grid w-full grid-flow-row place-items-center border-b-2 border-zinc-700 py-4 font-semibold">
             <p className="select-none text-xl">{props.title}</p>
