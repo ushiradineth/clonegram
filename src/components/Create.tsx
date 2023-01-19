@@ -11,7 +11,6 @@ import { trpc } from "../utils/trpc";
 import { Cropper, type CropperRef } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
 import { env } from "../env/client.mjs";
-import { useRouter } from "next/router";
 import Spinner from "./Spinner";
 
 interface itemType {

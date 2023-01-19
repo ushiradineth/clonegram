@@ -83,7 +83,7 @@ const EditProfile = () => {
 
     if (Name !== data?.user?.data.name || Handle !== data?.user?.data.handle || (data?.user?.data.bio ? Bio !== data?.user?.data.bio : Bio !== "") || typeof image !== "undefined") {
       if (typeof image !== "undefined") {
-        const upload = await data?.supabase.storage.from("clonegram").upload(`/Users/${data?.user?.data.id}/ProfilePicture`, imageURL, {
+        await data?.supabase.storage.from("clonegram").upload(`/Users/${data?.user?.data.id}/ProfilePicture`, imageURL, {
           cacheControl: "1",
           upsert: true,
         });
