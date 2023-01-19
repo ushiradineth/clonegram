@@ -15,21 +15,27 @@ interface itemType {
   onClickHandlerPost?: any;
   action?: JSX.Element;
   followState?: JSX.Element;
+  truncate?: boolean;
+  hideName?: boolean;
 }
 
 const ProfileLink = (props: itemType) => {
   const data = useContext(DataContext);
 
   return (
-    <Link href={props.user.userHandle} onClick={(e) => e.preventDefault()} key={props.index} className={"mt-6 flex h-12 w-full items-center justify-center px-6"} passHref>
+    <Link href={props.user.userHandle} onClick={(e) => e.preventDefault()} key={props.index} className={"mt-6 flex h-12 w-fit items-center justify-center px-4"} passHref>
       <Image className={"w-12 cursor-pointer rounded-full"} onClick={props.onClickHandlerPost ? props.onClickHandlerPost : props.onClickHandler} src={props.user.userImage} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
-      <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={props.onClickHandlerPost ? () => undefined : props.onClickHandler}>
-        <div onClick={props.onClickHandlerPost ? props.onClickHandlerPost : () => undefined}>{props.user.userHandle}</div>
-        <div className="grid grid-flow-col place-items-start">
-          <div className="w-fit truncate" onClick={props.onClickHandlerPost ? props.onClickHandlerPost : () => undefined}>
-            {props.user.userName}
-          </div>
+      <div className="m-4 flex w-full cursor-pointer flex-col justify-center gap-1 truncate" onClick={props.onClickHandlerPost ? () => undefined : props.onClickHandler}>
+        <div className="flex" onClick={props.onClickHandlerPost ? props.onClickHandlerPost : () => undefined}>
+          <p className={"truncate " + (props.truncate === false ? " w-[60%] " : "")}>{props.user.userHandle}</p>
           {props.followState && props.followState}
+        </div>
+        <div className="grid grid-flow-col place-items-start">
+          {!props.hideName && (
+            <div className="w-fit truncate" onClick={props.onClickHandlerPost ? props.onClickHandlerPost : () => undefined}>
+              {props.user.userName}
+            </div>
+          )}
         </div>
       </div>
       {props.action && props.action}
