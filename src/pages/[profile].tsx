@@ -197,8 +197,8 @@ const Profile = () => {
                     <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>following</p>
                   </button>
                 </div>
-                <div id="posts" className={"grid h-fit min-h-screen grid-cols-3 place-items-start py-10 " + (data?.viewport == "Web" && " w-[832px] border-t border-gray-500 px-24 ") + (data?.viewport == "Tab" && " w-[600px] border-t border-gray-500 ")}>
-                  <div className={"col-span-3 grid w-[90%] grid-cols-3 place-items-start gap-1 " + (data?.viewport == "Mobile" && " mb-10 ")}>
+                <div id="posts" className={"h-fit min-h-screen flex justify-center items-start w-fit py-10 " + (data?.viewport == "Web" && " w-[832px] border-t border-gray-500 px-24 ") + (data?.viewport == "Tab" && " w-[600px] border-t border-gray-500 ")}>
+                  <div className={"col-span-3 grid w-[90%] grid-cols-3 place-items-center gap-1 " + (data?.viewport == "Mobile" && " mb-10 ")}>
                     {page?.data?.posts.length ? (
                       page.data.posts
                         .slice(0)
