@@ -14,11 +14,13 @@ import { TbMessageCircle2 } from "react-icons/tb";
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { BsBookmark } from "react-icons/bs";
 import InputBox from "../../components/InputBox";
+import Error from "../../components/Error";
 
 const Post = () => {
   const [imageIndex, setImageIndex] = useState(0);
   const [showComments, setShowComments] = useState(false);
   const [like, setLike] = useState<boolean | null>(null);
+  const [commentLength, setCommentLength] = useState(false);
 
   const router = useRouter();
   const postID = router.query.post as string;
@@ -50,9 +52,14 @@ const Post = () => {
     },
   });
 
+  const comment = trpc.post.setcomment.useMutation({});
+
   useEffect(() => {
     post.data?.likes.forEach((e) => e.id === data?.user?.data.id && setLike(true));
   }, [post]);
+
+  if (!post.data && !post.isLoading) return <Error session={Boolean(session)} error="Post not found" />;
+  if (post.isLoading) return <Spinner />;
 
   const ProfileView = () => {
     return (
@@ -81,21 +88,54 @@ const Post = () => {
     );
   };
 
+  const Comment = (props: { text: string; handle: string; image: string }) => {
+    return (
+      <>
+        <Image className={"h-fit w-12 cursor-pointer rounded-full"} onClick={() => router.push(props.handle)} src={props.image} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
+        <div className="flex gap-2">
+          <span className="break-all">
+            <span className="mr-2 h-fit w-fit truncate font-semibold">{props.handle}</span>
+            {props.text}
+          </span>
+        </div>
+      </>
+    );
+  };
+
   const Comments = () => {
     return (
-      <div className={"grid h-[70%] w-full place-items-center border-zinc-600 " + (data?.viewport === "Mobile" ? " border-t p-4 " : " border-b ")}>
-        <p>No Comments Yet</p>
-      </div>
+      <>
+        {post.data?.caption && (
+          <div className={"flex h-24 gap-4 overflow-y-auto pt-4 pl-6 pr-2 " + (data?.viewport === "Mobile" ? " hidden " : "")}>
+            <Comment key={"caption"} text={post.data.caption} handle={post.data.user.handle} image={post.data.user.image || "/image-placeholder.png"} />
+          </div>
+        )}
+        {post.data?.comments.length ? (
+          post.data.comments
+            .slice(0)
+            .reverse()
+            .map((element, index) => {
+              console.log(element);
+              return <Comment key={index} text={element.id || ""} handle={element.userId} image={"/image-placeholder.png" || "/image-placeholder.png"} />;
+            })
+        ) : (
+          <div className={"grid h-[70%] w-full place-items-center border-zinc-600 " + (data?.viewport === "Mobile" ? " border-t p-4 " : " border-b ")}>
+            <p>No Comments Yet</p>
+          </div>
+        )}
+      </>
     );
   };
 
   const CommentBox = () => {
     return (
       <div className={"flex w-full items-center " + (data?.viewport === "Mobile" ? "" : " h-[7%] ")}>
-        <div className={(data?.viewport === "Mobile" ? " w-[88%] z-10 " : " w-[86%] ")}>
+        <div className={data?.viewport === "Mobile" ? " z-10 w-[88%] " : " w-[86%] "}>
           <InputBox id="comment" maxlength={200} placeholder="Add a comment..." minlength={1} />
         </div>
-        <button className="text-blue-300 z-10">Post</button>
+        <button className="z-10 text-blue-500" onClick={() => (document.getElementById("comment") as HTMLInputElement).value.length > 0 && comment.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "", text: (document.getElementById("comment") as HTMLInputElement).value })}>
+          Post
+        </button>
       </div>
     );
   };
@@ -137,7 +177,7 @@ const Post = () => {
         </div>
         {showComments && (
           <>
-            <div className="pb-2 w-full">
+            <div className="w-full pb-2">
               <CommentBox />
             </div>
             <Comments />
