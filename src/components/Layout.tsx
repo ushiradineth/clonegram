@@ -57,7 +57,7 @@ const Layout = (props: itemType) => {
   if (status === "authenticated") {
     return (
       <>
-        <div className={"max-h-screen w-fit select-none " + data?.theme?.primary}>
+        <div className={"max-h-screen w-fit select-none z-50 " + data?.theme?.primary}>
           {props.create && <Create create={props.create} setCreate={props.setCreate} />}
           {props.search && <Search search={props.search} setSearch={props.setSearch} />}
           <div id="Sidebar" className={"fixed left-0 grid gap-4 " + (data?.viewport !== "Mobile" && data?.theme?.primary) + (data?.viewport == "Web" && " bottom-0 z-10 h-full w-72 grid-flow-row border-r transition-all duration-200 ") + (data?.viewport == "Tab" && " top-0 h-full w-16 grid-flow-row border-r transition-all duration-200 ") + (data?.viewport == "Mobile" && " top-0 h-screen w-screen grid-flow-col ") + (data?.theme?.type === "dark" ? " border-zinc-500 " : "  border-zinc-300 ")}>
@@ -88,12 +88,12 @@ const Layout = (props: itemType) => {
                 <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} ID={"M-Messages"} />
                 <NavBarItem Icon={data?.user?.data.image} ID={"M-Profile"} onClickHandler={() => onClickHandler("/" + data?.user?.data.handle)} active={Boolean(router.query.profile === data?.user?.data.handle && !props.create && !props.search && !props.more)} />
               </div>
-              <div id="Sidebar-More" className={"group fixed bottom-5 left-2 z-0 " + (data?.viewport == "Mobile" && " hidden ")}>
+              <div id="Sidebar-More" className={"group fixed bottom-5 left-3 " + (data?.viewport == "Mobile" && " hidden ")}>
                 <button type="button" aria-haspopup="true">
                   <NavBarItem Icon={<HiOutlineMenu />} IconOnClick={<HiMenu />} Text={"More"} ID={"More"} onClickHandler={() => props.setMore(true)} active={props.more} />
                 </button>
                 {props.more && (
-                  <div id="Sidebar-More-Items" className={"invisible fixed bottom-16 left-6 z-10 w-fit origin-bottom-left scale-95 transform rounded-lg py-1 text-sm opacity-0 transition-all duration-300 group-focus-within:visible group-focus-within:scale-100 group-focus-within:opacity-100 " + (data?.theme?.type === "dark" ? " shadow-[0px_0px_10px_rgba(255,255,255,0.2)] " : " shadow-[0px_0px_10px_rgba(0,0,0,0.2)] ") + data?.theme?.secondary}>
+                  <div id="Sidebar-More-Items" className={"invisible fixed bottom-16 left-6 w-fit z-50 origin-bottom-left scale-95 transform rounded-lg py-1 text-sm opacity-0 transition-all duration-300 group-focus-within:visible group-focus-within:scale-100 group-focus-within:opacity-100 " + (data?.theme?.type === "dark" ? " shadow-[0px_0px_10px_rgba(255,255,255,0.2)] " : " shadow-[0px_0px_10px_rgba(0,0,0,0.2)] ") + data?.theme?.secondary}>
                     <MoreItem Icon={<IoMdSettings />} Text="Settings" setMore={props.setMore} onClickHandler={() => router.push("/settings")} />
                     <MoreItem Icon={<RxBookmark />} Text="Saved" setMore={props.setMore} />
                     <MoreItem Icon={<RxTimer />} Text="Your Activity" setMore={props.setMore} />
