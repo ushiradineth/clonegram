@@ -41,12 +41,16 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
       setCreate(false);
       setSearch(false);
     }
+  }, [more]);
 
+  useEffect(() => {
     if (create) {
       setMore(false);
       setSearch(false);
     }
+  }, [create]);
 
+  useEffect(() => {
     if (search) {
       setViewport("Tab");
       setMore(false);
@@ -54,18 +58,22 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
     } else {
       onResize();
     }
+  }, [search]);
 
+  useEffect(() => {
     if (viewport === "Mobile" && !create) {
       setHideSideComponents(true);
     }
+  }, [viewport]);
 
+  useEffect(() => {
     if (hideSideComponents) {
       create && setCreate(false);
       more && setMore(false);
       search && setSearch(false);
       setHideSideComponents(false);
     }
-  }, [viewport, search, create, more, hideSideComponents]);
+  }, [hideSideComponents]);
 
   useEffect(() => {
     if (lsTheme) {
@@ -87,7 +95,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
       user,
       theme,
       viewport,
-      supabase
+      supabase,
     };
   }, [user, theme, viewport, supabase]);
 
