@@ -81,14 +81,6 @@ const Post = () => {
     );
   };
 
-  const MobileHeader = () => {
-    return (
-      <div className={"z-10 flex h-fit w-[400px] items-center justify-start rounded-t-2xl border-b border-zinc-600 pl-4 pb-4 " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.tertiary}>
-        <ProfileView />
-      </div>
-    );
-  };
-
   const Comments = () => {
     return (
       <div className={"grid h-[70%] w-full place-items-center border-zinc-600 " + (data?.viewport === "Mobile" ? " border-t p-4 " : " border-b ")}>
@@ -97,17 +89,42 @@ const Post = () => {
     );
   };
 
+  const CommentBox = () => {
+    return (
+      <div className={"flex w-full items-center " + (data?.viewport === "Mobile" ? "" : " h-[7%] ")}>
+        <div className={(data?.viewport === "Mobile" ? " w-[88%] z-10 " : " w-[86%] ")}>
+          <InputBox id="comment" maxlength={200} placeholder="Add a comment..." minlength={1} />
+        </div>
+        <button className="text-blue-300 z-10">Post</button>
+      </div>
+    );
+  };
+
   const InteractionBar = () => {
     return (
-      <div className="grid grid-flow-col">
-        <div className="mt-4 grid h-fit w-fit scale-[1.6] grid-flow-col gap-2 pl-6 child-hover:text-zinc-600">
-          {like ? <AiFillHeart className="cursor-pointer text-red-500" onClick={() => unlikePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <AiOutlineHeart className="cursor-pointer" onClick={() => likePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} />}
-          <TbMessageCircle2 fill={showComments ? "white" : "none"} className="cursor-pointer" onClick={() => setShowComments(!showComments)} />
-          <IoPaperPlaneOutline className="cursor-pointer" />
+      <>
+        <div className="grid grid-flow-col">
+          <div className={"mt-4 grid h-fit w-fit scale-[1.6] grid-flow-col gap-2 child-hover:text-zinc-600 " + (data?.viewport !== "Mobile" ? " pl-4 " : "  pl-6 ")}>
+            {like ? <AiFillHeart className="cursor-pointer text-red-500" onClick={() => unlikePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <AiOutlineHeart className="cursor-pointer" onClick={() => likePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} />}
+            <TbMessageCircle2 fill={showComments ? "white" : "none"} className={"cursor-pointer " + (data?.viewport !== "Mobile" ? " hidden " : "")} onClick={() => setShowComments(!showComments)} />
+            <IoPaperPlaneOutline className="cursor-pointer" />
+          </div>
+          <div className={"mt-4 flex h-fit w-full items-center justify-end pr-3 hover:text-zinc-600"}>
+            <BsBookmark className="scale-[1.6] cursor-pointer" />
+          </div>
         </div>
-        <div className={"mt-4 flex h-fit w-full items-center justify-end pr-3 hover:text-zinc-600"}>
-          <BsBookmark className="scale-[1.6] cursor-pointer" />
+        <div className="pb-3 pt-2">
+          {(post.data?.likes.length || 0) > 0 && <p className="mt-1 pl-3 text-xs text-zinc-300">{(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}</p>}
+          <p className="pl-3 font-mono text-xs text-zinc-300">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
         </div>
+      </>
+    );
+  };
+
+  const MobileHeader = () => {
+    return (
+      <div className={"z-10 flex h-fit w-[400px] items-center justify-start rounded-t-2xl border-b border-zinc-600 pl-4 pb-5 " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.tertiary}>
+        <ProfileView />
       </div>
     );
   };
@@ -115,11 +132,17 @@ const Post = () => {
   const MobileFooter = () => {
     return (
       <div className={"flex h-fit w-[400px] flex-col items-center justify-start rounded-b-2xl border-t border-zinc-600 " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.tertiary}>
-        <div className="grid w-full border-zinc-600">
+        <div className={"mb-3 grid w-full border-zinc-600 " + (showComments ? " h-[90px]  border-b " : "  h-[80px] ")}>
           <InteractionBar />
-          <p className="mt-2 p-3 pb-2 font-mono text-xs text-zinc-300">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
         </div>
-        {showComments && <Comments />}
+        {showComments && (
+          <>
+            <div className="pb-2 w-full">
+              <CommentBox />
+            </div>
+            <Comments />
+          </>
+        )}
       </div>
     );
   };
@@ -127,7 +150,7 @@ const Post = () => {
   const WebSideView = () => {
     const Header = () => {
       return (
-        <div className="grid h-[13%] w-full border-b border-zinc-600">
+        <div className="grid h-[15%] w-full border-b border-zinc-600 pl-2">
           <ProfileView />
         </div>
       );
@@ -137,19 +160,6 @@ const Post = () => {
       return (
         <div className="grid h-[15%] w-full border-b border-zinc-600">
           <InteractionBar />
-          <p className="pl-3 mt-1 text-xs text-zinc-300">{post.data?.likes.length && (post.data?.likes.length + " " + (post.data?.likes.length > 1 ? "likes" : "like"))}</p>
-          <p className="pl-3 font-mono text-xs text-zinc-300">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
-        </div>
-      );
-    };
-
-    const CommentBox = () => {
-      return (
-        <div className="flex h-[7%] items-center">
-          <div className="w-[90%]">
-            <InputBox id="comment" maxlength={200} placeholder="Add a comment..." minlength={1} />
-          </div>
-          <button className="text-blue-300">Post</button>
         </div>
       );
     };
