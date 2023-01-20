@@ -21,6 +21,8 @@ export const postRouter = router({
       },
       include: {
         user: true,
+        likes: true,
+        comments: true,
       },
     });
   }),
