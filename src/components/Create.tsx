@@ -223,7 +223,7 @@ const Create = (props: itemType) => {
           </div>
           <div className="m-4 w-[50%]">
             <div className="flex gap-2 truncate">
-              <NextImage src={data?.user?.data.image || ""} key="image" className="h-8 w-8 rounded-full" height={100} width={100} alt={"image"} />
+              <NextImage src={data?.user?.data.image || "/image-placeholder.png"} key="image" className="h-8 w-8 rounded-full" height={100} width={100} alt={"image"} />
               {data?.user?.data.handle}
             </div>
             <textarea id="post-caption" placeholder="Write a caption..." maxLength={500} className={"min-h-24 mt-4 w-full rounded-xl p-2 focus:outline-none " + data?.theme?.secondary} />

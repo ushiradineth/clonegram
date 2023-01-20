@@ -197,13 +197,13 @@ const Profile = () => {
                     <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>following</p>
                   </button>
                 </div>
-                <div id="posts" className={"h-fit min-h-screen flex justify-center items-start w-fit py-10 " + (data?.viewport == "Web" && " w-[832px] border-t border-gray-500 px-24 ") + (data?.viewport == "Tab" && " w-[600px] border-t border-gray-500 ")}>
+                <div id="posts" className={"flex h-fit min-h-screen w-fit items-start justify-center py-10 " + (data?.viewport == "Web" && " w-[832px] border-t border-gray-500 px-24 ") + (data?.viewport == "Tab" && " w-[600px] border-t border-gray-500 ")}>
                   <div className={"col-span-3 grid w-[90%] grid-cols-3 place-items-center gap-1 " + (data?.viewport == "Mobile" && " mb-10 ")}>
                     {page?.data?.posts.length ? (
                       page.data.posts
                         .slice(0)
                         .reverse()
-                        .map((element, index) => <Image src={element.imageURLs[0] || ""} height={500} width={500} onClick={() => router.push("/post/" + element.id)} alt={element.id} key={index} className={"cursor-pointer bg-red-300 object-cover " + (data?.viewport == "Mobile" && " h-40 w-40 ") + (data?.viewport == "Web" && " h-48 w-48 ") + (data?.viewport == "Tab" && " h-48 w-48 ")} />)
+                        .map((element, index) => <Image src={element.imageURLs[0] || "/image-placeholder.png"} height={500} width={500} onClick={() => router.push("/post/" + element.id)} alt={element.id} key={index} className={"cursor-pointer bg-red-300 object-cover " + (data?.viewport == "Mobile" && " h-40 w-40 ") + (data?.viewport == "Web" && " h-48 w-48 ") + (data?.viewport == "Tab" && " h-48 w-48 ")} />)
                     ) : (
                       <div className="col-span-3 flex h-full min-h-screen w-full flex-col items-center p-4">
                         <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
