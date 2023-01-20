@@ -13,14 +13,13 @@ const privacy = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-      <h1 className="flex w-full justify-center border-b-2 p-4 font-semibold fixed top-0 bg-white">
+        <h1 className="fixed top-0 flex w-full justify-center border-b-2 bg-white p-4 font-semibold">
           <p>Privacy Policy for clonegram</p>
           <Link href="/" passHref>
             <HiChevronLeft className="fixed right-8 mt-1 scale-150" />
           </Link>
         </h1>
-        <div className="grid h-full place-items-start bg-zinc-900 px-4 text-3xl font-light text-white mt-14">
-        
+        <div className="mt-14 grid h-full place-items-start bg-zinc-900 px-4 text-3xl font-light text-white">
           <h1 className="py-4 font-semibold">Privacy Policy</h1>
           <p className="text-lg">Last updated: January 09, 2023</p>
           <p className="text-lg">This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.</p>
@@ -154,31 +153,31 @@ const privacy = () => {
               <p className="text-lg">
                 <strong>Necessary / Essential Cookies</strong>
               </p>
-              <p className="ml-4">
-                <p className="text-lg">Type: Session Cookies</p>
-                <p className="text-lg">Administered by: Us</p>
-                <p className="text-lg">Purpose: These Cookies are essential to provide You with services available through the Website and to enable You to use some of its features. They help to authenticate users and prevent fraudulent use of user accounts. Without these Cookies, the services that You have asked for cannot be provided, and We only use these Cookies to provide You with those services.</p>
-              </p>
+              <span className="ml-4">
+                <span className="text-lg">Type: Session Cookies</span>
+                <span className="text-lg">Administered by: Us</span>
+                <span className="text-lg">Purpose: These Cookies are essential to provide You with services available through the Website and to enable You to use some of its features. They help to authenticate users and prevent fraudulent use of user accounts. Without these Cookies, the services that You have asked for cannot be provided, and We only use these Cookies to provide You with those services.</span>
+              </span>
             </li>
             <li className="mt-4">
               <p className="text-lg">
                 <strong>Cookies Policy / Notice Acceptance Cookies</strong>
               </p>
-              <p className="ml-4">
-                <p className="list-disc text-lg">Type: Persistent Cookies</p>
-                <p className="list-disc text-lg">Administered by: Us</p>
-                <p className="list-disc text-lg">Purpose: These Cookies identify if users have accepted the use of cookies on the Website.</p>
-              </p>
+              <span className="ml-4">
+                <span className="list-disc text-lg">Type: Persistent Cookies</span>
+                <span className="list-disc text-lg">Administered by: Us</span>
+                <span className="list-disc text-lg">Purpose: These Cookies identify if users have accepted the use of cookies on the Website.</span>
+              </span>
             </li>
             <li className="mt-4">
               <p className="list-disc text-lg">
                 <strong>Functionality Cookies</strong>
               </p>
-              <p className="ml-4">
-                <p className="text-lg">Type: Persistent Cookies</p>
-                <p className="text-lg">Administered by: Us</p>
-                <p className="text-lg">Purpose: These Cookies allow us to remember choices You make when You use the Website, such as remembering your login details or language preference. The purpose of these Cookies is to provide You with a more personal experience and to avoid You having to re-enter your preferences every time You use the Website.</p>
-              </p>
+              <span className="ml-4">
+                <span className="text-lg">Type: Persistent Cookies</span>
+                <span className="text-lg">Administered by: Us</span>
+                <span className="text-lg">Purpose: These Cookies allow us to remember choices You make when You use the Website, such as remembering your login details or language preference. The purpose of these Cookies is to provide You with a more personal experience and to avoid You having to re-enter your preferences every time You use the Website.</span>
+              </span>
             </li>
           </ul>
           <p className="text-lg">For more information about the cookies we use and your choices regarding cookies, please visit our Cookies Policy or the Cookies section of our Privacy Policy.</p>

@@ -14,7 +14,7 @@ const about = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="h-screen">
-        <h1 className="flex justify-center w-full border-b-2 p-4 font-semibold">
+        <h1 className="flex w-full justify-center border-b-2 p-4 font-semibold">
           <p>About clonegram</p>
           <Link href="/" passHref>
             <HiChevronLeft className="fixed right-8 mt-1 scale-150" />
