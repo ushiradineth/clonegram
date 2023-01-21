@@ -20,6 +20,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
   const [status, setStatus] = useState("");
   const [user, setUser] = useState(null);
   const [search, setSearch] = useState(false);
+  const [notification, setNotification] = useState(false);
   const [lsTheme, setlsTheme] = useState("");
   const [hideSideComponents, setHideSideComponents] = useState(false);
   const [theme, setTheme] = useState({ type: "", primary: "", secondary: "", tertiary: "", accent: "" });
@@ -40,6 +41,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
     if (more) {
       setCreate(false);
       setSearch(false);
+      setNotification(false);
     }
   }, [more]);
 
@@ -47,6 +49,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
     if (create) {
       setMore(false);
       setSearch(false);
+      setNotification(false);
     }
   }, [create]);
 
@@ -55,10 +58,22 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
       setViewport("Tab");
       setMore(false);
       setCreate(false);
+      setNotification(false);
     } else {
       onResize();
     }
   }, [search]);
+
+  useEffect(() => {
+    if (notification) {
+      setViewport("Tab");
+      setMore(false);
+      setCreate(false);
+      setSearch(false);
+    } else {
+      onResize();
+    }
+  }, [notification]);
 
   useEffect(() => {
     if (viewport === "Mobile" && !create) {
@@ -71,6 +86,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
       create && setCreate(false);
       more && setMore(false);
       search && setSearch(false);
+      notification && setNotification(false);
       setHideSideComponents(false);
     }
   }, [hideSideComponents]);
@@ -106,7 +122,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
           <>
             <GetUser user={user} setUser={setUser} theme={theme} status={status} setStatus={setStatus} enabled={false} />
             <DataContext.Provider value={value}>
-              <Layout create={create} setCreate={setCreate} search={search} setSearch={setSearch} more={more} setMore={setMore} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} hideSideComponents={hideSideComponents} setHideSideComponents={setHideSideComponents} />
+              <Layout create={create} setCreate={setCreate} search={search} setSearch={setSearch} notification={notification} setNotification={setNotification} more={more} setMore={setMore} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} hideSideComponents={hideSideComponents} setHideSideComponents={setHideSideComponents} />
               <Component {...pageProps} />
             </DataContext.Provider>
           </>

@@ -17,12 +17,15 @@ import { env } from "../env/client.mjs";
 import MobileSearch from "./MobileSearch";
 import { DataContext } from "../pages/_app";
 import { useContext } from "react";
+import Notification from "./Notification";
 
 interface itemType {
   create: boolean;
   setCreate: (params: any) => any;
   search: boolean;
   setSearch: (params: any) => any;
+  notification: boolean;
+  setNotification: (params: any) => any;
   more: boolean;
   setMore: (params: any) => any;
   setTheme: (params: any) => any;
@@ -62,17 +65,18 @@ const Layout = (props: itemType) => {
         <div className={"z-50 max-h-screen w-fit select-none " + data?.theme?.primary}>
           {props.create && <Create create={props.create} setCreate={props.setCreate} />}
           {props.search && <Search search={props.search} setSearch={props.setSearch} />}
+          {props.notification && <Notification notification={props.notification} setNotification={props.setNotification} />}
           <div id="Sidebar" className={"fixed left-0 grid gap-4 " + (data?.viewport !== "Mobile" && data?.theme?.primary) + (data?.viewport == "Web" && " bottom-0 z-10 h-full w-72 grid-flow-row border-r transition-all duration-200 ") + (data?.viewport == "Tab" && " top-0 h-full w-16 grid-flow-row border-r transition-all duration-200 ") + (data?.viewport == "Mobile" && " top-0 h-screen w-screen grid-flow-col ") + (data?.theme?.type === "dark" ? " border-zinc-500 " : "  border-zinc-300 ")}>
             <div id="Sidebar-Items" className={"text-2xl font-light transition-all duration-200 " + (data?.viewport == "Web" && " ml-2 mt-5 ") + (data?.viewport == "Tab" && " ml-1 mt-5 ")}>
               <div onClick={() => onClickHandler("/home")} className={"cursor-pointer text-red-300 " + (data?.viewport == "Web" ? " ml-5 text-2xl " : " ml-4 text-4xl font-normal ") + (data?.viewport == "Mobile" ? " hidden " : " grid ")}>
                 {data?.viewport == "Web" ? "CLONEGRAM" : "C"}
               </div>
               <div id="Sidebar-Web-View-Items" className={"mt-5 ml-2 grid-flow-row place-items-start gap-5 " + (data?.viewport == "Mobile" ? " hidden " : " grid ")}>
-                <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} Text={"Home"} ID={"Home"} onClickHandler={() => onClickHandler("/home")} active={Boolean(router.pathname == "/home" && !props.create && !props.search && !props.more)} />
+                <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} Text={"Home"} ID={"Home"} onClickHandler={() => onClickHandler("/home")} active={Boolean(router.pathname == "/home" && !props.create && !props.search && !props.more && !props.notification)} />
                 <NavBarItem Icon={<BiSearchAlt2 />} IconOnClick={<FaSearch />} Text={"Search"} ID={"Search"} onClickHandler={() => props.setSearch(!props.search)} active={props.search} />
                 <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} Text={"Explore"} ID={"Explore"} />
                 <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} Text={"Messages"} ID={"Messages"} />
-                <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} />
+                <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} onClickHandler={() => props.setNotification(!props.notification)} active={props.notification} />
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} Text={"Create"} ID={"Create"} onClickHandler={() => props.setCreate(!props.create)} active={props.create} />
                 <NavBarItem Icon={data?.user?.data.image} Text={"Profile"} ID={"Profile"} onClickHandler={() => onClickHandler("/" + data?.user?.data.handle)} active={Boolean(router.query.profile === data?.user?.data.handle && !props.create && !props.search && !props.more)} />
               </div>
