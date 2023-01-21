@@ -145,10 +145,10 @@ const Search = (props: itemType) => {
             ) : isEmpty ? (
               <div>
                 <p className="mt-4 ml-4 text-lg ">Recent</p>
-                <div className={"grid place-items-center"}>{recentSearches.length > 0 ? recentSearches.map((user, index) => <ProfileLink user={user} key={index} index={index} onClickHandler={() => onClickProfile(user)} action={<AiOutlineClose className={"scale-150 cursor-pointer " + (data?.theme?.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")} onClick={() => removeRecentSearch(user)} />} />) : <NoResults text={"No recent searches"} />}</div>
+                <div className={"grid place-items-start"}>{recentSearches.length > 0 ? recentSearches.map((user, index) => <ProfileLink user={user} key={index} index={index} onClickHandler={() => onClickProfile(user)} action={<AiOutlineClose className={"scale-150 cursor-pointer " + (data?.theme?.type === "dark" ? " text-gray-300 hover:text-white " : " text-zinc-800 hover:text-black ")} onClick={() => removeRecentSearch(user)} />} />) : <NoResults text={"No recent searches"} />}</div>
               </div>
             ) : (
-              <div className="grid place-items-center">{users.length > 0 ? users.map((user, index) => <ProfileLink user={user} key={index} index={index} onClickHandler={() => onClickProfile(user)} />) : <NoResults text={"No results found"} />}</div>
+              <div className="grid place-items-start">{users.length > 0 ? users.map((user, index) => <ProfileLink user={user} key={index} index={index} onClickHandler={() => onClickProfile(user)} />) : <NoResults text={"No results found"} />}</div>
             )}
           </div>
         </div>
