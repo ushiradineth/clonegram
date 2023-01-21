@@ -17,13 +17,14 @@ interface itemType {
   followState?: JSX.Element;
   truncate?: boolean;
   hideName?: boolean;
+  wfit?: boolean;
 }
 
 const ProfileLink = (props: itemType) => {
   const data = useContext(DataContext);
 
   return (
-    <Link href={props.user.userHandle} onClick={(e) => e.preventDefault()} key={props.index} className={"mt-6 flex h-12 w-fit items-center justify-center px-4"} passHref>
+    <Link href={props.user.userHandle} onClick={(e) => e.preventDefault()} key={props.index} className={"mt-6 flex h-12 items-center justify-center px-4 " + (props.wfit ? " w-fit " : " w-full ")} passHref>
       <Image className={"w-12 cursor-pointer rounded-full"} onClick={props.onClickHandlerPost ? props.onClickHandlerPost : props.onClickHandler} src={props.user.userImage} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
       <div className="m-4 flex w-full cursor-pointer flex-col justify-center gap-1 truncate" onClick={props.onClickHandlerPost ? () => undefined : props.onClickHandler}>
         <div className="flex" onClick={props.onClickHandlerPost ? props.onClickHandlerPost : () => undefined}>

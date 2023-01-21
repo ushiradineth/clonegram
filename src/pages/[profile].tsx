@@ -211,6 +211,7 @@ const Profile = () => {
                 </div>
                 <div id={tab} className={"flex h-fit min-h-screen w-fit items-start justify-center " + (data?.viewport !== "Mobile" && " border-t border-zinc-700 ")}>
                   <div className={"col-span-3 mt-1 grid grid-cols-3 place-items-center gap-1 " + (data?.viewport == "Mobile" && " mb-10 ")}>
+                    {}
                     {(tab === "Posts" ? page?.data?.posts.length : data?.user?.data.saved.length) ? (
                       (tab === "Posts" ? page?.data?.posts : data?.user?.data.saved)
                         ?.slice(0)

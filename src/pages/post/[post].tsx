@@ -77,6 +77,7 @@ const Post = () => {
   const ProfileView = () => {
     return (
       <ProfileLink
+        wfit={true}
         hideName={true}
         truncate={post.data?.user.handle === data?.user?.data.handle}
         followState={
