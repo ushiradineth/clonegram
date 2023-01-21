@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { IoMdSettings } from "react-icons/io";
 import { FiCamera } from "react-icons/fi";
-import { BsThreeDots } from "react-icons/bs";
+import { BsThreeDots, BsBookmark, BsBookmarkFill } from "react-icons/bs";
+import { TfiLayoutGrid3, TfiLayoutGrid3Alt } from "react-icons/tfi";
+import { IoMdAlbums } from "react-icons/io";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -14,9 +16,6 @@ import { type UserType } from "../types/types";
 import Head from "next/head";
 import { DataContext } from "../pages/_app";
 import { useContext } from "react";
-import { TfiLayoutGrid3, TfiLayoutGrid3Alt } from "react-icons/tfi";
-import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
-import { IoMdAlbums } from "react-icons/io";
 
 const Profile = () => {
   const [options, setOptions] = useState(false);
@@ -203,11 +202,11 @@ const Profile = () => {
                   </button>
                 </div>
                 <div id="selection" className={"flex h-12 items-center justify-center gap-2 border-zinc-700 " + (data?.user?.data.handle !== page?.data?.handle ? " hidden " : "") + (data?.viewport === "Mobile" ? " w-full border-b " : " w-full border-t ")}>
-                  <div onClick={() => setTab("Posts")} className={"z-10 flex h-full cursor-pointer items-center justify-center gap-2 px-2 " + (tab === "Posts" && "  border-y ")}>
-                    <TfiLayoutGrid3 /> Posts
+                  <div onClick={() => setTab("Posts")} className={"active:text-zinc-700 z-10 flex h-full cursor-pointer items-center justify-center gap-2 px-2 " + (tab === "Posts" && "  border-y ")}>
+                    {tab === "Posts" ? <TfiLayoutGrid3Alt /> : <TfiLayoutGrid3 />} Posts
                   </div>
-                  <div onClick={() => setTab("Saved")} className={"z-10 flex h-full cursor-pointer items-center justify-center gap-2 px-2 " + (tab === "Saved" && "  border-y ")}>
-                    <BsBookmark /> Saved
+                  <div onClick={() => setTab("Saved")} className={"active:text-zinc-700 z-10 flex h-full cursor-pointer items-center justify-center gap-2 px-2 " + (tab === "Saved" && "  border-y ")}>
+                  {tab === "Saved" ? <BsBookmarkFill /> : <BsBookmark />} Saved
                   </div>
                 </div>
                 <div id={tab} className={"flex h-fit min-h-screen w-fit items-start justify-center " + (data?.viewport !== "Mobile" && " border-t border-zinc-700 ")}>
