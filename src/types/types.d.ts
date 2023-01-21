@@ -1,4 +1,4 @@
-import { type User, type Post, type Comment } from "@prisma/client";
+import { type User, type Post, type Comment, type Notification } from "@prisma/client";
 
 export interface UserType {
   data: User & {
@@ -11,6 +11,7 @@ export interface UserType {
     likes: Post[];
     comments: Comment[];
     recentSearches: User[];
+    notifications: Notfiication[];
   };
   refetch: any;
   isSuccess: boolean;
