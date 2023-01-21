@@ -8,13 +8,13 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { BiChevronRight, BiChevronLeft } from "react-icons/bi";
 import Spinner from "../../components/Spinner";
-import ProfileLink from "../../components/ProfileLink";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { TbMessageCircle2 } from "react-icons/tb";
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
 import InputBox from "../../components/InputBox";
 import Error from "../../components/Error";
+import Link from "next/link";
 
 const Post = () => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -76,39 +76,47 @@ const Post = () => {
 
   const ProfileView = () => {
     return (
-      <ProfileLink
-        wfit={true}
-        hideName={true}
-        truncate={post.data?.user.handle === data?.user?.data.handle}
-        followState={
-          post.data?.user.handle === data?.user?.data.handle ? (
-            <></>
-          ) : data?.user?.data.following.find((e) => e.handle === post.data?.user.handle) ? (
-            <button className="ml-1 flex gap-2" onClick={() => unfollow.mutate({ userid: data.user?.data.id || "", pageid: post.data?.userId || "" })}>
-              <p>•</p>
-              <p className="text-blue-400 hover:text-blue-500">following</p>
-            </button>
-          ) : (
-            <button className="flex gap-2" onClick={() => follow.mutate({ userid: data?.user?.data.id || "", pageid: post.data?.userId || "" })}>
-              <p>•</p>
-              <p className="text-blue-400 hover:text-blue-500"> follow</p>
-            </button>
-          )
-        }
-        user={{ userID: post.data?.user.id || "", userName: post.data?.user.name || "", userImage: post.data?.user.image || "/image-placeholder.png", userHandle: post.data?.user.handle || "" }}
-        index={0}
-        onClickHandlerPost={() => router.push({ pathname: "/" + post.data?.user.handle })}
-      />
+      <div className={"mt-5 flex h-12 w-fit items-center justify-center px-4 "}>
+        <Image className={"h-12 w-12 cursor-pointer rounded-full"} onClick={() => router.push("/" + post.data?.user.handle)} src={post.data?.user.image || ""} height={160} width={160} alt="Profile Picture" priority />
+        <div className="m-4 flex w-full flex-col justify-center gap-1 truncate">
+          <div className="flex gap-2">
+            <Link passHref href={"/" + post.data?.user.handle} onClick={(e) => e.preventDefault()} className={"cursor-pointer " + post.data?.user.handle !== data?.user?.data.handle ? " w-[60%] " : ""}>
+              {post.data?.user.handle}
+            </Link>
+            {post.data?.user.handle === data?.user?.data.handle ? (
+              <></>
+            ) : data?.user?.data.following.find((e) => e.handle === post.data?.user.handle) ? (
+              <div className="flex gap-2">
+                <p>•</p>
+                <button className="cursor-pointer text-blue-400 hover:text-blue-500 disabled:cursor-not-allowed disabled:text-blue-300" disabled={follow.isLoading || unfollow.isLoading} onClick={() => unfollow.mutate({ userid: data.user?.data.id || "", pageid: post.data?.userId || "" })}>
+                  following
+                </button>
+              </div>
+            ) : (
+              <button className="flex gap-2">
+                <p>•</p>
+                <button className="cursor-pointer text-blue-400 hover:text-blue-500 disabled:cursor-not-allowed disabled:text-blue-300 " disabled={follow.isLoading || unfollow.isLoading} onClick={() => follow.mutate({ userid: data?.user?.data.id || "", pageid: post.data?.userId || "" })}>
+                  follow
+                </button>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
     );
   };
 
   const Comment = (props: { text: string; handle: string; image: string }) => {
     return (
       <>
-        <Image className={"h-fit w-12 cursor-pointer rounded-full"} onClick={() => router.push(props.handle)} src={props.image} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
+        <Link passHref href={"/" + props.handle} onClick={(e) => e.preventDefault()}>
+          <Image className={"h-fit w-12 cursor-pointer rounded-full"} onClick={() => router.push("/" + props.handle)} src={props.image} height={160} width={160} alt="Profile Picture" priority />
+        </Link>
         <div className="flex gap-2">
           <span className="break-all">
-            <span className="mr-2 h-fit w-fit truncate font-semibold">{props.handle}</span>
+            <Link passHref href={"/" + props.handle} onClick={(e) => e.preventDefault()} className="mr-2 h-fit w-fit truncate font-semibold">
+              {props.handle}
+            </Link>
             {props.text}
           </span>
         </div>
