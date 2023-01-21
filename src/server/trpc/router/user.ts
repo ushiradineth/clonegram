@@ -11,10 +11,14 @@ export const userRouter = router({
       },
       include: {
         posts: true,
+        saved: true,
         followers: true,
         following: true,
         blockedby: true,
         blocking: true,
+        comments: true,
+        likes: true,
+        recentSearches: true
       },
     });
   }),
@@ -26,10 +30,14 @@ export const userRouter = router({
       },
       include: {
         posts: true,
+        saved: true,
         followers: true,
         following: true,
         blockedby: true,
         blocking: true,
+        comments: true,
+        likes: true,
+        recentSearches: true
       },
     });
   }),

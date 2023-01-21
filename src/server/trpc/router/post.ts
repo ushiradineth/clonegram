@@ -23,6 +23,7 @@ export const postRouter = router({
         user: true,
         likes: true,
         comments: true,
+        saved: true,
       },
     });
   }),
