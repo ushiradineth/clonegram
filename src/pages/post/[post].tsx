@@ -158,7 +158,7 @@ const Post = () => {
       <>
         <div className="grid grid-flow-col">
           <div className={"mt-4 grid h-fit w-fit scale-[1.6] grid-flow-col gap-2 child-hover:text-zinc-600 " + (data?.viewport !== "Mobile" ? " pl-4 " : "  pl-6 ")}>
-            {like ? <AiFillHeart className="cursor-pointer text-red-500" onClick={() => unlikePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <AiOutlineHeart className="cursor-pointer" onClick={() => likePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} />}
+            {like ? <AiFillHeart className="cursor-pointer text-red-500" onClick={() => unlikePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <AiOutlineHeart className="cursor-pointer" onClick={() => likePost.mutate({ userid: data?.user?.data.id || "", postOwnerid: post.data?.userId || "", postid: post.data?.id || "" })} />}
             <TbMessageCircle2 fill={showComments ? "white" : "none"} className={"cursor-pointer " + (data?.viewport !== "Mobile" ? " hidden " : "")} onClick={() => setShowComments(!showComments)} />
             <IoPaperPlaneOutline className="cursor-pointer" />
           </div>
