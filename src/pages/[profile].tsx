@@ -137,7 +137,7 @@ const Profile = () => {
             </div>
           )}
           <div className={" " + (data?.viewport == "Web" && session && " ml-72 ") + (data?.viewport == "Tab" && session && " ml-16 ")}>
-            <div id="Background" className={"flex h-fit flex-col items-center " + data?.theme?.secondary}>
+            <div id="Background" className={"flex h-fit flex-col items-center select-none " + data?.theme?.secondary}>
               <div className="mt-8 grid w-fit place-items-center">
                 <div id="user-details" className={"flex h-fit py-5 " + (data?.viewport == "Mobile" && " w-[400px] ") + (data?.viewport == "Web" && " w-[700px] items-center justify-center ") + (data?.viewport == "Tab" && " w-[500px] items-center justify-center ")}>
                   <Image className={"rounded-full " + (data?.viewport == "Mobile" ? " mr-2 ml-2 mt-4 h-24 w-24 " : " mr-10 flex w-24 scale-125 justify-center ")} src={page?.data?.image ? page?.data?.image : ""} height={96} width={96} alt="Profile Picture" priority />
@@ -202,11 +202,11 @@ const Profile = () => {
                   </button>
                 </div>
                 <div id="selection" className={"flex h-12 items-center justify-center gap-2 border-zinc-700 " + (data?.user?.data.handle !== page?.data?.handle ? " hidden " : "") + (data?.viewport === "Mobile" ? " w-full border-b " : " w-full border-t ")}>
-                  <div onClick={() => setTab("Posts")} className={"active:text-zinc-700 z-10 flex h-full cursor-pointer items-center justify-center gap-2 px-2 " + (tab === "Posts" && "  border-y ")}>
+                  <div onClick={() => setTab("Posts")} className={"z-10 flex h-full cursor-pointer items-center justify-center gap-2 px-2 active:text-zinc-700 " + (tab === "Posts" && "  border-y ")}>
                     {tab === "Posts" ? <TfiLayoutGrid3Alt /> : <TfiLayoutGrid3 />} Posts
                   </div>
-                  <div onClick={() => setTab("Saved")} className={"active:text-zinc-700 z-10 flex h-full cursor-pointer items-center justify-center gap-2 px-2 " + (tab === "Saved" && "  border-y ")}>
-                  {tab === "Saved" ? <BsBookmarkFill /> : <BsBookmark />} Saved
+                  <div onClick={() => setTab("Saved")} className={"z-10 flex h-full cursor-pointer items-center justify-center gap-2 px-2 active:text-zinc-700 " + (tab === "Saved" && "  border-y ")}>
+                    {tab === "Saved" ? <BsBookmarkFill /> : <BsBookmark />} Saved
                   </div>
                 </div>
                 <div id={tab} className={"flex h-fit min-h-screen w-fit items-start justify-center " + (data?.viewport !== "Mobile" && " border-t border-zinc-700 ")}>
@@ -216,15 +216,16 @@ const Profile = () => {
                         ?.slice(0)
                         .reverse()
                         .map((element, index) => (
-                          <div key={index} className={"relative w-fit h-fit"}>
-                            {element.imageURLs.length > 1 && <IoMdAlbums className=" absolute right-[4%] top-[4%] w-[8%] h-[8%] max-w-[30px] shadow-sm rotate-180" />}
+                          <div key={index} className={"relative h-fit w-fit"}>
+                            {element.imageURLs.length > 1 && <IoMdAlbums className=" absolute right-[4%] top-[4%] h-[8%] w-[8%] max-w-[30px] rotate-180 shadow-sm" />}
                             <Image src={element.imageURLs[0] || "/image-placeholder.png"} height={500} width={500} onClick={() => router.push("/post/" + element.id)} alt={element.id} key={index} className={"z-10 aspect-1 h-full max-h-[300px] w-full max-w-[300px] cursor-pointer bg-red-300 object-cover "}></Image>
                           </div>
                         ))
                     ) : (
                       <div className="min-w-screen col-span-3 mt-8 flex h-full min-h-screen w-full flex-col items-center">
                         <>
-                          <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
+                          <div className="w-screen"></div>
+                          <div className="mb-4 mt-8 grid h-32 w-32 place-items-center rounded-full border-2">
                             <FiCamera className="scale-x-[-5] scale-y-[5] transform" />
                           </div>
                           <div className="text-xl">No posts yet</div>
