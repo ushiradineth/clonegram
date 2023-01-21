@@ -18,7 +18,14 @@ export const userRouter = router({
         blocking: true,
         comments: true,
         likes: true,
-        recentSearches: true
+        recentSearches: true,
+        notifications: {
+          include: {
+            user: true,
+            post: true,
+            userRef: true,
+          },
+        },
       },
     });
   }),
@@ -37,7 +44,14 @@ export const userRouter = router({
         blocking: true,
         comments: true,
         likes: true,
-        recentSearches: true
+        recentSearches: true,
+        notifications: {
+          include: {
+            user: true,
+            post: true,
+            userRef: true,
+          },
+        },
       },
     });
   }),
@@ -84,7 +98,23 @@ export const userRouter = router({
       data: { followers: { connect: { id: input.userid } } },
     });
 
-    return { q1, q2 };
+    const q3 = await ctx.prisma.user.update({
+      where: { id: input.pageid },
+      data: {
+        notifications: {
+          create: {
+            type: "Follow",
+            userRef: {
+              connect: {
+                id: input.userid,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return { q1, q2, q3 };
   }),
 
   unfollow: protectedProcedure.input(z.object({ userid: z.string(), pageid: z.string() })).mutation(async ({ input, ctx }) => {
@@ -92,7 +122,7 @@ export const userRouter = router({
       where: { id: input.userid },
       data: { following: { disconnect: { id: input.pageid } } },
     });
-    
+
     const q2 = await ctx.prisma.user.update({
       where: { id: input.pageid },
       data: { followers: { disconnect: { id: input.userid } } },

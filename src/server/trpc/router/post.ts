@@ -34,7 +34,7 @@ export const postRouter = router({
     });
   }),
 
-  likePost: protectedProcedure.input(z.object({ postid: z.string(), userid: z.string() })).mutation(async ({ input, ctx }) => {
+  likePost: protectedProcedure.input(z.object({ postid: z.string(), postOwnerid: z.string(), userid: z.string() })).mutation(async ({ input, ctx }) => {
     const q1 = await ctx.prisma.post.update({
       where: { id: input.postid },
       data: { likes: { connect: { id: input.userid } } },
@@ -45,7 +45,28 @@ export const postRouter = router({
       data: { likes: { connect: { id: input.postid } } },
     });
 
-    return { q1, q2 };
+    const q3 = await ctx.prisma.user.update({
+      where: { id: input.postOwnerid },
+      data: {
+        notifications: {
+          create: {
+            type: "Like",
+            userRef: {
+              connect: {
+                id: input.userid,
+              },
+            },
+            post: {
+              connect: {
+                id: input.postid,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return { q1, q2, q3 };
   }),
 
   unlikePost: protectedProcedure.input(z.object({ postid: z.string(), userid: z.string() })).mutation(async ({ input, ctx }) => {
