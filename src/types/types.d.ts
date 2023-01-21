@@ -9,7 +9,8 @@ export interface UserType {
     blocking: User[];
     saved: Post[];
     likes: Post[];
-    comments: Comment[]
+    comments: Comment[];
+    recentSearches: User[];
   };
   refetch: any;
   isSuccess: boolean;
