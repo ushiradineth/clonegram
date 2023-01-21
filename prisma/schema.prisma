@@ -43,17 +43,18 @@ model Account {
 }
 
 model User {
-  id            String    @id @unique @default(cuid())
-  handle        String    @unique @default(cuid())
+  id            String         @id @unique @default(cuid())
+  handle        String         @unique @default(cuid())
   name          String?
   bio           String?
-  email         String?   @unique
+  email         String?        @unique
   emailVerified DateTime?
-  createdAt     DateTime  @default(now()) @db.Timestamptz(3)
+  createdAt     DateTime       @default(now()) @db.Timestamptz(3)
   image         String?
   accounts      Account[]
   sessions      Session[]
   comments      Comment[]
+  notifications Notification[] @relation("UserNotification")
 
   posts Post[]
   likes Post[] @relation("UserLikes")
@@ -66,14 +67,15 @@ model User {
   recentSearches User[] @relation("UserRecentSearches")
 
   //relations for same table refs or cross table refs
-  followingRelation      User[]    @relation("UserFollowing")
-  followersRelation      User[]    @relation("UserFollowers")
-  blockingRelation       User[]    @relation("UserBlocking")
-  blockedbyRelation      User[]    @relation("UserBlockedby")
-  recentSearchesRelation User[]    @relation("UserRecentSearches")
-  PostsLikesRelation     Post[]    @relation("PostLikes")
-  PostsSavedRelation     Post[]    @relation("PostSaved")
-  CommentsLikesRelation  Comment[] @relation("CommentLikes")
+  followingRelation        User[]         @relation("UserFollowing")
+  followersRelation        User[]         @relation("UserFollowers")
+  blockingRelation         User[]         @relation("UserBlocking")
+  blockedbyRelation        User[]         @relation("UserBlockedby")
+  recentSearchesRelation   User[]         @relation("UserRecentSearches")
+  PostsLikesRelation       Post[]         @relation("PostLikes")
+  PostsSavedRelation       Post[]         @relation("PostSaved")
+  CommentsLikesRelation    Comment[]      @relation("CommentLikes")
+  NotificationUserRelation Notification[] @relation("UserNotificationRelation")
 }
 
 model Post {
@@ -89,8 +91,9 @@ model Post {
   saved User[] @relation("PostSaved")
 
   //relations for same table refs or cross table refs
-  UserLikesRelation User[] @relation("UserLikes")
-  UserSavedRelation User[] @relation("UserSaved")
+  UserLikesRelation        User[]         @relation("UserLikes")
+  UserSavedRelation        User[]         @relation("UserSaved")
+  NotificationPostRelation Notification[]
 }
 
 model Comment {
@@ -108,4 +111,17 @@ model Comment {
   //relations for same table refs or cross table refs
   parentReplyRelation Comment?  @relation("parentReply")
   repliesRelation     Comment[] @relation("replies")
+}
+
+model Notification {
+  text      String?
+  id        String   @id @unique @default(cuid())
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  type      String
+  user      User?    @relation("UserNotification", fields: [userId], references: [id])
+  userId    String?
+  userRef   User?    @relation("UserNotificationRelation", fields: [userRefId], references: [id])
+  userRefId String?
+  post      Post?    @relation(fields: [postId], references: [id])
+  postId    String?
 }
