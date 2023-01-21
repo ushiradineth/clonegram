@@ -12,7 +12,7 @@ import ProfileLink from "../../components/ProfileLink";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { TbMessageCircle2 } from "react-icons/tb";
 import { IoPaperPlaneOutline } from "react-icons/io5";
-import { BsBookmark } from "react-icons/bs";
+import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
 import InputBox from "../../components/InputBox";
 import Error from "../../components/Error";
 
@@ -20,7 +20,7 @@ const Post = () => {
   const [imageIndex, setImageIndex] = useState(0);
   const [showComments, setShowComments] = useState(false);
   const [like, setLike] = useState<boolean | null>(null);
-  const [commentLength, setCommentLength] = useState(false);
+  const [save, setSave] = useState<boolean | null>(null);
 
   const router = useRouter();
   const postID = router.query.post as string;
@@ -52,10 +52,23 @@ const Post = () => {
     },
   });
 
+  const savePost = trpc.post.savePost.useMutation({
+    onMutate: () => {
+      setSave(true);
+    },
+  });
+
+  const unsavePost = trpc.post.unsavePost.useMutation({
+    onMutate: () => {
+      setSave(false);
+    },
+  });
+
   const comment = trpc.post.setcomment.useMutation({});
 
   useEffect(() => {
     post.data?.likes.forEach((e) => e.id === data?.user?.data.id && setLike(true));
+    post.data?.saved.forEach((e) => e.id === data?.user?.data.id && setSave(true));
   }, [post]);
 
   if (!post.data && !post.isLoading) return <Error session={Boolean(session)} error="Post not found" />;
@@ -149,9 +162,7 @@ const Post = () => {
             <TbMessageCircle2 fill={showComments ? "white" : "none"} className={"cursor-pointer " + (data?.viewport !== "Mobile" ? " hidden " : "")} onClick={() => setShowComments(!showComments)} />
             <IoPaperPlaneOutline className="cursor-pointer" />
           </div>
-          <div className={"mt-4 flex h-fit w-full items-center justify-end pr-3 hover:text-zinc-600"}>
-            <BsBookmark className="scale-[1.6] cursor-pointer" />
-          </div>
+          <div className={"mt-4 flex h-fit w-full items-center justify-end pr-3 hover:text-zinc-600"}>{save ? <BsBookmarkFill fill="white" className="scale-[1.6] cursor-pointer " onClick={() => unsavePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <BsBookmark className="scale-[1.6] cursor-pointer " onClick={() => savePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} />}</div>
         </div>
         <div className="pb-3 pt-2">
           {(post.data?.likes.length || 0) > 0 && <p className="mt-1 pl-3 text-xs text-zinc-300">{(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}</p>}
