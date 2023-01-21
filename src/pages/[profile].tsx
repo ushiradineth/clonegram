@@ -14,6 +14,9 @@ import { type UserType } from "../types/types";
 import Head from "next/head";
 import { DataContext } from "../pages/_app";
 import { useContext } from "react";
+import { TfiLayoutGrid3, TfiLayoutGrid3Alt } from "react-icons/tfi";
+import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
+import { IoMdAlbums } from "react-icons/io";
 
 const Profile = () => {
   const [options, setOptions] = useState(false);
@@ -24,6 +27,7 @@ const Profile = () => {
   const [following, setFollowing] = useState(new Array<{ UserID: string; UserName: string; UserHandle: string; UserImage: string; UserFollowing: boolean; UserRemoved: boolean }>());
   const [followersMenu, setFollowersMenu] = useState(false);
   const [followingMenu, setFollowingMenu] = useState(false);
+  const [tab, setTab] = useState("Posts");
 
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -40,6 +44,7 @@ const Profile = () => {
     setIsBlockedBy(false);
     setIsBlocking(false);
     setOptions(false);
+    setTab("Posts");
     document.dispatchEvent(new Event("visibilitychange"));
   }, [router.query]);
 
@@ -183,7 +188,7 @@ const Profile = () => {
                     {page?.data?.bio}
                   </div>
                 </div>
-                <div id="stats-mobile" className={"z-10 grid w-[90%] grid-flow-col place-items-center border-y border-gray-500 py-2 text-sm font-normal " + (data?.viewport != "Mobile" && " hidden ")}>
+                <div id="stats-mobile" className={"z-10 grid w-full grid-flow-col place-items-center border-y border-zinc-700 py-2 text-sm font-normal " + (data?.viewport != "Mobile" && " hidden ")}>
                   <div className="grid place-items-center">
                     <p className="font-semibold">{page?.data?.posts.length}</p>
                     <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>posts</p>
@@ -197,19 +202,34 @@ const Profile = () => {
                     <p className={data?.theme?.type === "dark" ? "text-gray-300" : "text-black"}>following</p>
                   </button>
                 </div>
-                <div id="posts" className={"flex h-fit min-h-screen w-fit items-start justify-center py-10 " + (data?.viewport == "Web" && " w-[832px] border-t border-gray-500 px-24 ") + (data?.viewport == "Tab" && " w-[600px] border-t border-gray-500 ")}>
-                  <div className={"col-span-3 grid w-[90%] grid-cols-3 place-items-center gap-1 " + (data?.viewport == "Mobile" && " mb-10 ")}>
-                    {page?.data?.posts.length ? (
-                      page.data.posts
-                        .slice(0)
+                <div id="selection" className={"flex h-12 items-center justify-center gap-2 border-zinc-700 " + (data?.user?.data.handle !== page?.data?.handle ? " hidden " : "") + (data?.viewport === "Mobile" ? " w-full border-b " : " w-full border-t ")}>
+                  <div onClick={() => setTab("Posts")} className={"z-10 flex h-full cursor-pointer items-center justify-center gap-2 px-2 " + (tab === "Posts" && "  border-y ")}>
+                    <TfiLayoutGrid3 /> Posts
+                  </div>
+                  <div onClick={() => setTab("Saved")} className={"z-10 flex h-full cursor-pointer items-center justify-center gap-2 px-2 " + (tab === "Saved" && "  border-y ")}>
+                    <BsBookmark /> Saved
+                  </div>
+                </div>
+                <div id={tab} className={"flex h-fit min-h-screen w-fit items-start justify-center " + (data?.viewport !== "Mobile" && " border-t border-zinc-700 ")}>
+                  <div className={"col-span-3 mt-1 grid grid-cols-3 place-items-center gap-1 " + (data?.viewport == "Mobile" && " mb-10 ")}>
+                    {(tab === "Posts" ? page?.data?.posts.length : data?.user?.data.saved.length) ? (
+                      (tab === "Posts" ? page?.data?.posts : data?.user?.data.saved)
+                        ?.slice(0)
                         .reverse()
-                        .map((element, index) => <Image src={element.imageURLs[0] || "/image-placeholder.png"} height={500} width={500} onClick={() => router.push("/post/" + element.id)} alt={element.id} key={index} className={"cursor-pointer bg-red-300 object-cover " + (data?.viewport == "Mobile" && " h-40 w-40 ") + (data?.viewport == "Web" && " h-48 w-48 ") + (data?.viewport == "Tab" && " h-48 w-48 ")} />)
+                        .map((element, index) => (
+                          <div key={index} className={"relative w-fit h-fit"}>
+                            {element.imageURLs.length > 1 && <IoMdAlbums className=" absolute right-[4%] top-[4%] w-[8%] h-[8%] max-w-[30px] shadow-sm rotate-180" />}
+                            <Image src={element.imageURLs[0] || "/image-placeholder.png"} height={500} width={500} onClick={() => router.push("/post/" + element.id)} alt={element.id} key={index} className={"z-10 aspect-1 h-full max-h-[300px] w-full max-w-[300px] cursor-pointer bg-red-300 object-cover "}></Image>
+                          </div>
+                        ))
                     ) : (
-                      <div className="col-span-3 flex h-full min-h-screen w-full flex-col items-center p-4">
-                        <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
-                          <FiCamera className="scale-x-[-5] scale-y-[5] transform" />
-                        </div>
-                        <div className="text-xl">No posts yet</div>
+                      <div className="min-w-screen col-span-3 mt-8 flex h-full min-h-screen w-full flex-col items-center">
+                        <>
+                          <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-2">
+                            <FiCamera className="scale-x-[-5] scale-y-[5] transform" />
+                          </div>
+                          <div className="text-xl">No posts yet</div>
+                        </>
                       </div>
                     )}
                   </div>
