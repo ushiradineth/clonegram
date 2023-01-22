@@ -17,6 +17,7 @@ import Error from "../../components/Error";
 import Link from "next/link";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import OptionMenu from "../../components/OptionMenu";
+import ListOfUsers from "../../components/ListOfUsers";
 
 const Post = () => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -24,6 +25,7 @@ const Post = () => {
   const [like, setLike] = useState<boolean | null>(null);
   const [save, setSave] = useState<boolean | null>(null);
   const [deleteMenu, setDeleteMenu] = useState(false);
+  const [likesMenu, setLikesMenu] = useState(false);
 
   const router = useRouter();
   const postID = router.query.post as string;
@@ -185,7 +187,7 @@ const Post = () => {
           <div className={"mt-4 flex h-fit w-full items-center justify-end pr-3 hover:text-zinc-600"}>{save ? <BsBookmarkFill fill="white" className="scale-[1.6] cursor-pointer " onClick={() => unsavePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <BsBookmark className="scale-[1.6] cursor-pointer " onClick={() => savePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} />}</div>
         </div>
         <div className="pb-3 pt-2">
-          {(post.data?.likes.length || 0) > 0 && <div className="mt-1 pl-3 text-xs text-zinc-300">{(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}</div>}
+          {(post.data?.likes.length || 0) > 0 && <div className="mt-1 pl-3 text-xs text-zinc-300 cursor-pointer" onClick={() => setLikesMenu(true)} >{(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}</div>}
           <p className="pl-3 font-mono text-xs text-zinc-300">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
         </div>
       </>
@@ -283,6 +285,7 @@ const Post = () => {
           <SignInNotification />
           <div className={"flex h-screen select-none items-center px-2 " + data?.theme?.secondary + (data?.viewport == "Web" && session && " ml-72  justify-center ") + (data?.viewport == "Tab" && session && " ml-16 justify-center ") + (data?.viewport == "Mobile" && session && " flex-col pt-12 ")}>
             {deleteMenu && <OptionMenu buttonPositive="Delete" buttonNegative="Cancel" description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ id: post.data?.id || "" })} onClickNegative={() => setDeleteMenu(false)} />}
+            {likesMenu && <ListOfUsers users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" userHandle={data?.user?.data.handle} userID={data?.user?.data.id} pageID={"0"} />}
             <MobileHeader />
             <PostView />
             <WebSideView />
