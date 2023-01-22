@@ -15,12 +15,15 @@ import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
 import InputBox from "../../components/InputBox";
 import Error from "../../components/Error";
 import Link from "next/link";
+import { MdOutlineDeleteOutline } from "react-icons/md";
+import OptionMenu from "../../components/OptionMenu";
 
 const Post = () => {
   const [imageIndex, setImageIndex] = useState(0);
   const [showComments, setShowComments] = useState(false);
   const [like, setLike] = useState<boolean | null>(null);
   const [save, setSave] = useState<boolean | null>(null);
+  const [deleteMenu, setDeleteMenu] = useState(false);
 
   const router = useRouter();
   const postID = router.query.post as string;
@@ -49,6 +52,13 @@ const Post = () => {
   const unlikePost = trpc.post.unlikePost.useMutation({
     onMutate: () => {
       setLike(false);
+    },
+  });
+
+  const deletePost = trpc.post.deletePost.useMutation({
+    onSuccess: () => {
+      router.push("/");
+      data?.user?.refetch;
     },
   });
 
@@ -165,16 +175,17 @@ const Post = () => {
   const InteractionBar = () => {
     return (
       <>
-        <div className="grid grid-flow-col">
-          <div className={"mt-4 grid h-fit w-fit scale-[1.6] grid-flow-col gap-2 child-hover:text-zinc-600 " + (data?.viewport !== "Mobile" ? " pl-4 " : "  pl-6 ")}>
+        <div className="grid grid-flow-col place-items-start">
+          <div className={"mt-4 grid h-fit w-fit scale-[1.6] grid-flow-col gap-2 child-hover:text-zinc-600 " + (post.data?.user.handle === data?.user?.data.handle ? (data?.viewport !== "Mobile" ? " pl-6 " : "  pl-7 ") : (data?.viewport !== "Mobile" ? " pl-4 " : "  pl-6 "))}>
             {like ? <AiFillHeart className="cursor-pointer text-red-500" onClick={() => unlikePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <AiOutlineHeart className="cursor-pointer" onClick={() => likePost.mutate({ userid: data?.user?.data.id || "", postOwnerid: post.data?.userId || "", postid: post.data?.id || "" })} />}
             <TbMessageCircle2 fill={showComments ? "white" : "none"} className={"cursor-pointer " + (data?.viewport !== "Mobile" ? " hidden " : "")} onClick={() => setShowComments(!showComments)} />
             <IoPaperPlaneOutline className="cursor-pointer" />
+            {post.data?.user.handle === data?.user?.data.handle && <MdOutlineDeleteOutline onClick={() => setDeleteMenu(true)} />}
           </div>
           <div className={"mt-4 flex h-fit w-full items-center justify-end pr-3 hover:text-zinc-600"}>{save ? <BsBookmarkFill fill="white" className="scale-[1.6] cursor-pointer " onClick={() => unsavePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <BsBookmark className="scale-[1.6] cursor-pointer " onClick={() => savePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} />}</div>
         </div>
         <div className="pb-3 pt-2">
-          {(post.data?.likes.length || 0) > 0 && <p className="mt-1 pl-3 text-xs text-zinc-300">{(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}</p>}
+          {(post.data?.likes.length || 0) > 0 && <div className="mt-1 pl-3 text-xs text-zinc-300">{(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}</div>}
           <p className="pl-3 font-mono text-xs text-zinc-300">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
         </div>
       </>
@@ -271,6 +282,7 @@ const Post = () => {
         <main>
           <SignInNotification />
           <div className={"flex h-screen select-none items-center px-2 " + data?.theme?.secondary + (data?.viewport == "Web" && session && " ml-72  justify-center ") + (data?.viewport == "Tab" && session && " ml-16 justify-center ") + (data?.viewport == "Mobile" && session && " flex-col pt-12 ")}>
+            {deleteMenu && <OptionMenu buttonPositive="Delete" buttonNegative="Cancel" description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ id: post.data?.id || "" })} onClickNegative={() => setDeleteMenu(false)} />}
             <MobileHeader />
             <PostView />
             <WebSideView />
