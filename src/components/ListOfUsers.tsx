@@ -6,6 +6,7 @@ import { trpc } from "../utils/trpc";
 import { DataContext } from "../pages/_app";
 import ProfileLink from "./ProfileLink";
 import Spinner from "./Spinner";
+import { type User } from "@prisma/client";
 
 type user = {
   UserID: string;
@@ -17,12 +18,11 @@ type user = {
 };
 
 interface itemType {
-  users: user[];
+  users: User[] | undefined;
   title: string;
   userHandle: string | undefined;
   userID: string | undefined;
   pageID: string;
-  userSetter: (...arg: any) => unknown;
   onClickNegative: (...arg: any) => unknown;
 }
 
@@ -30,12 +30,12 @@ const ListOfUsers = (props: itemType) => {
   const data = useContext(DataContext);
   const follow = trpc.user.follow.useMutation();
   const unfollow = trpc.user.unfollow.useMutation();
+  const [users, setUsers] = useState(new Array<user>());
 
   const followFunc = (page: user) => {
     if (props.userID && page.UserID) {
       follow.mutate({ userid: props.userID, pageid: page.UserID });
       page.UserFollowing = true;
-      props.userSetter(props.users);
     }
   };
 
@@ -53,6 +53,11 @@ const ListOfUsers = (props: itemType) => {
     }
   };
 
+  useEffect(() => {
+    props.users?.forEach((element) => element.name && element.image && Boolean(!users.find((e) => e.UserID === element.id)) && users.push({ UserID: element.id, UserName: element.name, UserHandle: element.handle, UserImage: element.image, UserFollowing: Boolean(data?.user?.data.following.find((e) => e.handle === element.handle)) || false, UserRemoved: false }));
+    setUsers(users);
+  }, []);
+
   return (
     <div className="fixed top-0 left-0 z-20 h-screen w-screen select-none bg-black bg-opacity-30" onClick={() => props.onClickNegative}>
       <div className={"absolute top-1/2 left-1/2 z-20 grid w-[400px] -translate-x-1/2 -translate-y-1/2 transform place-items-center rounded-2xl shadow-[0px_0px_10px_rgba(0,0,0,0.7)] " + data?.theme?.tertiary}>
@@ -61,9 +66,9 @@ const ListOfUsers = (props: itemType) => {
             <p className="select-none text-xl">{props.title}</p>
             <AiOutlineClose onClick={props.onClickNegative} className="fixed top-6 right-6 scale-150 hover:cursor-pointer" />
           </div>
-          {props.users.length > 0 ? (
-            props.users.map((user, index) => {
-              return <User user={user} index={index} key={index} userID={props.userID || ""} userHandle={props.userHandle || ""} pageID={props.pageID || ""} title={props.title} followFunc={followFunc} unfollowFunc={unfollowFunc} followIsLoading={follow.isLoading} unfollowIsLoading={unfollow.isLoading} removeFunc={removeFunc} />;
+          {users.length > 0 ? (
+            users.map((user, index) => {
+              return <UserItem user={user} index={index} key={index} userID={props.userID || ""} userHandle={props.userHandle || ""} pageID={props.pageID || ""} title={props.title} followFunc={followFunc} unfollowFunc={unfollowFunc} followIsLoading={follow.isLoading} unfollowIsLoading={unfollow.isLoading} removeFunc={removeFunc} />;
             })
           ) : (
             <div className={"flex flex-col items-center justify-center rounded-2xl p-8 " + data?.theme?.tertiary}>
@@ -72,7 +77,10 @@ const ListOfUsers = (props: itemType) => {
                   <BiUserPlus className="scale-x-[-6] scale-y-[6] transform" />
                 </div>
                 <div className="text-xl">{props.title}</div>
-                <div className="text-sm">{props.title === "Followers" ? "You'll see all of the people who follow you here." : "When you follow people, you'll see them here."}</div>
+
+                <div className="text-sm">{props.title === "Followers" && "You'll see all of the people who follow you here."}</div>
+                <div className="text-sm">{props.title === "Following" && "When you follow people, you'll see them here."}</div>
+                <div className="text-sm">{props.title === "Likes" && "When people like this post, you'll see them here."}</div>
               </div>
             </div>
           )}
@@ -99,7 +107,7 @@ type UserType = {
   unfollowIsLoading: boolean;
 };
 
-const User = (props: UserType) => {
+const UserItem = (props: UserType) => {
   const [text, setText] = useState("");
   const router = useRouter();
 

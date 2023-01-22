@@ -22,8 +22,6 @@ const Profile = () => {
   const [isBlockedBy, setIsBlockedBy] = useState(false);
   const [isBlocking, setIsBlocking] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [followers, setFollowers] = useState(new Array<{ UserID: string; UserName: string; UserHandle: string; UserImage: string; UserFollowing: boolean; UserRemoved: boolean }>());
-  const [following, setFollowing] = useState(new Array<{ UserID: string; UserName: string; UserHandle: string; UserImage: string; UserFollowing: boolean; UserRemoved: boolean }>());
   const [followersMenu, setFollowersMenu] = useState(false);
   const [followingMenu, setFollowingMenu] = useState(false);
   const [tab, setTab] = useState("Posts");
@@ -83,37 +81,12 @@ const Profile = () => {
 
   useEffect(() => {
     if (page?.isSuccess) {
-      const userfollowing: Array<string> = [];
-      const followersArray: Array<{ UserID: string; UserName: string; UserHandle: string; UserImage: string; UserFollowing: boolean; UserRemoved: boolean }> = [];
-      const followingArray: Array<{ UserID: string; UserName: string; UserHandle: string; UserImage: string; UserFollowing: boolean; UserRemoved: boolean }> = [];
-
-      if (session) {
-        data?.user?.data.following.forEach((element: { handle: string }) => {
-          userfollowing.push(element.handle);
-        });
-
-        if (data?.user?.data.handle !== String(profile)) {
-          data?.user?.data.blockedby.forEach((element: { id: string | undefined }) => {
-            if (element.id === page?.data?.id && !isBlocking && !isBlockedBy) setIsBlockedBy(true);
-          });
-
-          data?.user?.data.blocking.forEach((element: { id: string | undefined }) => {
-            if (element.id === page?.data?.id && !isBlockedBy && !isBlocking) setIsBlocking(true);
-          });
-        }
+      if (data?.user?.data.handle !== String(profile) && session) {
+        data?.user?.data.blockedby.find((element) => element.id === page?.data?.id && !isBlocking && !isBlockedBy && setIsBlockedBy(true));
+        data?.user?.data.blocking.find((element) => element.id === page?.data?.id && !isBlockedBy && !isBlocking && setIsBlocking(true));
       }
 
-      page?.data?.following.forEach((element: { name: any; image: any; id: any; handle: string }) => {
-        if (element.name && element.image) followingArray.push({ UserID: element.id, UserName: element.name, UserHandle: element.handle, UserImage: element.image, UserFollowing: userfollowing.indexOf(element.handle) > -1 || false, UserRemoved: false });
-      });
-
-      page?.data?.followers.forEach((element: { name: any; image: any; id: string; handle: string }) => {
-        if (element.name && element.image) followersArray.push({ UserID: element.id, UserName: element.name, UserHandle: element.handle, UserImage: element.image, UserFollowing: userfollowing.indexOf(element.handle) > -1 || false, UserRemoved: false });
-        if (element.id === session?.user?.id && !isFollowing) setIsFollowing(true);
-      });
-
-      setFollowing(followingArray);
-      setFollowers(followersArray);
+      page?.data?.followers.find((element) => element.id === session?.user?.id && !isFollowing && setIsFollowing(true));
     }
   }, [page?.data]);
 
@@ -131,8 +104,8 @@ const Profile = () => {
           <link rel="icon" href={"/favicon.ico"} />
         </Head>
         <main>
-          {followersMenu && <ListOfUsers users={followers} userSetter={() => setFollowers} onClickNegative={() => setFollowersMenu(false)} title="Followers" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page?.data?.id ? page?.data.id : "0"} />}
-          {followingMenu && <ListOfUsers users={following} userSetter={() => setFollowing} onClickNegative={() => setFollowingMenu(false)} title="Following" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page?.data?.id ? page?.data.id : "0"} />}
+          {followersMenu && <ListOfUsers users={page?.data?.followers} onClickNegative={() => setFollowersMenu(false)} title="Followers" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page?.data?.id ? page?.data.id : "0"} />}
+          {followingMenu && <ListOfUsers users={page?.data?.following} onClickNegative={() => setFollowingMenu(false)} title="Following" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page?.data?.id ? page?.data.id : "0"} />}
           {options && <ProfileOptions onClickNegative={() => setOptions(false)} page={page as UserType} refetch={data?.user?.refetch} setIsBlocking={setIsBlocking} />}
           {!session && (
             <div className={"fixed bottom-0 left-0 flex h-12 w-screen items-center justify-center gap-2 " + data?.theme?.primary}>
