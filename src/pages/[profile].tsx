@@ -43,8 +43,14 @@ const Profile = () => {
     setIsBlockedBy(false);
     setIsBlocking(false);
     setOptions(false);
-    setTab("Posts");
+    
     document.dispatchEvent(new Event("visibilitychange"));
+
+    if (data?.user?.data.handle === profile && router.query.saved === "true") {
+      setTab("Saved");
+    } else {
+      setTab("Posts");
+    }
   }, [router.query]);
 
   const follow = trpc.user.follow.useMutation({
@@ -137,7 +143,7 @@ const Profile = () => {
             </div>
           )}
           <div className={" " + (data?.viewport == "Web" && session && " ml-72 ") + (data?.viewport == "Tab" && session && " ml-16 ")}>
-            <div id="Background" className={"flex h-fit flex-col items-center select-none " + data?.theme?.secondary}>
+            <div id="Background" className={"flex h-fit select-none flex-col items-center " + data?.theme?.secondary}>
               <div className="mt-8 grid w-fit place-items-center">
                 <div id="user-details" className={"flex h-fit py-5 " + (data?.viewport == "Mobile" && " w-[400px] ") + (data?.viewport == "Web" && " w-[700px] items-center justify-center ") + (data?.viewport == "Tab" && " w-[500px] items-center justify-center ")}>
                   <Image className={"rounded-full " + (data?.viewport == "Mobile" ? " mr-2 ml-2 mt-4 h-24 w-24 " : " mr-10 flex w-24 scale-125 justify-center ")} src={page?.data?.image ? page?.data?.image : ""} height={96} width={96} alt="Profile Picture" priority />

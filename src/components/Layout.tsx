@@ -101,7 +101,7 @@ const Layout = (props: itemType) => {
                 {props.more && (
                   <div id="Sidebar-More-Items" className={"invisible fixed bottom-16 left-6 z-50 w-fit origin-bottom-left scale-95 transform rounded-lg py-1 text-sm opacity-0 transition-all duration-300 group-focus-within:visible group-focus-within:scale-100 group-focus-within:opacity-100 " + (data?.theme?.type === "dark" ? " shadow-[0px_0px_10px_rgba(255,255,255,0.2)] " : " shadow-[0px_0px_10px_rgba(0,0,0,0.2)] ") + data?.theme?.secondary}>
                     <MoreItem Icon={<IoMdSettings />} Text="Settings" setMore={props.setMore} onClickHandler={() => router.push("/settings")} />
-                    <MoreItem Icon={<RxBookmark />} Text="Saved" setMore={props.setMore} />
+                    <MoreItem Icon={<RxBookmark />} Text="Saved" setMore={props.setMore} onClickHandler={() => router.push({ pathname: "/" + data?.user?.data.handle, query: { saved: true } })} />
                     <MoreItem Icon={<RxTimer />} Text="Your Activity" setMore={props.setMore} />
                     <MoreItem Icon={<HiOutlineMoon />} Text="Switch Appearence" setMore={props.setMore} onClickHandler={switchLayout} />
                     <MoreItem Icon={<BiMessageAltError />} Text="Report a problem" setMore={props.setMore} />
