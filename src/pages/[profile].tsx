@@ -43,7 +43,7 @@ const Profile = () => {
     setIsBlockedBy(false);
     setIsBlocking(false);
     setOptions(false);
-    
+
     document.dispatchEvent(new Event("visibilitychange"));
 
     if (data?.user?.data.handle === profile && router.query.saved === "true") {
@@ -156,7 +156,7 @@ const Profile = () => {
                         <button id="cta" disabled={follow.isLoading || unfollow.isLoading} className={"text-xs font-semibold disabled:cursor-not-allowed " + (data?.viewport === "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page?.data?.id ? router.push("/settings") : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))}>
                           {session?.user?.id === page?.data?.id ? "Edit profile" : follow.isLoading || unfollow.isLoading ? <Spinner SpinnerOnly={true} /> : isFollowing ? "Following" : "Follow"}
                         </button>
-                        {session?.user?.id === page?.data?.id ? <IoMdSettings id="settings" className="scale-150" onClick={() => router.push("/settings")} /> : <BsThreeDots className="scale-150 cursor-pointer" onClick={() => (session ? setOptions(true) : router.push("/"))} />}
+                        {session?.user?.id === page?.data?.id ? <IoMdSettings id="settings" className="scale-150 cursor-pointer" onClick={() => router.push("/settings")} /> : <BsThreeDots className="scale-150 cursor-pointer" onClick={() => (session ? setOptions(true) : router.push("/"))} />}
                       </div>
                     </div>
                     <button id="cta-mobile" disabled={follow.isLoading || unfollow.isLoading} className={"z-10 mt-2 flex h-fit w-[235px] items-center justify-center p-2 text-xs font-semibold disabled:cursor-not-allowed " + (data?.viewport != "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border-2 py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page?.data?.id ? router.push("/settings") : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))}>
