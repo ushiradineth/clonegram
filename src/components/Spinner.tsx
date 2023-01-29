@@ -30,7 +30,7 @@ const Spinner = (props: itemType) => {
         <meta name="description" content="Clonegram by Ushira Dineth" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={"flex min-h-screen flex-col items-center justify-center " + (!props.removeBackground && data?.theme?.secondary) + (data?.viewport == "Web" && session && " ml-72 ") + (data?.viewport == "Tab" && session && " ml-16 ")}>
+      <main className={"flex min-h-screen flex-col items-center justify-center " + (!props.removeBackground && " bg-zinc-900 ") + (data?.viewport == "Web" && session && " ml-72 ") + (data?.viewport == "Tab" && session && " ml-16 ")}>
         <div className="container flex flex-col items-center justify-center gap-6 px-4 py-16">
           <div className="flex flex-col items-center">
             <div role="status">
