@@ -16,6 +16,7 @@ import { type UserType } from "../types/types";
 import Head from "next/head";
 import { DataContext } from "../pages/_app";
 import { useContext } from "react";
+import UnAuthedAlert from "../components/UnAuthedAlert";
 
 const Profile = () => {
   const [options, setOptions] = useState(false);
@@ -96,14 +97,7 @@ const Profile = () => {
         {followersMenu && <ListOfUsers users={page?.data?.followers} onClickNegative={() => setFollowersMenu(false)} title="Followers" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page?.data?.id ? page?.data.id : "0"} />}
         {followingMenu && <ListOfUsers users={page?.data?.following} onClickNegative={() => setFollowingMenu(false)} title="Following" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page?.data?.id ? page?.data.id : "0"} />}
         {options && <ProfileOptions onClickNegative={() => setOptions(false)} page={page as UserType} refetch={data?.user?.refetch} setIsBlocking={setIsBlocking} />}
-        {!session && (
-          <div className={"fixed bottom-0 left-0 flex h-12 w-screen items-center justify-center gap-2 " + data?.theme?.primary}>
-            Sign in to Clonegram to see more!
-            <button className={"rounded-full px-4 py-2 font-semibold no-underline transition " + data?.theme?.tertiary} onClick={() => router.push("/")}>
-              Sign in
-            </button>
-          </div>
-        )}
+        {!session && <UnAuthedAlert />}
       </>
     );
   };
@@ -244,7 +238,7 @@ const Profile = () => {
         </div>
       </>
     );
-  };
+  }
 
   if (page?.isLoading) return <Spinner />;
   if (status === "unauthenticated" ? page?.isError : session?.user?.handle === String(profile) ? page?.isError : page?.data?.handle === String(profile) ? false : page?.data?.handle !== String(profile)) return <Error error="User does not exist" session={Boolean(session)} />;

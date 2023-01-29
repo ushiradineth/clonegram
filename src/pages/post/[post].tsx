@@ -18,6 +18,7 @@ import Link from "next/link";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import OptionMenu from "../../components/OptionMenu";
 import ListOfUsers from "../../components/ListOfUsers";
+import UnAuthedAlert from "../../components/UnAuthedAlert";
 
 const Post = () => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -178,7 +179,7 @@ const Post = () => {
     return (
       <>
         <div className="grid grid-flow-col place-items-start">
-          <div className={"mt-4 grid h-fit w-fit scale-[1.6] grid-flow-col gap-2 child-hover:text-zinc-600 " + (post.data?.user.handle === data?.user?.data.handle ? (data?.viewport !== "Mobile" ? " pl-6 " : "  pl-7 ") : (data?.viewport !== "Mobile" ? " pl-4 " : "  pl-6 "))}>
+          <div className={"mt-4 grid h-fit w-fit scale-[1.6] grid-flow-col gap-2 child-hover:text-zinc-600 " + (post.data?.user.handle === data?.user?.data.handle ? (data?.viewport !== "Mobile" ? " pl-6 " : "  pl-7 ") : data?.viewport !== "Mobile" ? " pl-4 " : "  pl-6 ")}>
             {like ? <AiFillHeart className="cursor-pointer text-red-500" onClick={() => unlikePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <AiOutlineHeart className="cursor-pointer" onClick={() => likePost.mutate({ userid: data?.user?.data.id || "", postOwnerid: post.data?.userId || "", postid: post.data?.id || "" })} />}
             <TbMessageCircle2 fill={showComments ? "white" : "none"} className={"cursor-pointer " + (data?.viewport !== "Mobile" ? " hidden " : "")} onClick={() => setShowComments(!showComments)} />
             <IoPaperPlaneOutline className="cursor-pointer" />
@@ -187,7 +188,11 @@ const Post = () => {
           <div className={"mt-4 flex h-fit w-full items-center justify-end pr-3 hover:text-zinc-600"}>{save ? <BsBookmarkFill fill="white" className="scale-[1.6] cursor-pointer " onClick={() => unsavePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <BsBookmark className="scale-[1.6] cursor-pointer " onClick={() => savePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} />}</div>
         </div>
         <div className="pb-3 pt-2">
-          {(post.data?.likes.length || 0) > 0 && <div className="mt-1 pl-3 text-xs text-zinc-300 cursor-pointer" onClick={() => setLikesMenu(true)} >{(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}</div>}
+          {(post.data?.likes.length || 0) > 0 && (
+            <div className="mt-1 cursor-pointer pl-3 text-xs text-zinc-300" onClick={() => setLikesMenu(true)}>
+              {(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}
+            </div>
+          )}
           <p className="pl-3 font-mono text-xs text-zinc-300">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
         </div>
       </>
@@ -260,15 +265,7 @@ const Post = () => {
   };
 
   const SignInNotification = () => {
-    if (!session)
-      return (
-        <div className={"fixed bottom-0 left-0 flex h-12 w-screen items-center justify-center gap-2 " + data?.theme?.primary}>
-          Sign in to Clonegram to see more!
-          <button className={"rounded-full px-4 py-2 font-semibold no-underline transition " + data?.theme?.tertiary} onClick={() => router.push("/")}>
-            Sign in
-          </button>
-        </div>
-      );
+    if (!session) return <UnAuthedAlert />;
 
     return <></>;
   };
