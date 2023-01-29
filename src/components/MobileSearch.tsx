@@ -43,7 +43,7 @@ const MobileSearch = () => {
 
     localStorage.setItem("clonegram.recentSearch", JSON.stringify(tempRecentSearches));
 
-    router.push({ pathname: "/" + user.userHandle });
+    router.push({ pathname: "/profile/" + user.userHandle });
   };
 
   if (typeof document !== "undefined" || typeof window !== "undefined") {

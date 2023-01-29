@@ -48,7 +48,7 @@ const Search = (props: itemType) => {
     localStorage.setItem("clonegram.recentSearch", JSON.stringify(tempRecentSearches));
 
     props.setSearch(false);
-    router.push({ pathname: "/" + user.userHandle });
+    router.push({ pathname: "/profile/" + user.userHandle });
   };
 
   if (typeof document !== "undefined" || typeof window !== "undefined") {

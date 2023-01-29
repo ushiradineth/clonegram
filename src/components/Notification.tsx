@@ -36,7 +36,7 @@ const Notification = (props: itemType) => {
 
     return (
       <div key={props.index} className="flex h-fit w-fit items-center justify-center gap-4 p-4">
-        <Image onClick={() => onClickHandler("/" + props.element.userRef.handle)} className={"h-[50px] w-[50px] cursor-pointer rounded-full object-cover"} src={props.element.userRef.image} alt={String(props.index)} width={200} height={200} />
+        <Image onClick={() => onClickHandler("/profile/" + props.element.userRef.handle)} className={"h-[50px] w-[50px] cursor-pointer rounded-full object-cover"} src={props.element.userRef.image} alt={String(props.index)} width={200} height={200} />
         <div>
           {props.element.type === "Follow" && <div>{props.element.userRef.handle} has followed you</div>}
           {props.element.type === "Like" && <div>{props.element.userRef.handle} has liked your post</div>}

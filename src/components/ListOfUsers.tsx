@@ -124,9 +124,9 @@ const UserItem = (props: UserType) => {
       user={{ userHandle: props.user.UserHandle, userID: props.user.UserID, userImage: props.user.UserImage, userName: props.user.UserName }}
       index={props.index}
       key={props.index}
-      onClickHandler={() => router.push({ pathname: "/" + props.user.UserHandle })}
+      onClickHandler={() => router.push({ pathname: "/profile/" + props.user.UserHandle })}
       action={
-        <button id={props.user.UserHandle} disabled={props.user.UserRemoved} className={"cursor-pointer text-xs font-semibold disabled:cursor-not-allowed " + (props.followIsLoading || props.unfollowIsLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => !props.user.UserRemoved && (props.user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? props.removeFunc(props.user) : props.user.UserFollowing ? props.unfollowFunc(props.user) : props.followFunc(props.user)) : router.push({ pathname: "/" + props.user.UserHandle }))}>
+        <button id={props.user.UserHandle} disabled={props.user.UserRemoved} className={"cursor-pointer text-xs font-semibold disabled:cursor-not-allowed " + (props.followIsLoading || props.unfollowIsLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => !props.user.UserRemoved && (props.user.UserHandle !== props.userHandle ? (props.title === "Followers" && props.userID === props.pageID ? props.removeFunc(props.user) : props.user.UserFollowing ? props.unfollowFunc(props.user) : props.followFunc(props.user)) : router.push({ pathname: "/profile/" + props.user.UserHandle }))}>
           {props.followIsLoading || props.unfollowIsLoading ? <Spinner SpinnerOnly={true} /> : props.user.UserRemoved ? "Removed" : text}
         </button>
       }

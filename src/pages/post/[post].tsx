@@ -90,10 +90,10 @@ const Post = () => {
   const ProfileView = () => {
     return (
       <div className={"mt-5 flex h-12 w-fit items-center justify-center px-4 "}>
-        <Image className={"h-12 w-12 cursor-pointer rounded-full"} onClick={() => router.push("/" + post.data?.user.handle)} src={post.data?.user.image || ""} height={160} width={160} alt="Profile Picture" priority />
+        <Image className={"h-12 w-12 cursor-pointer rounded-full"} onClick={() => router.push("/profile/" + post.data?.user.handle)} src={post.data?.user.image || ""} height={160} width={160} alt="Profile Picture" priority />
         <div className="m-4 flex w-full flex-col justify-center gap-1 truncate">
           <div className="flex gap-2">
-            <Link passHref href={"/" + post.data?.user.handle} onClick={(e) => e.preventDefault()} className={"cursor-pointer " + post.data?.user.handle !== data?.user?.data.handle ? " w-[60%] " : ""}>
+            <Link passHref href={"/profile/" + post.data?.user.handle} onClick={(e) => e.preventDefault()} className={"cursor-pointer " + post.data?.user.handle !== data?.user?.data.handle ? " w-[60%] " : ""}>
               {post.data?.user.handle}
             </Link>
             {post.data?.user.handle === data?.user?.data.handle ? (
@@ -122,12 +122,12 @@ const Post = () => {
   const Comment = (props: { text: string; handle: string; image: string }) => {
     return (
       <>
-        <Link passHref href={"/" + props.handle} onClick={(e) => e.preventDefault()}>
-          <Image className={"h-fit w-12 cursor-pointer rounded-full"} onClick={() => router.push("/" + props.handle)} src={props.image} height={160} width={160} alt="Profile Picture" priority />
+        <Link passHref href={"/profile/" + props.handle} onClick={(e) => e.preventDefault()}>
+          <Image className={"h-fit w-12 cursor-pointer rounded-full"} onClick={() => router.push("/profile/" + props.handle)} src={props.image} height={160} width={160} alt="Profile Picture" priority />
         </Link>
         <div className="flex gap-2">
           <span className="break-all">
-            <Link passHref href={"/" + props.handle} onClick={(e) => e.preventDefault()} className="mr-2 h-fit w-fit truncate font-semibold">
+            <Link passHref href={"/profile/" + props.handle} onClick={(e) => e.preventDefault()} className="mr-2 h-fit w-fit truncate font-semibold">
               {props.handle}
             </Link>
             {props.text}

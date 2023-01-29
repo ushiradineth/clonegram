@@ -7,16 +7,16 @@ import { IoMdAlbums } from "react-icons/io";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { trpc } from "../utils/trpc";
-import Spinner from "../components/Spinner";
-import ListOfUsers from "../components/ListOfUsers";
-import ProfileOptions from "../components/ProfileOptions";
-import Error from "../components/Error";
-import { type UserType } from "../types/types";
+import { trpc } from "../../utils/trpc";
+import Spinner from "../../components/Spinner";
+import ListOfUsers from "../../components/ListOfUsers";
+import ProfileOptions from "../../components/ProfileOptions";
+import Error from "../../components/Error";
+import { type UserType } from "../../types/types";
 import Head from "next/head";
-import { DataContext } from "../pages/_app";
+import { DataContext } from "../_app";
 import { useContext } from "react";
-import UnAuthedAlert from "../components/UnAuthedAlert";
+import UnAuthedAlert from "../../components/UnAuthedAlert";
 
 const Profile = () => {
   const [options, setOptions] = useState(false);

@@ -23,7 +23,7 @@ const EditProfile = () => {
   const updateUser = trpc.user.updateUser.useMutation({
     onSuccess: async (result) => {
       data?.user?.refetch();
-      router.push({ pathname: result.handle, query: { user: "true" } });
+      router.push({ pathname: "/profile/" + result.handle, query: { user: "true" } });
     },
   });
 

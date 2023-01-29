@@ -46,8 +46,8 @@ const BlockedUsers = () => {
 
           return (
             <div key={index} className={"flex h-12 w-full items-center justify-center p-10 " + (index !== data?.user?.data.blocking.length || (0 - 1 && " border-b "))}>
-              <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => router.push({ pathname: "/" + user.handle })} src={user.image || "/image-placeholder.png"} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
-              <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => router.push({ pathname: "/" + user.handle })}>
+              <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => router.push({ pathname: "/profile/" + user.handle })} src={user.image || "/image-placeholder.png"} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
+              <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => router.push({ pathname: "/profile/" + user.handle })}>
                 <div>{user.handle}</div>
                 <div>{user.name}</div>
               </div>
