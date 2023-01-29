@@ -68,11 +68,11 @@ const Layout = (props: itemType) => {
           {props.notification && <Notification notification={props.notification} setNotification={props.setNotification} />}
           <div id="Sidebar" className={"fixed left-0 grid gap-4 " + (data?.viewport !== "Mobile" && data?.theme?.primary) + (data?.viewport == "Web" && " bottom-0 z-10 h-full w-72 grid-flow-row border-r transition-all duration-200 ") + (data?.viewport == "Tab" && " top-0 h-full w-16 grid-flow-row border-r transition-all duration-200 ") + (data?.viewport == "Mobile" && " top-0 h-screen w-screen grid-flow-col ") + (data?.theme?.type === "dark" ? " border-zinc-500 " : "  border-zinc-300 ")}>
             <div id="Sidebar-Items" className={"text-2xl font-light transition-all duration-200 " + (data?.viewport == "Web" && " ml-2 mt-5 ") + (data?.viewport == "Tab" && " ml-1 mt-5 ")}>
-              <div onClick={() => onClickHandler("/home")} className={"cursor-pointer text-red-300 " + (data?.viewport == "Web" ? " ml-5 text-2xl " : " ml-4 text-4xl font-normal ") + (data?.viewport == "Mobile" ? " hidden " : " grid ")}>
+              <div onClick={() => onClickHandler("/")} className={"cursor-pointer text-red-300 " + (data?.viewport == "Web" ? " ml-5 text-2xl " : " ml-4 text-4xl font-normal ") + (data?.viewport == "Mobile" ? " hidden " : " grid ")}>
                 {data?.viewport == "Web" ? "CLONEGRAM" : "C"}
               </div>
               <div id="Sidebar-Web-View-Items" className={"mt-5 ml-2 grid-flow-row place-items-start gap-5 " + (data?.viewport == "Mobile" ? " hidden " : " grid ")}>
-                <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} Text={"Home"} ID={"Home"} onClickHandler={() => onClickHandler("/home")} active={Boolean(router.pathname == "/home" && !props.create && !props.search && !props.more && !props.notification)} />
+                <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} Text={"Home"} ID={"Home"} onClickHandler={() => onClickHandler("/")} active={Boolean(router.pathname == "/" && !props.create && !props.search && !props.more && !props.notification)} />
                 <NavBarItem Icon={<BiSearchAlt2 />} IconOnClick={<FaSearch />} Text={"Search"} ID={"Search"} onClickHandler={() => props.setSearch(!props.search)} active={props.search} />
                 <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} Text={"Explore"} ID={"Explore"} />
                 <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} Text={"Messages"} ID={"Messages"} />
@@ -80,15 +80,15 @@ const Layout = (props: itemType) => {
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} Text={"Create"} ID={"Create"} onClickHandler={() => props.setCreate(!props.create)} active={props.create} />
                 <NavBarItem Icon={data?.user?.data.image} Text={"Profile"} ID={"Profile"} onClickHandler={() => onClickHandler("/" + data?.user?.data.handle)} active={Boolean(router.query.profile === data?.user?.data.handle && !props.create && !props.search && !props.more)} />
               </div>
-              <div id="Header-Mobile-View-Items" className={"fixed top-0 grid h-16 w-screen grid-flow-col place-items-center border-b border-zinc-600 " + data?.theme?.primary + (data?.viewport != "Mobile" && " hidden ") + (router.pathname !== "/home" && " hidden ")}>
-                <div className="cursor-pointer text-4xl font-normal text-red-300" onClick={() => onClickHandler("/home")}>
+              <div id="Header-Mobile-View-Items" className={"fixed top-0 grid h-16 w-screen grid-flow-col place-items-center border-b border-zinc-600 " + data?.theme?.primary + (data?.viewport != "Mobile" && " hidden ") + (router.pathname !== "/" && " hidden ")}>
+                <div className="cursor-pointer text-4xl font-normal text-red-300" onClick={() => onClickHandler("/")}>
                   C
                 </div>
                 <MobileSearch />
                 <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} />
               </div>
               <div id="Footer-Mobile-View-Items" className={"fixed bottom-0 z-20 mt-[4px] grid h-12 w-screen grid-flow-col place-items-center border-t border-zinc-600 " + data?.theme?.primary + (data?.viewport != "Mobile" && " hidden ")}>
-                <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} ID={"M-Home"} onClickHandler={() => onClickHandler("/home")} active={Boolean(router.pathname == "/home" && !props.create && !props.search && !props.more)} />
+                <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} ID={"M-Home"} onClickHandler={() => onClickHandler("/")} active={Boolean(router.pathname == "/" && !props.create && !props.search && !props.more)} />
                 <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} ID={"M-Explore"} />
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} ID={"M-Create"} onClickHandler={() => props.setCreate(!props.create)} active={props.create} />
                 <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} ID={"M-Messages"} />
