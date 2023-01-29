@@ -115,11 +115,9 @@ const Profile = () => {
 
   const DetailsMobile = () => {
     return (
-      <div className={"mb-5 w-[460px] px-8 text-sm font-semibold " + (data?.viewport != "Mobile" && " hidden ")}>
-        <div id="name" className="">
-          {page?.data?.name}
-        </div>
-        <div id="bio" className={"grid grid-flow-col break-all " + (page?.data?.bio ? "" : " hidden ")}>
+      <div className={"w-full text-sm font-semibold " + (data?.viewport != "Mobile" && " hidden ")}>
+        <div id="name">{page?.data?.name}</div>
+        <div id="bio" className={"mt-5 grid grid-flow-col break-all " + (page?.data?.bio ? "" : " hidden ")}>
           {page?.data?.bio}
         </div>
       </div>
@@ -176,7 +174,7 @@ const Profile = () => {
     return (
       <div>
         <div className="flex items-center gap-3">
-          <div id="id" className="max-w-[200px] overflow-hidden text-ellipsis text-xl">
+          <div id="id" className="max-w-[200px] overflow-hidden truncate text-ellipsis text-xl sm:max-w-[500px]">
             {page?.data?.handle}
           </div>
           <CTA />
@@ -188,7 +186,7 @@ const Profile = () => {
 
   const CTAMobile = () => {
     return (
-      <button disabled={follow.isLoading || unfollow.isLoading} className={"z-10 mt-2 flex h-fit w-[235px] items-center justify-center p-2 text-xs font-semibold disabled:cursor-not-allowed " + (data?.viewport != "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border-2 py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page?.data?.id ? router.push("/settings") : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))}>
+      <button disabled={follow.isLoading || unfollow.isLoading} className={"z-10 mt-2 flex h-fit w-full items-center justify-center p-2 text-xs font-semibold disabled:cursor-not-allowed " + (data?.viewport != "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border-2 py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page?.data?.id ? router.push("/settings") : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))}>
         {session?.user?.id === page?.data?.id ? "Edit profile" : follow.isLoading || unfollow.isLoading ? <Spinner SpinnerOnly={true} /> : isFollowing ? "Following" : "Follow"}
       </button>
     );
@@ -197,7 +195,7 @@ const Profile = () => {
   function PostView() {
     const SelectionTab = () => {
       return (
-        <div className={"flex h-12 items-center justify-center gap-2 border-zinc-700 " + (data?.user?.data.handle !== page?.data?.handle ? " hidden " : "") + (data?.viewport === "Mobile" ? " w-full border-b " : " w-full border-t ")}>
+        <div className={"flex h-12 items-center justify-center gap-2 border-zinc-700 max-w-[908px] " + (data?.user?.data.handle !== page?.data?.handle ? " hidden " : "") + (data?.viewport === "Mobile" ? " w-full border-b " : " w-full border-t ")}>
           <div onClick={() => setTab("Posts")} className={"z-10 flex h-full cursor-pointer items-center justify-center gap-2 px-2 active:text-zinc-700 " + (tab === "Posts" && "  border-y ")}>
             {tab === "Posts" ? <TfiLayoutGrid3Alt /> : <TfiLayoutGrid3 />} Posts
           </div>
@@ -211,7 +209,7 @@ const Profile = () => {
     return (
       <>
         <SelectionTab />
-        <div className={"flex h-fit min-h-screen w-fit items-start justify-center " + (data?.viewport !== "Mobile" && " border-t border-zinc-700 ")}>
+        <div className={"flex h-fit min-h-screen w-fit items-start justify-center " + (data?.viewport !== "Mobile" && " border-t max-w-[908px] border-zinc-700 ")}>
           <div className={"col-span-3 mt-1 grid grid-cols-3 place-items-center gap-1 " + (data?.viewport == "Mobile" && " mb-10 ")}>
             {(tab === "Posts" ? page?.data?.posts.length : data?.user?.data.saved.length) ? (
               (tab === "Posts" ? page?.data?.posts : data?.user?.data.saved)
@@ -220,7 +218,7 @@ const Profile = () => {
                 .map((element, index) => (
                   <div key={index} className={"relative h-fit w-fit"}>
                     {element.imageURLs.length > 1 && <IoMdAlbums className=" absolute right-[4%] top-[4%] h-[8%] w-[8%] max-w-[30px] rotate-180 shadow-sm" />}
-                    <Image src={element.imageURLs[0] || "/image-placeholder.png"} height={500} width={500} onClick={() => router.push("/post/" + element.id)} alt={element.id} key={index} className={"z-10 aspect-1 h-full max-h-[300px] w-full max-w-[300px] cursor-pointer bg-red-300 object-cover "}></Image>
+                    <Image src={element.imageURLs[0] || "/image-placeholder.png"} height={500} width={500} onClick={() => router.push("/post/" + element.id)} alt={element.id} key={index} className={"z-10 aspect-1 h-full max-h-[300px] w-full max-w-[300px] cursor-pointer object-cover "}></Image>
                   </div>
                 ))
             ) : (
@@ -258,16 +256,18 @@ const Profile = () => {
           <div className={" " + (data?.viewport == "Web" && session && " ml-72 ") + (data?.viewport == "Tab" && session && " ml-16 ")}>
             <div id="Background" className={"flex h-fit select-none flex-col items-center " + data?.theme?.secondary}>
               <div className="mt-8 grid w-fit place-items-center">
-                <div id="user-details" className={"flex h-fit py-5 " + (data?.viewport == "Mobile" && " w-[400px] ") + (data?.viewport == "Web" && " w-[700px] items-center justify-center ") + (data?.viewport == "Tab" && " w-[500px] items-center justify-center ")}>
-                  <Image className={"rounded-full " + (data?.viewport == "Mobile" ? " mr-2 ml-2 mt-4 h-24 w-24 " : " mr-10 flex w-24 scale-125 justify-center ")} src={page?.data?.image ? page?.data?.image : ""} height={96} width={96} alt="Profile Picture" priority />
-                  <div className={"mb-4 mt-6 ml-4 grid grid-flow-row " + (data?.viewport != "Mobile" && " h-fit gap-3 ")}>
-                    <UserInfo />
-                    <CTAMobile />
-                    <Stats />
-                    <Details />
+                <div className="mx-2 my-6 flex h-fit flex-col items-center justify-center gap-4 md:gap-8">
+                  <div className="flex items-center justify-center">
+                    <Image className="h-14 w-14 rounded-full xsm:h-24 xsm:w-24 md:h-32 md:w-32" src={page?.data?.image || ""} height={200} width={200} alt="Profile Picture" priority />
+                    <div className={"mb-4 mt-6 ml-4 grid grid-flow-row " + (data?.viewport != "Mobile" && " h-fit gap-3 ")}>
+                      <UserInfo />
+                      <CTAMobile />
+                      <Stats />
+                      <Details />
+                    </div>
                   </div>
+                  <DetailsMobile />
                 </div>
-                <DetailsMobile />
                 <StatsMobile />
                 <PostView />
               </div>
