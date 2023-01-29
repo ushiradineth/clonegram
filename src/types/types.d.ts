@@ -1,4 +1,4 @@
-import { type User, type Post, type Comment, type Notification } from "@prisma/client";
+import { type User, type Post, type Comment } from "@prisma/client";
 
 export interface UserType {
   data: User & {

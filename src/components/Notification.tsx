@@ -13,7 +13,6 @@ interface itemType {
 
 const Notification = (props: itemType) => {
   const router = useRouter();
-  const { data: session } = useSession();
   const data = useContext(DataContext);
 
   const NoNotifications = (props: { text: string }) => {
@@ -29,7 +28,7 @@ const Notification = (props: itemType) => {
     );
   };
 
-  const NotificationContainer = (props: { element: Notification & {notificationCreator: User, post: Post}; index: number; setNotification: any }) => {
+  const NotificationContainer = (props: { element: any; index: number; setNotification: any }) => {
     const onClickHandler = (link: string) => {
       props.setNotification(false);
       router.push(link);

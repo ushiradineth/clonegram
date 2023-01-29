@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { signIn, useSession } from "next-auth/react";
 import Spinner from "../components/Spinner";
 import { env } from "../env/client.mjs";
@@ -8,7 +7,6 @@ import Link from "next/link";
 
 const Auth = () => {
   const { status } = useSession();
-  const router = useRouter();
 
   if (status == "loading") {
     return <Spinner />;
