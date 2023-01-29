@@ -38,27 +38,19 @@ const BlockedUsers = () => {
 
   if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
 
-
   return (
     <div className="z-50">
       {data?.user?.data.blocking.length || 0 > 0 ? (
         data?.user?.data.blocking.map((user, index) => {
-
           return (
             <div key={index} className={"flex h-12 w-full items-center justify-center p-10 " + (index !== data?.user?.data.blocking.length || (0 - 1 && " border-b "))}>
-              <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => router.push({ pathname: "/profile/" + user.handle })} src={user.image || "/image-placeholder.png"} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
+              <Image className={"w-12 cursor-pointer rounded-full"} onClick={() => router.push({ pathname: "/profile/" + user.handle })} src={user.image || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} height={data?.viewport == "Mobile" ? 96 : 160} width={data?.viewport == "Mobile" ? 96 : 160} alt="Profile Picture" priority />
               <div className="m-4 flex w-full cursor-pointer flex-col gap-1 truncate" onClick={() => router.push({ pathname: "/profile/" + user.handle })}>
                 <div>{user.handle}</div>
                 <div>{user.name}</div>
               </div>
               <button id={user.handle} disabled={block.isLoading || unblock.isLoading} className={"cursor-pointer text-xs font-semibold disabled:cursor-not-allowed" + (block.isLoading || unblock.isLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => (blocking ? unblockFunc(user, setBlocking) : blockFunc(user, setBlocking))}>
-                {block.isLoading || unblock.isLoading ? (
-                  <Spinner SpinnerOnly={true} />
-                ) : blocking[index] ? (
-                  "Unblock"
-                ) : (
-                  "Block"
-                )}
+                {block.isLoading || unblock.isLoading ? <Spinner SpinnerOnly={true} /> : blocking[index] ? "Unblock" : "Block"}
               </button>
             </div>
           );

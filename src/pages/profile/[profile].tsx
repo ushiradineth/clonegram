@@ -195,7 +195,7 @@ const Profile = () => {
   function PostView() {
     const SelectionTab = () => {
       return (
-        <div className={"flex h-12 items-center justify-center gap-2 border-zinc-700 max-w-[908px] " + (data?.user?.data.handle !== page?.data?.handle ? " hidden " : "") + (data?.viewport === "Mobile" ? " w-full border-b " : " w-full border-t ")}>
+        <div className={"flex h-12 max-w-[908px] items-center justify-center gap-2 border-zinc-700 " + (data?.user?.data.handle !== page?.data?.handle ? " hidden " : "") + (data?.viewport === "Mobile" ? " w-full border-b " : " w-full border-t ")}>
           <div onClick={() => setTab("Posts")} className={"z-10 flex h-full cursor-pointer items-center justify-center gap-2 px-2 active:text-zinc-700 " + (tab === "Posts" && "  border-y ")}>
             {tab === "Posts" ? <TfiLayoutGrid3Alt /> : <TfiLayoutGrid3 />} Posts
           </div>
@@ -209,7 +209,7 @@ const Profile = () => {
     return (
       <>
         <SelectionTab />
-        <div className={"flex h-fit min-h-screen w-fit items-start justify-center " + (data?.viewport !== "Mobile" && " border-t max-w-[908px] border-zinc-700 ")}>
+        <div className={"flex h-fit min-h-screen w-fit items-start justify-center " + (data?.viewport !== "Mobile" && " max-w-[908px] border-t border-zinc-700 ")}>
           <div className={"col-span-3 mt-1 grid grid-cols-3 place-items-center gap-1 " + (data?.viewport == "Mobile" && " mb-10 ")}>
             {(tab === "Posts" ? page?.data?.posts.length : data?.user?.data.saved.length) ? (
               (tab === "Posts" ? page?.data?.posts : data?.user?.data.saved)
@@ -218,7 +218,7 @@ const Profile = () => {
                 .map((element, index) => (
                   <div key={index} className={"relative h-fit w-fit"}>
                     {element.imageURLs.length > 1 && <IoMdAlbums className=" absolute right-[4%] top-[4%] h-[8%] w-[8%] max-w-[30px] rotate-180 shadow-sm" />}
-                    <Image src={element.imageURLs[0] || "/image-placeholder.png"} height={500} width={500} onClick={() => router.push("/post/" + element.id)} alt={element.id} key={index} className={"z-10 aspect-1 h-full max-h-[300px] w-full max-w-[300px] cursor-pointer object-cover "}></Image>
+                    <Image src={element.imageURLs[0] || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} height={500} width={500} onClick={() => router.push("/post/" + element.id)} alt={element.id} key={index} className={"z-10 aspect-1 h-full max-h-[300px] w-full max-w-[300px] cursor-pointer object-cover "}></Image>
                   </div>
                 ))
             ) : (
@@ -258,7 +258,7 @@ const Profile = () => {
               <div className="mt-8 grid w-fit place-items-center">
                 <div className="mx-2 my-6 flex h-fit flex-col items-center justify-center gap-4 md:gap-8">
                   <div className="flex items-center justify-center">
-                    <Image className="h-14 w-14 rounded-full xsm:h-24 xsm:w-24 md:h-32 md:w-32" src={page?.data?.image || ""} height={200} width={200} alt="Profile Picture" priority />
+                    <Image className="h-14 w-14 rounded-full xsm:h-24 xsm:w-24 md:h-32 md:w-32" src={page?.data?.image || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/default-user-image.jpg"} height={200} width={200} alt="Profile Picture" priority />
                     <div className={"mb-4 mt-6 ml-4 grid grid-flow-row " + (data?.viewport != "Mobile" && " h-fit gap-3 ")}>
                       <UserInfo />
                       <CTAMobile />

@@ -90,7 +90,7 @@ const Post = () => {
   const ProfileView = () => {
     return (
       <div className={"mt-5 flex h-12 w-fit items-center justify-center px-4 "}>
-        <Image className={"h-12 w-12 cursor-pointer rounded-full"} onClick={() => router.push("/profile/" + post.data?.user.handle)} src={post.data?.user.image || ""} height={160} width={160} alt="Profile Picture" priority />
+        <Image className={"h-12 w-12 cursor-pointer rounded-full"} onClick={() => router.push("/profile/" + post.data?.user.handle)} src={post.data?.user.image || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/default-user-image.jpg"} height={160} width={160} alt="Profile Picture" priority />
         <div className="m-4 flex w-full flex-col justify-center gap-1 truncate">
           <div className="flex gap-2">
             <Link passHref href={"/profile/" + post.data?.user.handle} onClick={(e) => e.preventDefault()} className={"cursor-pointer " + post.data?.user.handle !== data?.user?.data.handle ? " w-[60%] " : ""}>
@@ -142,7 +142,7 @@ const Post = () => {
       <>
         {post.data?.caption && (
           <div className={"flex h-24 gap-4 overflow-y-auto pt-4 pl-6 pr-2 " + (data?.viewport === "Mobile" ? " hidden " : "")}>
-            <Comment key={"caption"} text={post.data.caption} handle={post.data.user.handle} image={post.data.user.image || "/image-placeholder.png"} />
+            <Comment key={"caption"} text={post.data.caption} handle={post.data.user.handle} image={post.data.user.image || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} />
           </div>
         )}
         {post.data?.comments.length ? (
@@ -151,7 +151,7 @@ const Post = () => {
             .reverse()
             .map((element, index) => {
               console.log(element);
-              return <Comment key={index} text={element.id || ""} handle={element.userId} image={"/image-placeholder.png" || "/image-placeholder.png"} />;
+              return <Comment key={index} text={element.id || ""} handle={element.userId} image={"https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png" || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} />;
             })
         ) : (
           <div className={"grid h-[70%] w-full place-items-center border-zinc-600 " + (data?.viewport === "Mobile" ? " border-t p-4 " : " border-b ")}>
@@ -258,7 +258,7 @@ const Post = () => {
         <div className={"flex h-fit w-fit items-center justify-center p-2 transition-all duration-300 " + (data?.viewport === "Mobile" ? "  max-h-[400px] max-w-[350px]" : " max-h-[650px] max-w-[450px] ")}>
           <BiChevronLeft onClick={() => imageIndex > 0 && setImageIndex(imageIndex - 1)} className={"fixed left-4 top-[50%] h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex > 0 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
           <BiChevronRight onClick={() => imageIndex < (post.data?.imageURLs.length || 0) - 1 && setImageIndex(imageIndex + 1)} className={"fixed top-[50%] right-4 h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex < (post.data?.imageURLs.length || 0) - 1 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
-          <Image src={post.data?.imageURLs[imageIndex] || "/image-placeholder.png"} key="image" className="h-full w-full object-cover" height={1000} width={1000} alt={"images"} />
+          <Image src={post.data?.imageURLs[imageIndex] || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} key="image" className="h-full w-full object-cover" height={1000} width={1000} alt={"images"} />
         </div>
       </div>
     );
