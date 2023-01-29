@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
 import { DataContext } from "../pages/_app";
 import Image from "next/image";
-import { type Notification, type User, type Post } from "@prisma/client";
+import { type Notification } from "@prisma/client";
 
 interface itemType {
   notification: boolean;
