@@ -22,7 +22,11 @@ export const postRouter = router({
       include: {
         user: true,
         likes: true,
-        comments: true,
+        comments: {
+          include: {
+            user: true
+          }
+        },
         saved: true,
       },
     });
@@ -51,7 +55,7 @@ export const postRouter = router({
         notifications: {
           create: {
             type: "Like",
-            userRef: {
+            notificationCreator: {
               connect: {
                 id: input.userid,
               },

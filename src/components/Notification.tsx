@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { DataContext } from "../pages/_app";
 import Image from "next/image";
+import { type Notification, type User, type Post } from "@prisma/client";
 
 interface itemType {
   notification: boolean;
@@ -28,7 +29,7 @@ const Notification = (props: itemType) => {
     );
   };
 
-  const NotificationContainer = (props: { element: any; index: number; setNotification: any }) => {
+  const NotificationContainer = (props: { element: Notification & {notificationCreator: User, post: Post}; index: number; setNotification: any }) => {
     const onClickHandler = (link: string) => {
       props.setNotification(false);
       router.push(link);
@@ -36,12 +37,12 @@ const Notification = (props: itemType) => {
 
     return (
       <div key={props.index} className="flex h-fit w-fit items-center justify-center gap-4 p-4">
-        <Image onClick={() => onClickHandler("/profile/" + props.element.userRef.handle)} className={"h-[50px] w-[50px] cursor-pointer rounded-full object-cover"} src={props.element.userRef.image} alt={String(props.index)} width={200} height={200} />
+        <Image onClick={() => onClickHandler("/profile/" + props.element.notificationCreator.handle)} className={"h-[50px] w-[50px] cursor-pointer rounded-full object-cover"} src={props.element.notificationCreator.image || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/default-user-image.jpg"} alt={String(props.index)} width={200} height={200} />
         <div>
-          {props.element.type === "Follow" && <div>{props.element.userRef.handle} has followed you</div>}
-          {props.element.type === "Like" && <div>{props.element.userRef.handle} has liked your post</div>}
+          {props.element.type === "Follow" && <div>{props.element.notificationCreator.handle} has followed you</div>}
+          {props.element.type === "Like" && <div>{props.element.notificationCreator.handle} has liked your post</div>}
         </div>
-        {props.element.type === "Like" && <Image onClick={() => onClickHandler("/post/" + props.element.post.id)} className={"h-[50px] w-[50px] cursor-pointer rounded-2xl  object-cover"} src={props.element.post.imageURLs[0]} alt={String(props.index)} width={200} height={200} />}
+        {props.element.type === "Like" && <Image onClick={() => onClickHandler("/post/" + props.element.post.id)} className={"h-[50px] w-[50px] cursor-pointer rounded-2xl  object-cover"} src={props.element.post.imageURLs[0] || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} alt={String(props.index)} width={200} height={200} />}
       </div>
     );
   };

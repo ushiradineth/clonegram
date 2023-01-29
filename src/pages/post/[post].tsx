@@ -151,7 +151,7 @@ const Post = () => {
             .reverse()
             .map((element, index) => {
               console.log(element);
-              return <Comment key={index} text={element.id || ""} handle={element.userId} image={"https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png" || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} />;
+              return <Comment key={index} text={element.id || ""} handle={element.user.handle} image={element.user.image || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} />;
             })
         ) : (
           <div className={"grid h-[70%] w-full place-items-center border-zinc-600 " + (data?.viewport === "Mobile" ? " border-t p-4 " : " border-b ")}>

@@ -21,9 +21,8 @@ export const userRouter = router({
         recentSearches: true,
         notifications: {
           include: {
-            user: true,
+            notificationCreator: true,
             post: true,
-            userRef: true,
           },
         },
       },
@@ -47,9 +46,8 @@ export const userRouter = router({
         recentSearches: true,
         notifications: {
           include: {
-            user: true,
+            notificationCreator: true,
             post: true,
-            userRef: true,
           },
         },
       },
@@ -104,7 +102,7 @@ export const userRouter = router({
         notifications: {
           create: {
             type: "Follow",
-            userRef: {
+            notificationCreator: {
               connect: {
                 id: input.userid,
               },

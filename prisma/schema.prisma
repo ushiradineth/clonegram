@@ -114,14 +114,14 @@ model Comment {
 }
 
 model Notification {
-  text      String?
-  id        String   @id @unique @default(cuid())
-  createdAt DateTime @default(now()) @db.Timestamptz(3)
-  type      String
-  user      User?    @relation("UserNotification", fields: [userId], references: [id])
-  userId    String?
-  userRef   User?    @relation("UserNotificationRelation", fields: [userRefId], references: [id])
-  userRefId String?
-  post      Post?    @relation(fields: [postId], references: [id])
-  postId    String?
+  text                String?
+  id                  String   @id @unique @default(cuid())
+  createdAt           DateTime @default(now()) @db.Timestamptz(3)
+  type                String
+  notificationOwner   User?    @relation("UserNotification", fields: [userId], references: [id])
+  userId              String?
+  notificationCreator User?    @relation("UserNotificationRelation", fields: [userRefId], references: [id])
+  userRefId           String?
+  post                Post?    @relation(fields: [postId], references: [id])
+  postId              String?
 }
