@@ -174,7 +174,7 @@ const Profile = () => {
     return (
       <div>
         <div className="flex items-center gap-3">
-          <div id="id" className="max-w-[200px] overflow-hidden truncate text-ellipsis text-xl sm:max-w-[500px]">
+          <div id="id" className="max-w-[150px] overflow-hidden truncate text-ellipsis text-xl sm:max-w-[500px]">
             {page?.data?.handle}
           </div>
           <CTA />
