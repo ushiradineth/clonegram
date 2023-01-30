@@ -11,7 +11,7 @@ const Index = () => {
     return <Spinner />;
   }
 
-  session ? <Home /> : <Auth />
+  return session ? <Home /> : <Auth />;
 };
 
 export default Index;
