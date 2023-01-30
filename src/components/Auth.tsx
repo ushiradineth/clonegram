@@ -63,7 +63,7 @@ const Auth = () => {
         <meta name="google-site-verification" content="WqjiADJh02W0ssceX3ZwKlqRFhVgDEEPUQjG8au1k80" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      
       <main className=" grid h-screen w-screen select-none bg-[#171717]">
         <div className={"grid place-content-center place-items-center gap-4"}>
           <Objects />

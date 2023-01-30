@@ -10,7 +10,6 @@ const about = () => {
       <Head>
         <title>About • Clonegram</title>
         <meta name="description" content="Clonegram by Ushira Dineth" />
-        <meta name="google-site-verification" content="WqjiADJh02W0ssceX3ZwKlqRFhVgDEEPUQjG8au1k80" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="h-screen">
