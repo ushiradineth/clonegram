@@ -28,6 +28,7 @@ const Spinner = (props: itemType) => {
       <Head>
         <title>Loading...</title>
         <meta name="description" content="Clonegram by Ushira Dineth" />
+        <meta name="google-site-verification" content="WqjiADJh02W0ssceX3ZwKlqRFhVgDEEPUQjG8au1k80" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={"flex min-h-screen flex-col items-center justify-center " + (!props.removeBackground && " bg-zinc-900 ") + (data?.viewport == "Web" && session && " ml-72 ") + (data?.viewport == "Tab" && session && " ml-16 ")}>
