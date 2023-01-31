@@ -192,8 +192,8 @@ const Create = (props: itemType) => {
     const Links: string[] = [];
 
     croppedImages.current.forEach(async (element, index) => {
-      Links.push(`${env.NEXT_PUBLIC_SUPABASE_IMAGE_URL}Users/${data?.user?.data.id}/Posts/${(data?.user?.data.posts.length || 0) + 1}/${index}`);
-      await data?.supabase.storage.from("clonegram").upload(`/Users/${data?.user?.data.id}/Posts/${(data?.user?.data.posts.length || 0) + 1}/${index}`, element, {
+      Links.push(`${env.NEXT_PUBLIC_SUPABASE_IMAGE_URL}Users/${data?.user?.data.id}/Posts/${(Number(data?.user?.data.posts.length) || 0) + 1}/${index}`);
+      await data?.supabase.storage.from("clonegram").upload(`/Users/${data?.user?.data.id}/Posts/${(Number(data?.user?.data.posts.length) || 0) + 1}/${index}`, element, {
         cacheControl: "1",
         upsert: true,
       });
