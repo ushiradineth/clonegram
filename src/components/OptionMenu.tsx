@@ -4,7 +4,7 @@ import { DataContext } from "../pages/_app";
 interface itemType {
   title: string;
   description: string;
-  buttonPositive: string;
+  buttonPositive: string | JSX.Element;
   buttonNegative: string;
   onClickPositive: (...arg: any) => unknown;
   onClickNegative: (...arg: any) => unknown;
