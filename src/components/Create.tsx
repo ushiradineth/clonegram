@@ -199,7 +199,7 @@ const Create = (props: itemType) => {
       });
     });
 
-    if (Links.length === croppedImages.current.length) setPost.mutate({ id: data?.user?.data.id || "", links: Links, caption: (document.getElementById("post-caption") as HTMLInputElement).value || null });
+    if (Links.length === croppedImages.current.length) setPost.mutate({ index:(Number(data?.user?.data.posts.length) || 0) + 1, id: data?.user?.data.id || "", links: Links, caption: (document.getElementById("post-caption") as HTMLInputElement).value || null });
   };
 
   const Caption = () => {

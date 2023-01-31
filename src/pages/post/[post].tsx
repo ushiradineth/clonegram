@@ -281,7 +281,7 @@ const Post = () => {
         <main>
           <SignInNotification />
           <div className={"flex h-screen select-none items-center px-2 " + data?.theme?.secondary + (data?.viewport == "Web" && session && " ml-72  justify-center ") + (data?.viewport == "Tab" && session && " ml-16 justify-center ") + (data?.viewport == "Mobile" && session && " flex-col pt-12 ")}>
-            {deleteMenu && <OptionMenu buttonPositive="Delete" buttonNegative="Cancel" description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ id: post.data?.id || "" })} onClickNegative={() => setDeleteMenu(false)} />}
+            {deleteMenu && <OptionMenu buttonPositive="Delete" buttonNegative="Cancel" description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ userid: post.data?.user.id || "", postid: post.data?.id || "", index: post.data?.index || 0 })} onClickNegative={() => setDeleteMenu(false)} />}
             {likesMenu && <ListOfUsers users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" userHandle={data?.user?.data.handle} userID={data?.user?.data.id} pageID={"0"} />}
             <MobileHeader />
             <PostView />

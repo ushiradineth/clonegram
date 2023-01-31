@@ -80,6 +80,7 @@ model User {
 
 model Post {
   id        String    @id @unique @default(cuid())
+  index     Int
   caption   String
   createdAt DateTime  @default(now()) @db.Timestamptz(3)
   userId    String

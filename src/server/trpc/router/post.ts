@@ -4,11 +4,10 @@ import { env } from "../../../env/client.mjs";
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 
 export const postRouter = router({
-  setPost: protectedProcedure.input(z.object({ id: z.string(), links: z.array(z.string()), caption: z.string().nullish() })).mutation(({ input, ctx }) => {
-    input.links.forEach((e) => console.log(e));
-
+  setPost: protectedProcedure.input(z.object({ index: z.number(), id: z.string(), links: z.array(z.string()), caption: z.string().nullish() })).mutation(({ input, ctx }) => {
     return ctx.prisma.post.create({
       data: {
+        index: input.index,
         user: { connect: { id: input.id } },
         caption: input.caption || "",
         imageURLs: input.links,
