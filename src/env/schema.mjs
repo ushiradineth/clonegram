@@ -24,8 +24,8 @@ export const serverSchema = z.object({
     GOOGLE_CLIENT_SECRET: z.string(),
     GITHUB_CLIENT_ID: z.string(),
     GITHUB_CLIENT_SECRET: z.string(),
-    TWITTER_ACCESS_TOKEN: z.string(),
-    TWITTER_ACEESS_TOKEN_SECRET: z.string(),
+    TWITTER_CLIENT_ID: z.string(),
+    TWITTER_CLIENT_SECRET: z.string(),
 });
 
 /**
