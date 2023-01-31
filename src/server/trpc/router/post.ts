@@ -1,4 +1,6 @@
+import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
+import { env } from "../../../env/client.mjs";
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 
 export const postRouter = router({
@@ -14,6 +16,116 @@ export const postRouter = router({
     });
   }),
 
+  getHomeFeed: publicProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+    const q1 = await ctx.prisma.post.findMany({
+      where: {
+        AND: [
+          {
+            user: {
+              followers: {
+                some: {
+                  id: {
+                    contains: input.id,
+                  },
+                },
+              },
+            },
+          },
+          {
+            likes: {
+              every: {
+                id: {
+                  not: {
+                    equals: input.id,
+                  },
+                },
+              },
+            },
+          },
+          {
+            user: {
+              id: {
+                not: {
+                  equals: input.id,
+                },
+              },
+            },
+          },
+        ],
+      },
+      include: {
+        user: true,
+        likes: true,
+      },
+      orderBy: [
+        {
+          likes: {
+            _count: "desc",
+          },
+        },
+        {
+          createdAt: "desc",
+        },
+      ],
+      take: 10,
+    });
+
+    const q2 = await ctx.prisma.post.findMany({
+      where: {
+        AND: [
+          {
+            user: {
+              followers: {
+                none: {
+                  id: {
+                    contains: input.id,
+                  },
+                },
+              },
+            },
+          },
+          {
+            likes: {
+              every: {
+                id: {
+                  not: {
+                    equals: input.id,
+                  },
+                },
+              },
+            },
+          },
+          {
+            user: {
+              id: {
+                not: {
+                  equals: input.id,
+                },
+              },
+            },
+          },
+        ],
+      },
+      include: {
+        user: true,
+        likes: true,
+      },
+      orderBy: [
+        {
+          likes: {
+            _count: "desc",
+          },
+        },
+        {
+          createdAt: "desc",
+        },
+      ],
+      take: 10,
+    });
+
+    return { q1, q2 };
+  }),
+
   getPost: publicProcedure.input(z.object({ id: z.string() })).query(({ input, ctx }) => {
     return ctx.prisma.post.findFirst({
       where: {
@@ -24,17 +136,23 @@ export const postRouter = router({
         likes: true,
         comments: {
           include: {
-            user: true
-          }
+            user: true,
+          },
         },
         saved: true,
       },
     });
   }),
 
-  deletePost: protectedProcedure.input(z.object({ id: z.string() })).mutation(({ input, ctx }) => {
+  deletePost: protectedProcedure.input(z.object({ userid: z.string(), postid: z.string(), index: z.number() })).mutation(async ({ input, ctx }) => {
+    const supabase = createClient("https://" + env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY);
+    const { data: list } = await supabase.storage.from("clonegram").list(`Users/${input.userid}/Posts/${input.index}`);
+
+    const filesToRemove = list?.map((x) => `Users/${input.userid}/Posts/${input.index}/${x.name}`);
+    await supabase.storage.from("clonegram").remove(filesToRemove || [""]);
+
     return ctx.prisma.post.delete({
-      where: { id: input.id },
+      where: { id: input.postid },
     });
   }),
 
