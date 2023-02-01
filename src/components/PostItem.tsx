@@ -16,6 +16,8 @@ import OptionMenu from "./OptionMenu";
 import ListOfUsers from "./ListOfUsers";
 import UnAuthedAlert from "./UnAuthedAlert";
 import moment from "moment";
+import { TbMessageCircle2 } from "react-icons/tb";
+import { IoPaperPlaneOutline } from "react-icons/io5";
 
 const PostItem = (props: { postID?: string; post?: any }) => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -80,8 +82,10 @@ const PostItem = (props: { postID?: string; post?: any }) => {
     return (
       <>
         <div className="mb-2 grid grid-flow-col place-items-start">
-          <div className={"mt-4 grid h-fit w-fit scale-[1.6] grid-flow-col gap-2 child-hover:text-zinc-600 " + (post.data?.user.handle === data?.user?.data.handle ? " pl-5 " : " pl-4 ")}>
+          <div className={"mt-4 ml-3 grid h-fit w-fit scale-[1.6] grid-flow-col gap-2 child-hover:text-zinc-600 " + (post.data?.user.handle === data?.user?.data.handle ? " pl-5 " : " pl-4 ")}>
             {likePost.isLoading || unlikePost.isLoading || post.isFetching ? <Spinner SpinnerOnly={true} size={4} /> : like ? <AiFillHeart className="cursor-pointer text-red-500" onClick={() => unlikePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <AiOutlineHeart className="cursor-pointer" onClick={() => likePost.mutate({ userid: data?.user?.data.id || "", postOwnerid: post.data?.userId || "", postid: post.data?.id || "" })} />}
+            <TbMessageCircle2 className={"cursor-pointer"} onClick={() => router.push("/post/" + post.data.id) } />
+            <IoPaperPlaneOutline className="cursor-pointer" />
             {post.data?.user.handle === data?.user?.data.handle && <MdOutlineDeleteOutline className="cursor-pointer" onClick={() => setDeleteMenu(true)} />}
           </div>
         </div>
