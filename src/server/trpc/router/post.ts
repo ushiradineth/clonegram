@@ -103,6 +103,33 @@ export const postRouter = router({
               },
             },
           },
+          ,
+          {
+            user: {
+              blocking: {
+                every: {
+                  id: {
+                    not: {
+                      equals: input.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
+            user: {
+              blockedby: {
+                every: {
+                  id: {
+                    not: {
+                      equals: input.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
         ],
       },
       include: {
