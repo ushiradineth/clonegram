@@ -163,10 +163,51 @@ export const userRouter = router({
     return { q1, q2 };
   }),
 
-  getUsersSearch: protectedProcedure.input(z.object({ key: z.string() })).mutation(({ input, ctx }) => {
+  getUsersSearch: protectedProcedure.input(z.object({ id: z.string(), key: z.string() })).mutation(({ input, ctx }) => {
     return ctx.prisma.user.findMany({
       where: {
-        OR: [{ handle: { contains: input.key } }, { name: { contains: input.key } }],
+        AND: [
+          {
+            AND: [
+              {
+                blocking: {
+                  every: {
+                    id: {
+                      not: {
+                        equals: input.id,
+                      },
+                    },
+                  },
+                },
+              },
+              {
+                blockedby: {
+                  every: {
+                    id: {
+                      not: {
+                        equals: input.id,
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          {
+            OR: [
+              {
+                handle: {
+                  contains: input.key,
+                },
+              },
+              {
+                name: {
+                  contains: input.key,
+                },
+              },
+            ],
+          },
+        ],
       },
     });
   }),

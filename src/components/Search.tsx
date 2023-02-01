@@ -78,7 +78,7 @@ const Search = (props: itemType) => {
   useEffect(() => {
     setUsers([]);
     if (keyword) {
-      usersList.mutate({ key: keyword });
+      usersList.mutate({ id: data?.user?.data.id || "", key: keyword });
     }
   }, [keyword]);
 
@@ -102,7 +102,7 @@ const Search = (props: itemType) => {
 
   const NoResults = (props: { text: string }) => {
     return (
-      <div className={"flex flex-col items-center justify-center rounded-2xl p-8 w-full " + data?.theme?.secondary}>
+      <div className={"flex w-full flex-col items-center justify-center rounded-2xl p-8 " + data?.theme?.secondary}>
         <div className="flex flex-col items-center justify-center p-4">
           <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-4">
             <BiUserPlus className="scale-x-[-6] scale-y-[6] transform" />

@@ -73,7 +73,7 @@ const MobileSearch = () => {
   useEffect(() => {
     setUsers([]);
     if (keyword) {
-      usersList.mutate({ key: keyword });
+      usersList.mutate({ id: data?.user?.data.id || "", key: keyword });
     }
   }, [keyword]);
 
