@@ -8,33 +8,13 @@ import { BiUserX } from "react-icons/bi";
 import { DataContext } from "../pages/_app";
 
 const BlockedUsers = () => {
-  const [blocking, setBlocking] = useState([]);
-
   const { data: session } = useSession();
   const router = useRouter();
   const data = useContext(DataContext);
 
-  const block = trpc.user.block.useMutation({
-    onSuccess: () => data?.user?.refetch(),
-  });
-
   const unblock = trpc.user.unblock.useMutation({
     onSuccess: () => data?.user?.refetch(),
   });
-
-  const blockFunc = (page: any, setBlocking: (arg0: any) => any) => {
-    if (data?.user?.data.id && page.id) {
-      block.mutate({ userid: data?.user?.data.id, pageid: page.id });
-      setBlocking(true);
-    }
-  };
-
-  const unblockFunc = (page: any, setBlocking: (arg0: any) => any) => {
-    if (data?.user?.data.id && page.id) {
-      unblock.mutate({ userid: data?.user?.data.id, pageid: page.id });
-      setBlocking(false);
-    }
-  };
 
   if (typeof session === "undefined" || session === null || typeof session.user === "undefined") return <Spinner />;
 
@@ -49,8 +29,8 @@ const BlockedUsers = () => {
                 <div>{user.handle}</div>
                 <div>{user.name}</div>
               </div>
-              <button id={user.handle} disabled={block.isLoading || unblock.isLoading} className={"cursor-pointer text-xs font-semibold disabled:cursor-not-allowed" + (block.isLoading || unblock.isLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => (blocking ? unblockFunc(user, setBlocking) : blockFunc(user, setBlocking))}>
-                {block.isLoading || unblock.isLoading ? <Spinner SpinnerOnly={true} /> : blocking[index] ? "Unblock" : "Block"}
+              <button id={user.handle} disabled={unblock.isLoading} className={"cursor-pointer text-xs font-semibold disabled:cursor-not-allowed" + (unblock.isLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => unblock.mutate({ userid: data?.user?.data.id || "", pageid: user.id })}>
+                {unblock.isLoading ? <Spinner SpinnerOnly={true} /> : "Unblock"}
               </button>
             </div>
           );
