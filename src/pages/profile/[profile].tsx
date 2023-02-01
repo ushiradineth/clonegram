@@ -215,12 +215,16 @@ const Profile = () => {
               (tab === "Posts" ? page?.data?.posts : data?.user?.data.saved)
                 ?.slice(0)
                 .reverse()
-                .map((element, index) => (
-                  <div key={index} className={"relative h-fit w-fit"}>
-                    {element.imageURLs.length > 1 && <IoMdAlbums className=" absolute right-[4%] top-[4%] h-[8%] w-[8%] max-w-[30px] rotate-180 shadow-sm" />}
-                    <Image src={element.imageURLs[0] || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} height={500} width={500} onClick={() => router.push("/post/" + element.id)} alt={element.id} key={index} className={"z-10 aspect-1 h-full max-h-[300px] w-full max-w-[300px] cursor-pointer object-cover "}></Image>
-                  </div>
-                ))
+                .map((element, index) =>
+                  Boolean(data?.user?.data.blocking.find((e) => e.id === element.userId)) || Boolean(data?.user?.data.blocking.find((e) => e.id === element.userId)) ? (
+                    <div key={index}></div>
+                  ) : (
+                    <div key={index} className={"relative h-fit w-fit"}>
+                      {element.imageURLs.length > 1 && <IoMdAlbums className=" absolute right-[4%] top-[4%] h-[8%] w-[8%] max-w-[30px] rotate-180 shadow-sm" />}
+                      <Image src={element.imageURLs[0] || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} height={500} width={500} onClick={() => router.push("/post/" + element.id)} alt={element.id} key={index} className={"z-10 aspect-1 h-full max-h-[300px] w-full max-w-[300px] cursor-pointer object-cover "}></Image>
+                    </div>
+                  )
+                )
             ) : (
               <div className="min-w-screen col-span-3 mt-8 flex h-full min-h-screen w-full flex-col items-center">
                 <>
