@@ -84,7 +84,7 @@ const PostItem = (props: { postID?: string; post?: any }) => {
         <div className="mb-2 grid grid-flow-col place-items-start">
           <div className={"mt-4 ml-3 grid h-fit w-fit scale-[1.6] grid-flow-col gap-2 child-hover:text-zinc-600 " + (post.data?.user.handle === data?.user?.data.handle ? " pl-5 " : " pl-4 ")}>
             {likePost.isLoading || unlikePost.isLoading || post.isFetching ? <Spinner SpinnerOnly={true} size={4} /> : like ? <AiFillHeart className="cursor-pointer text-red-500" onClick={() => unlikePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <AiOutlineHeart className="cursor-pointer" onClick={() => likePost.mutate({ userid: data?.user?.data.id || "", postOwnerid: post.data?.userId || "", postid: post.data?.id || "" })} />}
-            <TbMessageCircle2 className={"cursor-pointer"} onClick={() => router.push("/post/" + post.data.id) } />
+            <TbMessageCircle2 className={"cursor-pointer"} onClick={() => router.push("/post/" + post.data.id)} />
             <IoPaperPlaneOutline className="cursor-pointer" />
             {post.data?.user.handle === data?.user?.data.handle && <MdOutlineDeleteOutline className="cursor-pointer" onClick={() => setDeleteMenu(true)} />}
           </div>
@@ -148,7 +148,7 @@ const PostItem = (props: { postID?: string; post?: any }) => {
         <main className="flex items-center justify-center">
           {status === "unauthenticated" && <UnAuthedAlert />}
           <div id="post" className={"flex h-[400px] w-screen select-none flex-col items-center justify-center rounded-2xl border-2 border-zinc-600 sm:w-[400px] md:h-[700px] md:w-[700px] " + (props.post ? " my-4 md:h-fit " : " h-screen ")}>
-            {deleteMenu && <OptionMenu buttonPositive={deletePost.isLoading ? <Spinner SpinnerOnly={true} fill={"fill-red-500"} /> : "Delete"} buttonNegative="Cancel" description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ userid: post.data.user.id, postid: post.data.id, index: post.data?.index })} onClickNegative={() => setDeleteMenu(false)} />}
+            {deleteMenu && <OptionMenu buttonPositive={"Delete"} buttonLoading={deletePost.isLoading} buttonNegative="Cancel" description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ userid: post.data.user.id, postid: post.data.id, index: post.data?.index })} onClickNegative={() => setDeleteMenu(false)} />}
             {likesMenu && <ListOfUsers pageID={post.data.userid} userHandle={data?.user?.data.handle} userID={data?.user?.data.id} users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" />}
             <Header />
             <PostView />

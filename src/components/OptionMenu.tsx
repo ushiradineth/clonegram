@@ -1,11 +1,13 @@
 import { useContext } from "react";
 import { DataContext } from "../pages/_app";
+import Spinner from "./Spinner";
 
 interface itemType {
   title: string;
   description: string;
   buttonPositive: string | JSX.Element;
   buttonNegative: string;
+  buttonLoading: boolean;
   onClickPositive: (...arg: any) => unknown;
   onClickNegative: (...arg: any) => unknown;
 }
@@ -21,7 +23,7 @@ const OptionMenu = (props: itemType) => {
           <p className="px-4 text-center text-sm font-normal">{props.description}</p>
         </div>
         <div className="flex h-12 w-full cursor-pointer items-center justify-center border-b-[1px] border-gray-300 font-semibold text-red-500" onClick={props.onClickPositive}>
-          <p>{props.buttonPositive}</p>
+          <p>{props.buttonLoading ? <Spinner SpinnerOnly={true} fill={"fill-red-500"} /> : props.buttonPositive}</p>
         </div>
         <div className="flex h-12 w-full cursor-pointer items-center justify-center font-semibold" onClick={props.onClickNegative}>
           <p>{props.buttonNegative}</p>

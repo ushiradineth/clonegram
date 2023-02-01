@@ -30,7 +30,7 @@ const Account = () => {
 
   return (
     <div className="z-50">
-      {deleteMenu && <OptionMenu title="Delete your account?" description="If you delete your account, your data won't be recoverable" buttonPositive="Delete" buttonNegative="Cancel" onClickPositive={() => deleteUserFunc()} onClickNegative={() => setDeleteMenu(false)} />}
+      {deleteMenu && <OptionMenu title="Delete your account?" description="If you delete your account, your data won't be recoverable" buttonPositive="Delete" buttonNegative="Cancel" buttonLoading={deleteUser.isLoading} onClickPositive={() => deleteUserFunc()} onClickNegative={() => setDeleteMenu(false)} />}
       <div className="flex flex-col items-center justify-center rounded-2xl">
         <div className="flex w-44 flex-col items-center justify-center p-4 font-semibold">
           <button id="Log out" className="mt-2 flex w-full cursor-pointer items-center justify-center rounded-2xl bg-blue-600 px-4 py-2" onClick={onLogout}>

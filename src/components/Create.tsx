@@ -240,6 +240,7 @@ const Create = (props: itemType) => {
           description="If you leave, your edits won't be saved."
           buttonPositive="Discard"
           buttonNegative="Cancel"
+          buttonLoading={false}
           onClickPositive={() => {
             setCaption(false);
             setFileList(null);
