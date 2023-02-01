@@ -90,10 +90,10 @@ const Post = () => {
   const ProfileView = () => {
     return (
       <div className={"mt-5 flex h-12 w-fit items-center justify-center px-4 "}>
-        <Image className={"h-12 w-12 cursor-pointer rounded-full"} onClick={() => router.push("/profile/" + post.data?.user.handle)} src={post.data?.user.image || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/default-user-image.jpg"} height={160} width={160} alt="Profile Picture" priority />
+        <Image className={"h-12 w-12 cursor-pointer rounded-full"} onClick={() => router.push("/profile/" + data?.user?.data.handle)} src={post.data?.user.image || ""} height={160} width={160} alt="Profile Picture" priority />
         <div className="m-4 flex w-full flex-col justify-center gap-1 truncate">
           <div className="flex gap-2">
-            <Link passHref href={"/profile/" + post.data?.user.handle} onClick={(e) => e.preventDefault()} className={"cursor-pointer " + post.data?.user.handle !== data?.user?.data.handle ? " w-[60%] " : ""}>
+            <Link passHref href={"/profile/" + post.data?.user.handle} className={"cursor-pointer " + post.data?.user.handle !== data?.user?.data.handle ? " overflow-hidden truncate " : ""}>
               {post.data?.user.handle}
             </Link>
             {post.data?.user.handle === data?.user?.data.handle ? (
