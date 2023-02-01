@@ -19,6 +19,7 @@ import { MdOutlineDeleteOutline } from "react-icons/md";
 import OptionMenu from "../../components/OptionMenu";
 import ListOfUsers from "../../components/ListOfUsers";
 import UnAuthedAlert from "../../components/UnAuthedAlert";
+import moment from "moment";
 
 const Post = () => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -193,7 +194,7 @@ const Post = () => {
               {(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}
             </div>
           )}
-          <p className="pl-3 font-mono text-xs text-zinc-300">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
+          <p className="mt-2 pl-3 font-mono text-xs uppercase text-zinc-300">{moment(post.data?.createdAt).fromNow()}</p> <p className="pl-3 font-mono text-xs text-zinc-300">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
         </div>
       </>
     );
