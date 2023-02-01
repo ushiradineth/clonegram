@@ -17,6 +17,7 @@ import Head from "next/head";
 import { DataContext } from "../_app";
 import { useContext } from "react";
 import UnAuthedAlert from "../../components/UnAuthedAlert";
+import OptionMenu from "../../components/OptionMenu";
 
 const Profile = () => {
   const [options, setOptions] = useState(false);
@@ -25,6 +26,7 @@ const Profile = () => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [followersMenu, setFollowersMenu] = useState(false);
   const [followingMenu, setFollowingMenu] = useState(false);
+  const [unfollowMenu, setUnfollowMenu] = useState(false);
   const [tab, setTab] = useState("Posts");
 
   const { data: session, status } = useSession();
@@ -64,6 +66,7 @@ const Profile = () => {
     onSuccess: () => {
       page?.refetch();
       data?.user?.refetch();
+      setUnfollowMenu(false)
       setIsFollowing(false);
     },
   });
@@ -96,6 +99,7 @@ const Profile = () => {
       <>
         {followersMenu && <ListOfUsers users={page?.data?.followers} onClickNegative={() => setFollowersMenu(false)} title="Followers" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page?.data?.id ? page?.data.id : "0"} />}
         {followingMenu && <ListOfUsers users={page?.data?.following} onClickNegative={() => setFollowingMenu(false)} title="Following" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page?.data?.id ? page?.data.id : "0"} />}
+        {unfollowMenu && <OptionMenu buttonPositive={"Unfollow"} buttonNegative={"Cancel"} buttonLoading={unfollow.isLoading} description={"Do you wish to unfollow this user?"} onClickPositive={() => unfollowFunc()} onClickNegative={() => setUnfollowMenu(false)} title="Unfollow" />}
         {options && <ProfileOptions onClickNegative={() => setOptions(false)} page={page as UserType} refetch={data?.user?.refetch} setIsBlocking={setIsBlocking} />}
         {!session && <UnAuthedAlert />}
       </>
@@ -165,7 +169,7 @@ const Profile = () => {
   const UserInfo = () => {
     const CTA = () => {
       return (
-        <button disabled={follow.isLoading || unfollow.isLoading} className={"text-xs font-semibold disabled:cursor-not-allowed " + (data?.viewport === "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page?.data?.id ? router.push("/settings") : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))}>
+        <button disabled={follow.isLoading || unfollow.isLoading} className={"text-xs font-semibold disabled:cursor-not-allowed " + (data?.viewport === "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page?.data?.id ? router.push("/settings") : isFollowing ? setUnfollowMenu(true) : followFunc()) : router.push("/"))}>
           {session?.user?.id === page?.data?.id ? "Edit profile" : follow.isLoading || unfollow.isLoading ? <Spinner SpinnerOnly={true} /> : isFollowing ? "Following" : "Follow"}
         </button>
       );
@@ -186,7 +190,7 @@ const Profile = () => {
 
   const CTAMobile = () => {
     return (
-      <button disabled={follow.isLoading || unfollow.isLoading} className={"z-10 mt-2 flex h-fit w-full items-center justify-center p-2 text-xs font-semibold disabled:cursor-not-allowed " + (data?.viewport != "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border-2 py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page?.data?.id ? router.push("/settings") : isFollowing ? unfollowFunc() : followFunc()) : router.push("/"))}>
+      <button disabled={follow.isLoading || unfollow.isLoading} className={"z-10 mt-2 flex h-fit w-full items-center justify-center p-2 text-xs font-semibold disabled:cursor-not-allowed " + (data?.viewport != "Mobile" && " hidden ") + (follow.isLoading || unfollow.isLoading ? " " : " rounded-[4px] border-2 py-1 px-2 ")} onClick={() => (session ? (session?.user?.id === page?.data?.id ? router.push("/settings") : isFollowing ? setUnfollowMenu(true) : followFunc()) : router.push("/"))}>
         {session?.user?.id === page?.data?.id ? "Edit profile" : follow.isLoading || unfollow.isLoading ? <Spinner SpinnerOnly={true} /> : isFollowing ? "Following" : "Follow"}
       </button>
     );
