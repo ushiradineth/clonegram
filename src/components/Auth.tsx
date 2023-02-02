@@ -4,17 +4,19 @@ import Spinner from "../components/Spinner";
 import { env } from "../env/client.mjs";
 import { AiFillGithub, AiFillGoogleCircle, AiOutlineTwitter } from "react-icons/ai";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import { z } from "zod";
 
 const Auth = () => {
   const { status } = useSession();
+  const [msg, setMsg] = useState("");
 
   if (status == "loading") {
     return <Spinner />;
   }
 
   const CTAs = () => {
-    const Item = (props: { icon: JSX.Element; text: string, provider: string }) => {
+    const Item = (props: { icon: JSX.Element; text: string; provider: string }) => {
       return (
         <button className="flex w-full select-none items-center justify-center gap-2 rounded-full bg-white from-red-300 via-pink-300 to-orange-100 px-8 py-3 font-semibold text-black no-underline transition hover:bg-gradient-to-br" onClick={() => signIn(props.provider, { callbackUrl: env.NEXT_PUBLIC_NEXTAUTH_URL })}>
           {props.icon}
@@ -23,12 +25,56 @@ const Auth = () => {
       );
     };
 
+    const MagicEmail = () => {
+      const [emailValidation, setEmailValidation] = useState(false);
+      const onChange = (e: { target: { name: any; value: any } }) => {
+        if (e.target.name === "email") {
+          const bState = z.string().email().safeParse(e.target.value);
+          if (emailValidation !== bState.success) {
+            setEmailValidation(bState.success);
+          }
+        }
+      };
+
+      const onSubmit = async (e: { preventDefault: () => void }) => {
+        e.preventDefault();
+        signIn("email", { email: (document.getElementById("email") as HTMLInputElement).value, redirect: false });
+        const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+        await delay(1000);
+        setMsg("Magic link sent, Check your Email.");
+      };
+
+      return (
+        <form className="mt-3 grid w-full gap-1 px-6 text-center" onSubmit={onSubmit}>
+          <input type="email" name="email" id="email" placeholder="Email" className={"focus:shadow-outline w-full appearance-none rounded-full border px-3 py-3 leading-tight text-gray-700 shadow focus:outline-none"} onChange={onChange} />
+          <p className={"font-semibold text-green-500"}>{msg}</p>
+          <button type="submit" disabled={!emailValidation} className="font-semiboldno-underline focus:shadow-outline flex w-full select-none items-center justify-center rounded-full bg-blue-500 from-red-300 via-pink-300 to-orange-100 px-2 py-3 font-semibold text-white transition hover:bg-gradient-to-br hover:text-black focus:outline-none disabled:cursor-not-allowed disabled:bg-blue-300">
+            Magic Link
+          </button>
+        </form>
+      );
+    };
+
+    const Divider = () => {
+      return (
+        <div className="relative flex items-center py-5">
+          <div className="flex-grow border-t border-gray-400"></div>
+          <span className="mx-4 flex-shrink select-none text-gray-400">OR</span>
+          <div className="flex-grow border-t border-gray-400"></div>
+        </div>
+      );
+    };
+
     return (
-      <section className="grid w-[350px] gap-2 rounded px-6 pb-6 pt-2">
-        <Item icon={<AiFillGoogleCircle size={30} />} text={"Continue with Google"} provider={"google"} />
-        <Item icon={<AiFillGithub size={30} />} text={"Continue with Github"} provider={"github"} />
-        <Item icon={<AiOutlineTwitter size={30} />} text={"Continue with Twitter"} provider={"twitter"} />
-      </section>
+      <>
+        <MagicEmail />
+        <Divider />
+        <section className="grid w-[350px] gap-2 rounded px-6 pb-6 pt-2">
+          <Item icon={<AiFillGoogleCircle size={30} />} text={"Continue with Google"} provider={"google"} />
+          <Item icon={<AiFillGithub size={30} />} text={"Continue with Github"} provider={"github"} />
+          <Item icon={<AiOutlineTwitter size={30} />} text={"Continue with Twitter"} provider={"twitter"} />
+        </section>
+      </>
     );
   };
 
@@ -63,7 +109,7 @@ const Auth = () => {
         <meta name="google-site-verification" content="WqjiADJh02W0ssceX3ZwKlqRFhVgDEEPUQjG8au1k80" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      
+
       <main className=" grid h-screen w-screen select-none bg-[#171717]">
         <div className={"grid place-content-center place-items-center gap-4"}>
           <Objects />
