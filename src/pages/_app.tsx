@@ -10,6 +10,8 @@ import { env } from "../env/client.mjs";
 import themeObject from "../components/Theme";
 import GetUser from "../components/GetUser";
 import { type MemoType } from "../types/types";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 export const DataContext = createContext<MemoType | undefined | null>(null);
 
@@ -124,6 +126,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
             <DataContext.Provider value={value}>
               <Layout create={create} setCreate={setCreate} search={search} setSearch={setSearch} notification={notification} setNotification={setNotification} more={more} setMore={setMore} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} hideSideComponents={hideSideComponents} setHideSideComponents={setHideSideComponents} />
               <Component {...pageProps} />
+              <ToastContainer />
             </DataContext.Provider>
           </>
         ) : (

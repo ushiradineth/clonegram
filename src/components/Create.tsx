@@ -12,7 +12,7 @@ import { Cropper, type CropperRef } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
 import { env } from "../env/client.mjs";
 import Spinner from "./Spinner";
-
+import { Theme, toast } from "react-toastify";
 interface itemType {
   create: boolean;
   setCreate: (params: unknown) => unknown;
@@ -35,6 +35,11 @@ const Create = (props: itemType) => {
     onSuccess: () => {
       props.setCreate(false);
       data?.user?.refetch();
+      toast("Post Created", { hideProgressBar: true, autoClose: 2000, type: "success", theme: (data?.theme?.type as Theme) || ("dark" as Theme) });
+    },
+    onError: () => {
+      props.setCreate(false);
+      toast("Post was not Created", { hideProgressBar: true, autoClose: 2000, type: "error", theme: (data?.theme?.type as Theme) || ("dark" as Theme) });
     },
   });
 
@@ -199,7 +204,7 @@ const Create = (props: itemType) => {
       });
     });
 
-    if (Links.length === croppedImages.current.length) setPost.mutate({ index:(Number(data?.user?.data.posts.length) || 0) + 1, id: data?.user?.data.id || "", links: Links, caption: (document.getElementById("post-caption") as HTMLInputElement).value || null });
+    if (Links.length === croppedImages.current.length) setPost.mutate({ index: (Number(data?.user?.data.posts.length) || 0) + 1, id: data?.user?.data.id || "", links: Links, caption: (document.getElementById("post-caption") as HTMLInputElement).value || null });
   };
 
   const Caption = () => {
