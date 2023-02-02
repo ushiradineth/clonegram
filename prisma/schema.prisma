@@ -50,7 +50,7 @@ model User {
   email         String?        @unique
   emailVerified DateTime?
   createdAt     DateTime       @default(now()) @db.Timestamptz(3)
-  image         String?
+  image         String?        @default("https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/default-user-image.jpg")
   accounts      Account[]
   sessions      Session[]
   comments      Comment[]
