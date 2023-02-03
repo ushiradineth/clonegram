@@ -46,7 +46,7 @@ const Layout = (props: itemType) => {
 
   const switchLayout = () => {
     props.setlsTheme(data?.theme?.type === "dark" ? "light" : "dark");
-    props.setTheme({ type: props.lsTheme, primary: data?.theme?.primary, secondary: data?.theme?.secondary, tertiary: data?.theme?.tertiary, accent: data?.theme?.accent });
+    props.setTheme({ type: props.lsTheme, primary: data?.theme?.primary, secondary: data?.theme?.secondary, tertiary: data?.theme?.tertiary });
   };
 
   const signout = () => {

@@ -25,7 +25,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
   const [notification, setNotification] = useState(false);
   const [lsTheme, setlsTheme] = useState("");
   const [hideSideComponents, setHideSideComponents] = useState(false);
-  const [theme, setTheme] = useState({ type: "", primary: "", secondary: "", tertiary: "", accent: "" });
+  const [theme, setTheme] = useState({ type: "", primary: "", secondary: "", tertiary: "" });
   const supabase = createClient("https://" + env.NEXT_PUBLIC_SUPABASE_URL, env.NEXT_PUBLIC_SUPABASE_PUBLIC_ANON_KEY);
 
   const onResize = () => {

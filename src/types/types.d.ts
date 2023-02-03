@@ -27,7 +27,6 @@ export interface ThemeType {
   primary: string;
   secondary: string;
   tertiary: string;
-  accent: string;
 }
 
 export interface MemoType {
