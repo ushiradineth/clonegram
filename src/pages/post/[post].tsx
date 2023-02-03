@@ -204,7 +204,7 @@ const Post = () => {
 
   const MobileHeader = () => {
     return (
-      <div className={"z-10 flex h-fit w-[80%] items-center justify-start rounded-t-2xl border-b border-zinc-600 p-4 " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.tertiary}>
+      <div className={"z-10 flex h-fit w-[90%] items-center justify-start rounded-t-2xl border-b border-zinc-600 p-4 sm:w-full " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.tertiary}>
         <ProfileView />
       </div>
     );
@@ -212,7 +212,7 @@ const Post = () => {
 
   const MobileFooter = () => {
     return (
-      <div className={"flex h-fit w-[80%] flex-col items-center justify-start rounded-b-2xl border-t border-zinc-600 " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.tertiary}>
+      <div className={"flex h-fit w-[90%] flex-col items-center justify-start rounded-b-2xl border-t border-zinc-600 sm:w-full " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.tertiary}>
         <div className={"mb-3 grid w-full border-zinc-600 " + (showComments ? " h-[90px]  border-b " : "  h-[80px] ")}>
           <InteractionBar />
         </div>
@@ -257,8 +257,8 @@ const Post = () => {
 
   const PostView = () => {
     return (
-      <div className={"grid transform place-items-center " + (data?.viewport === "Mobile" ? "  h-[500px] w-[80%] " : "  h-[700px] w-[500px] rounded-l-2xl ") + data?.theme?.tertiary}>
-        <div className={"flex h-fit w-fit items-center justify-center p-2 transition-all duration-300 " + (data?.viewport === "Mobile" ? "  max-h-[400px] max-w-[350px]" : " max-h-[650px] max-w-[450px] ")}>
+      <div className={"grid transform place-items-center " + (data?.viewport === "Mobile" ? " h-fit w-[90%] sm:w-full " : " min-h-[700px] rounded-l-2xl ") + data?.theme?.tertiary}>
+        <div className={"flex h-fit w-fit items-center justify-center transition-all duration-300"}>
           <BiChevronLeft onClick={() => imageIndex > 0 && setImageIndex(imageIndex - 1)} className={"fixed left-4 top-[50%] h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex > 0 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
           <BiChevronRight onClick={() => imageIndex < (post.data?.imageURLs.length || 0) - 1 && setImageIndex(imageIndex + 1)} className={"fixed top-[50%] right-4 h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex < (post.data?.imageURLs.length || 0) - 1 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
           <Image src={post.data?.imageURLs[imageIndex] || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} key="image" className="h-full w-full object-cover" height={1000} width={1000} alt={"images"} />
@@ -283,13 +283,15 @@ const Post = () => {
         </Head>
         <main>
           <SignInNotification />
-          <div className={"flex h-screen select-none items-center justify-center px-2 " + data?.theme?.secondary + (data?.viewport == "Web" && session && " ml-72 ") + (data?.viewport == "Tab" && session && " ml-16 ") + (data?.viewport == "Mobile" && session && " flex-col ")}>
-            {deleteMenu && <OptionMenu buttonPositive="Delete" buttonNegative="Cancel" buttonLoading={deletePost.isLoading} description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ userid: post.data?.user.id || "", postid: post.data?.id || "", index: post.data?.index || 0 })} onClickNegative={() => setDeleteMenu(false)} />}
-            {likesMenu && <ListOfUsers users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" userHandle={data?.user?.data.handle} userID={data?.user?.data.id} pageID={"0"} />}
-            <MobileHeader />
-            <PostView />
-            <WebSideView />
-            <MobileFooter />
+          <div className={"flex h-screen w-screen select-none items-center justify-center " + data?.theme?.secondary + (data?.viewport == "Web" && session && " pl-72 ") + (data?.viewport == "Tab" && session && " pl-16 ")}>
+            <div className={"flex h-[90%] w-[90%] items-center justify-center px-2 sm:h-fit sm:w-fit " + (data?.viewport == "Mobile" && session && " flex-col ")}>
+              {deleteMenu && <OptionMenu buttonPositive="Delete" buttonNegative="Cancel" buttonLoading={deletePost.isLoading} description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ userid: post.data?.user.id || "", postid: post.data?.id || "", index: post.data?.index || 0 })} onClickNegative={() => setDeleteMenu(false)} />}
+              {likesMenu && <ListOfUsers users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" userHandle={data?.user?.data.handle} userID={data?.user?.data.id} pageID={"0"} />}
+              <MobileHeader />
+              <PostView />
+              <WebSideView />
+              <MobileFooter />
+            </div>
           </div>
         </main>
       </>
