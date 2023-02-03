@@ -257,8 +257,8 @@ const Post = () => {
 
   const PostView = () => {
     return (
-      <div className={"grid transform place-items-center " + (data?.viewport === "Mobile" ? " h-fit w-[90%] sm:w-full " : " min-h-[700px] rounded-l-2xl ") + data?.theme?.primary}>
-        <div className={"flex h-fit w-fit items-center justify-center transition-all duration-300"}>
+      <div className={"grid transform place-items-center " + (data?.viewport === "Mobile" ? " h-fit max-h-[700px] w-[90%] sm:w-full " : " h-[700px] rounded-l-2xl ") + data?.theme?.primary}>
+        <div className={"flex h-fit max-h-screen w-fit max-w-[300px] items-center justify-center transition-all duration-300"}>
           <BiChevronLeft onClick={() => imageIndex > 0 && setImageIndex(imageIndex - 1)} className={"fixed left-4 top-[50%] h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex > 0 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
           <BiChevronRight onClick={() => imageIndex < (post.data?.imageURLs.length || 0) - 1 && setImageIndex(imageIndex + 1)} className={"fixed top-[50%] right-4 h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex < (post.data?.imageURLs.length || 0) - 1 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
           <Image src={post.data?.imageURLs[imageIndex] || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} key="image" className="h-full w-full object-cover" height={1000} width={1000} alt={"images"} />
