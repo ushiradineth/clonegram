@@ -1,4 +1,3 @@
-import Head from "next/head";
 import { useSession } from "next-auth/react";
 import Spinner from "../components/Spinner";
 import Home from "../components/Home";

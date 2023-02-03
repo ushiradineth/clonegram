@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { trpc } from "../utils/trpc";

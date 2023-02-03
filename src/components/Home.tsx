@@ -5,7 +5,7 @@ import { DataContext } from "../pages/_app";
 import { useContext } from "react";
 import { trpc } from "../utils/trpc";
 import Spinner from "./Spinner";
-import { Post } from "@prisma/client";
+import { type Post } from "@prisma/client";
 import PostItem from "./PostItem";
 import { FiCamera } from "react-icons/fi";
 

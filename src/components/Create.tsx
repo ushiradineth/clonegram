@@ -12,7 +12,7 @@ import { Cropper, type CropperRef } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
 import { env } from "../env/client.mjs";
 import Spinner from "./Spinner";
-import { Theme, toast } from "react-toastify";
+import { type Theme, toast } from "react-toastify";
 interface itemType {
   create: boolean;
   setCreate: (params: unknown) => unknown;
