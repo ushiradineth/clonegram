@@ -90,11 +90,11 @@ const Post = () => {
 
   const ProfileView = () => {
     return (
-      <div className={"mt-5 flex h-12 w-fit items-center justify-center px-4 "}>
+      <div className={"relative flex h-full w-full items-center justify-center"}>
         <Image className={"h-12 w-12 cursor-pointer rounded-full"} onClick={() => router.push("/profile/" + data?.user?.data.handle)} src={post.data?.user.image || ""} height={160} width={160} alt="Profile Picture" priority />
-        <div className="m-4 flex w-full flex-col justify-center gap-1 truncate">
+        <div className="m-4 flex flex-col justify-center gap-1 truncate">
           <div className="flex gap-2">
-            <Link passHref href={"/profile/" + post.data?.user.handle} className={"cursor-pointer " + post.data?.user.handle !== data?.user?.data.handle ? " overflow-hidden truncate " : ""}>
+            <Link passHref href={"/profile/" + post.data?.user.handle} className={"w-fit cursor-pointer " + post.data?.user.handle !== data?.user?.data.handle ? " overflow-hidden truncate " : ""}>
               {post.data?.user.handle}
             </Link>
             {post.data?.user.handle === data?.user?.data.handle ? (
@@ -186,7 +186,9 @@ const Post = () => {
             <IoPaperPlaneOutline className="cursor-pointer" />
             {post.data?.user.handle === data?.user?.data.handle && <MdOutlineDeleteOutline onClick={() => setDeleteMenu(true)} />}
           </div>
-          <div className={"mt-4 flex h-fit w-full items-center justify-end pr-3 hover:text-zinc-600"}>{save ? <BsBookmarkFill fill="white" className="scale-[1.6] cursor-pointer " onClick={() => unsavePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <BsBookmark className="scale-[1.6] cursor-pointer " onClick={() => savePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} />}</div>
+          <div className="mt-4 flex h-fit w-full items-center justify-end ">
+            <div className={"mr-3 hover:text-zinc-600"}>{save ? <BsBookmarkFill fill="white" className="scale-[1.6] cursor-pointer " onClick={() => unsavePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <BsBookmark className="scale-[1.6] cursor-pointer " onClick={() => savePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} />}</div>
+          </div>
         </div>
         <div className="pb-3 pt-2">
           {(post.data?.likes.length || 0) > 0 && (
@@ -202,7 +204,7 @@ const Post = () => {
 
   const MobileHeader = () => {
     return (
-      <div className={"z-10 flex h-fit w-[400px] items-center justify-start rounded-t-2xl border-b border-zinc-600 pl-4 pb-5 " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.tertiary}>
+      <div className={"z-10 flex h-fit w-[80%] items-center justify-start rounded-t-2xl border-b border-zinc-600 p-4 " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.tertiary}>
         <ProfileView />
       </div>
     );
@@ -210,7 +212,7 @@ const Post = () => {
 
   const MobileFooter = () => {
     return (
-      <div className={"flex h-fit w-[400px] flex-col items-center justify-start rounded-b-2xl border-t border-zinc-600 " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.tertiary}>
+      <div className={"flex h-fit w-[80%] flex-col items-center justify-start rounded-b-2xl border-t border-zinc-600 " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.tertiary}>
         <div className={"mb-3 grid w-full border-zinc-600 " + (showComments ? " h-[90px]  border-b " : "  h-[80px] ")}>
           <InteractionBar />
         </div>
@@ -255,7 +257,7 @@ const Post = () => {
 
   const PostView = () => {
     return (
-      <div className={"grid transform place-items-center " + (data?.viewport === "Mobile" ? "  h-[500px] w-[400px] " : "  h-[700px] w-[500px] rounded-l-2xl ") + data?.theme?.tertiary}>
+      <div className={"grid transform place-items-center " + (data?.viewport === "Mobile" ? "  h-[500px] w-[80%] " : "  h-[700px] w-[500px] rounded-l-2xl ") + data?.theme?.tertiary}>
         <div className={"flex h-fit w-fit items-center justify-center p-2 transition-all duration-300 " + (data?.viewport === "Mobile" ? "  max-h-[400px] max-w-[350px]" : " max-h-[650px] max-w-[450px] ")}>
           <BiChevronLeft onClick={() => imageIndex > 0 && setImageIndex(imageIndex - 1)} className={"fixed left-4 top-[50%] h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex > 0 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
           <BiChevronRight onClick={() => imageIndex < (post.data?.imageURLs.length || 0) - 1 && setImageIndex(imageIndex + 1)} className={"fixed top-[50%] right-4 h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex < (post.data?.imageURLs.length || 0) - 1 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
@@ -281,7 +283,7 @@ const Post = () => {
         </Head>
         <main>
           <SignInNotification />
-          <div className={"flex h-screen select-none items-center px-2 " + data?.theme?.secondary + (data?.viewport == "Web" && session && " ml-72  justify-center ") + (data?.viewport == "Tab" && session && " ml-16 justify-center ") + (data?.viewport == "Mobile" && session && " flex-col pt-12 ")}>
+          <div className={"flex h-screen select-none items-center justify-center px-2 " + data?.theme?.secondary + (data?.viewport == "Web" && session && " ml-72 ") + (data?.viewport == "Tab" && session && " ml-16 ") + (data?.viewport == "Mobile" && session && " flex-col ")}>
             {deleteMenu && <OptionMenu buttonPositive="Delete" buttonNegative="Cancel" buttonLoading={deletePost.isLoading} description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ userid: post.data?.user.id || "", postid: post.data?.id || "", index: post.data?.index || 0 })} onClickNegative={() => setDeleteMenu(false)} />}
             {likesMenu && <ListOfUsers users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" userHandle={data?.user?.data.handle} userID={data?.user?.data.id} pageID={"0"} />}
             <MobileHeader />
