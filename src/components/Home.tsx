@@ -28,7 +28,7 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={"flex min-h-screen flex-col items-center justify-center bg-zinc-900 text-gray-300 " + (data?.viewport == "Web" && session && " ml-72 ") + (data?.viewport == "Tab" && session && " ml-16 ")}>
+      <main className={"flex min-h-screen flex-col items-center justify-center py-8 " + data?.theme?.primary + (data?.viewport == "Web" && session && " ml-72 ") + (data?.viewport == "Tab" && session && " ml-16 ")}>
         <div className="mx-16 pt-12 pb-4">
           {posts.data?.q1.map((post: Post, index: number) => {
             return (
@@ -39,14 +39,14 @@ const Home = () => {
           })}
 
           {posts.data?.q1.length === 0 && (
-            <div className="min-w-screen col-span-3 flex w-full flex-col items-center rounded-xl border-2 border-zinc-700 p-2 my-2">
-              <div className="text-xl font-semibold text-center">{(data?.user?.data.following.length || 0) > 0 ? "None of the accounts you follow have posted recently" : "Follow some accounts to see their posts here"}</div>
+            <div className="min-w-screen col-span-3 my-2 flex w-full flex-col items-center rounded-xl border-2 border-zinc-700 p-2">
+              <div className="text-center text-xl font-semibold ">{(data?.user?.data.following.length || 0) > 0 ? "None of the accounts you follow have posted recently" : "Follow some accounts to see their posts here"}</div>
             </div>
           )}
 
           {posts.data?.q2.length !== 0 && (
             <div className="min-w-screen col-span-3 flex w-full flex-col items-center rounded-xl border-2 border-zinc-700 p-2">
-              <div className="text-xl font-semibold text-center">See some posts from other users on this platform</div>
+              <div className="text-center text-xl font-semibold">See some posts from other users on this platform</div>
             </div>
           )}
 
