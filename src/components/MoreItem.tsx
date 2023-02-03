@@ -14,7 +14,7 @@ const MoreItem = (props: itemType) => {
 
   return (
     <div
-      className={"flex cursor-pointer items-center p-2 pr-4 text-sm font-normal " + (!props.last && " border-b-2 border-black ") + (data?.theme?.type === "dark" ? " hover:bg-zinc-800 " : " hover:bg-zinc-200 ")}
+      className={"flex cursor-pointer items-center p-2 pr-4 text-sm font-normal " + (!props.last && " border-b-2 border-black ") + data?.theme?.primary}
       onClick={() => {
         props.setMore(false);
         props.onClickHandler && props.onClickHandler();

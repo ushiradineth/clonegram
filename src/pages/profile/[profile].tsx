@@ -199,7 +199,7 @@ const Profile = () => {
   function PostView() {
     const SelectionTab = () => {
       return (
-        <div className={"flex h-12 max-w-[908px] items-center justify-center gap-2 border-zinc-700 " + (data?.user?.data.handle !== page?.data?.handle ? " hidden " : "") + (data?.viewport === "Mobile" ? " w-full border-b " : " w-full border-t ")}>
+        <div className={"flex h-12 max-w-[908px] items-center justify-center gap-2 " + (data?.user?.data.handle !== page?.data?.handle ? " hidden " : "") + (data?.viewport === "Mobile" ? " w-full border-b " : " w-full border-t ")}>
           <div onClick={() => setTab("Posts")} className={"z-10 flex h-full cursor-pointer items-center justify-center gap-2 px-2 active:text-zinc-700 " + (tab === "Posts" && "  border-y ")}>
             {tab === "Posts" ? <TfiLayoutGrid3Alt /> : <TfiLayoutGrid3 />} Posts
           </div>
@@ -213,7 +213,7 @@ const Profile = () => {
     return (
       <>
         <SelectionTab />
-        <div className={"flex h-fit min-h-screen w-fit items-start justify-center " + (data?.viewport !== "Mobile" && " max-w-[908px] border-t border-zinc-700 ")}>
+        <div className={"flex h-fit min-h-screen w-fit items-start justify-center " + (data?.viewport !== "Mobile" && " max-w-[908px] border-t ")}>
           <div className={"col-span-3 mt-1 grid grid-cols-3 place-items-center gap-1 " + (data?.viewport == "Mobile" && " mb-10 ")}>
             {(tab === "Posts" ? page?.data?.posts.length : data?.user?.data.saved.length) ? (
               (tab === "Posts" ? page?.data?.posts : data?.user?.data.saved)
@@ -224,7 +224,7 @@ const Profile = () => {
                     <div key={index}></div>
                   ) : (
                     <div key={index} className={"relative h-fit w-fit"}>
-                      {element.imageURLs.length > 1 && <IoMdAlbums className=" absolute right-[4%] top-[4%] h-[8%] w-[8%] max-w-[30px] rotate-180 shadow-sm" />}
+                      {element.imageURLs.length > 1 && <IoMdAlbums className=" absolute right-[4%] top-[4%] h-[8%] w-[8%] max-w-[30px] rotate-180 shadow-sm text-white" />}
                       <Image src={element.imageURLs[0] || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} height={500} width={500} onClick={() => router.push("/post/" + element.id)} alt={element.id} key={index} className={"z-10 aspect-1 h-full max-h-[300px] w-full max-w-[300px] cursor-pointer object-cover "}></Image>
                     </div>
                   )

@@ -88,7 +88,7 @@ const Layout = (props: itemType) => {
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} Text={"Create"} ID={"Create"} onClickHandler={() => props.setCreate(!props.create)} active={props.create} />
                 <NavBarItem Icon={data?.user?.data.image} Text={"Profile"} ID={"Profile"} onClickHandler={() => onClickHandler("/profile/" + data?.user?.data.handle)} active={Boolean(router.query.profile === data?.user?.data.handle && !props.create && !props.search && !props.more)} />
               </div>
-              <div id="Header-Mobile-View-Items" className={"fixed top-0 grid h-16 w-screen grid-flow-col place-items-center border-b border-zinc-600 " + data?.theme?.primary + (data?.viewport != "Mobile" && " hidden ") + (router.pathname !== "/" && " hidden ")}>
+              <div id="Header-Mobile-View-Items" className={"top-0 absolute z-50 grid h-16 w-screen grid-flow-col place-items-center border-b border-zinc-600 " + data?.theme?.primary + (data?.viewport != "Mobile" && " hidden ") + (router.pathname !== "/" && " hidden ")}>
                 <h1 className="ml-3 flex text-2xl font-normal">
                   C<span className="bg-gradient-to-br from-red-300 via-pink-300 to-orange-100 bg-clip-text text-transparent">G</span>
                 </h1>
@@ -96,7 +96,7 @@ const Layout = (props: itemType) => {
                 <MobileSearch />
                 <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} />
               </div>
-              <div id="Footer-Mobile-View-Items" className={"fixed bottom-0 z-20 mt-[4px] grid h-12 w-screen grid-flow-col place-items-center border-t border-zinc-600 " + data?.theme?.primary + (data?.viewport != "Mobile" && " hidden ")}>
+              <div id="Footer-Mobile-View-Items" className={"fixed bottom-0 z-50 mt-[4px] grid h-12 w-screen grid-flow-col place-items-center border-t border-zinc-600 " + data?.theme?.primary + (data?.viewport != "Mobile" && " hidden ")}>
                 <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} ID={"M-Home"} onClickHandler={() => onClickHandler("/")} active={Boolean(router.pathname == "/" && !props.create && !props.search && !props.more)} />
                 <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} ID={"M-Explore"} />
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} ID={"M-Create"} onClickHandler={() => props.setCreate(!props.create)} active={props.create} />
@@ -108,7 +108,7 @@ const Layout = (props: itemType) => {
                   <NavBarItem Icon={<HiOutlineMenu />} IconOnClick={<HiMenu />} Text={"More"} ID={"More"} onClickHandler={() => props.setMore(true)} active={props.more} />
                 </button>
                 {props.more && (
-                  <div id="Sidebar-More-Items" className={"invisible fixed bottom-16 left-6 z-50 w-fit origin-bottom-left scale-95 transform rounded-lg py-1 text-sm opacity-0 transition-all duration-300 group-focus-within:visible group-focus-within:scale-100 group-focus-within:opacity-100 " + (data?.theme?.type === "dark" ? " shadow-[0px_0px_10px_rgba(255,255,255,0.2)] " : " shadow-[0px_0px_10px_rgba(0,0,0,0.2)] ") + data?.theme?.secondary}>
+                  <div id="Sidebar-More-Items" className={"invisible fixed bottom-16 left-6 z-50 w-fit origin-bottom-left scale-95 transform rounded-lg py-1 text-sm opacity-0 transition-all duration-300 group-focus-within:visible group-focus-within:scale-100 group-focus-within:opacity-100 " + (data?.theme?.type === "dark" ? " shadow-[0px_0px_10px_rgba(255,255,255,0.2)] " : " shadow-[0px_0px_10px_rgba(0,0,0,0.2)] ") + data?.theme?.primary}>
                     <MoreItem Icon={<IoMdSettings />} Text="Settings" setMore={props.setMore} onClickHandler={() => router.push("/settings")} />
                     <MoreItem Icon={<RxBookmark />} Text="Saved" setMore={props.setMore} onClickHandler={() => router.push({ pathname: "/profile/" + data?.user?.data.handle, query: { saved: true } })} />
                     <MoreItem Icon={<RxTimer />} Text="Your Activity" setMore={props.setMore} />

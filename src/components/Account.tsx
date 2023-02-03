@@ -33,10 +33,10 @@ const Account = () => {
       {deleteMenu && <OptionMenu title="Delete your account?" description="If you delete your account, your data won't be recoverable" buttonPositive="Delete" buttonNegative="Cancel" buttonLoading={deleteUser.isLoading} onClickPositive={() => deleteUserFunc()} onClickNegative={() => setDeleteMenu(false)} />}
       <div className="flex flex-col items-center justify-center rounded-2xl">
         <div className="flex w-44 flex-col items-center justify-center p-4 font-semibold">
-          <button id="Log out" className="mt-2 flex w-full cursor-pointer items-center justify-center rounded-2xl bg-blue-600 px-4 py-2" onClick={onLogout}>
+          <button id="Log out" className="mt-2 flex w-full cursor-pointer items-center justify-center rounded-2xl bg-blue-500 px-4 py-2" onClick={onLogout}>
             {logout ? <Spinner SpinnerOnly={true} fill={"fill-blue-300"} /> : "Log out"}
           </button>
-          <button id="Delete Account" className="mt-2 flex w-full cursor-pointer items-center justify-center rounded-2xl bg-red-600 px-4 py-2" onClick={() => setDeleteMenu(true)}>
+          <button id="Delete Account" className="mt-2 flex w-full cursor-pointer items-center justify-center rounded-2xl bg-red-500 px-4 py-2" onClick={() => setDeleteMenu(true)}>
             {deleteUser.isLoading ? <Spinner SpinnerOnly={true} /> : "Delete Account"}
           </button>
         </div>

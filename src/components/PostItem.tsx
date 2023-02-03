@@ -91,12 +91,12 @@ const PostItem = (props: { postID?: string; post?: any }) => {
         </div>
         <div className="pb-2">
           {(post.data?.likes.length || 0) > 0 && (
-            <div className="mt-1 cursor-pointer pl-4 text-xs uppercase text-zinc-300" onClick={() => setLikesMenu(true)}>
-              {(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}
+            <div className="mt-1 cursor-pointer pl-4 text-xs uppercase" onClick={() => setLikesMenu(true)}>
+              {(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "Likes" : "Like")}
             </div>
           )}
-          {post.data.caption ? <p className="mt-1 truncate pl-4 text-xs font-semibold text-zinc-300">{post.data?.caption}</p> : <></>}
-          <p className="mt-1 pl-4 font-mono text-xs uppercase text-zinc-300">{moment(post.data.createdAt).fromNow()} </p>
+          {post.data.caption ? <p className="mt-1 truncate pl-4 text-xs font-semibold">{post.data?.caption}</p> : <></>}
+          <p className="mt-1 pl-4 font-mono text-xs uppercase text-zinc-500">{moment(post.data.createdAt).fromNow()} </p>
         </div>
       </>
     );
@@ -104,7 +104,7 @@ const PostItem = (props: { postID?: string; post?: any }) => {
 
   const Header = () => {
     return (
-      <div className={"z-10 flex h-fit w-full items-center justify-start rounded-t-2xl border-b border-zinc-600 bg-zinc-900 pl-4 pb-5 text-gray-300"}>
+      <div className={"flex h-fit w-full items-center justify-start rounded-t-2xl border-b border-zinc-600 pl-4 pb-5"}>
         <ProfileView />
       </div>
     );
@@ -112,7 +112,7 @@ const PostItem = (props: { postID?: string; post?: any }) => {
 
   const Footer = () => {
     return (
-      <div className={"flex h-fit w-full flex-col items-center justify-start rounded-b-2xl border-t border-zinc-600 bg-zinc-900 text-gray-300"}>
+      <div className={"flex h-fit w-full flex-col items-center justify-start rounded-b-2xl border-t border-zinc-600"}>
         <div className="grid w-full border-zinc-600">
           <InteractionBar />
         </div>
@@ -122,7 +122,7 @@ const PostItem = (props: { postID?: string; post?: any }) => {
 
   const PostView = () => {
     return (
-      <div className={"grid h-full w-full transform place-items-center bg-zinc-900 text-gray-300 transition-all duration-300"}>
+      <div className={"place-items-centertransition-all grid h-full w-full transform duration-300"}>
         <div className="flex h-full max-h-[200px] w-full items-center justify-center transition-all duration-300 md:max-h-[475px]">
           <BiChevronLeft onClick={() => imageIndex > 0 && setImageIndex(imageIndex - 1)} className={"fixed left-4 top-[50%] h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex > 0 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
           <BiChevronRight onClick={() => imageIndex < (post.data?.imageURLs.length || 0) - 1 && setImageIndex(imageIndex + 1)} className={"fixed top-[50%] right-4 h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex < (post.data?.imageURLs.length || 0) - 1 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
@@ -145,9 +145,9 @@ const PostItem = (props: { postID?: string; post?: any }) => {
             <link rel="icon" href="/favicon.ico" />
           </Head>
         )}
-        <main className="flex items-center justify-center">
+        <main className={"flex items-center justify-center "  + data?.theme?.primary}>
           {status === "unauthenticated" && <UnAuthedAlert />}
-          <div id="post" className={"flex h-[400px] w-screen select-none flex-col items-center justify-center rounded-2xl border-2 border-zinc-600 sm:w-[400px] md:h-[700px] md:w-[700px] " + (props.post ? " my-4 md:h-fit " : " h-screen ")}>
+          <div id="post" className={"flex h-[400px] w-screen select-none flex-col items-center justify-center rounded-2xl border-2 border-zinc-500 sm:w-[400px] md:h-[700px] md:w-[700px] " + (props.post ? " my-4 md:h-fit " : " h-screen ")}>
             {deleteMenu && <OptionMenu buttonPositive={"Delete"} buttonLoading={deletePost.isLoading} buttonNegative="Cancel" description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ userid: post.data.user.id, postid: post.data.id, index: post.data?.index })} onClickNegative={() => setDeleteMenu(false)} />}
             {likesMenu && <ListOfUsers pageID={post.data.userid} userHandle={data?.user?.data.handle} userID={data?.user?.data.id} users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" />}
             <Header />

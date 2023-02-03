@@ -121,9 +121,9 @@ const Create = (props: itemType) => {
               />
             </svg>
             <p className="select-none text-xl font-light">Add photos and videos here</p>
-            <div onClick={() => inputRef.current?.click()} className="flex w-[70%] cursor-pointer items-center justify-center rounded-lg bg-blue-500 py-2 text-sm font-semibold text-white hover:bg-blue-600 active:bg-blue-400">
+            <button onClick={() => inputRef.current?.click()} className="flex w-[70%] cursor-pointer items-center justify-center rounded-lg bg-blue-500 py-2 text-sm font-semibold text-white hover:bg-blue-600 active:bg-blue-400">
               Select From Computer
-            </div>
+            </button>
             <input type="file" accept=".png, .jpg, .jpeg" ref={inputRef} onChange={(e) => setFileList(e.target.files)} style={{ display: "none" }} multiple />
           </div>
         </div>

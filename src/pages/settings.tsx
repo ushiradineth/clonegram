@@ -53,7 +53,7 @@ const Settings = () => {
                 <SettingsItem Text={"Account"} ID={"Account"} setActive={setActive} active={active} />
               </div>
             </div>
-            <div className={"flex h-full items-center justify-center border border-gray-400 " + (data?.viewport === "Mobile" ? " w-[350px] " : " w-[500px] ") + data?.theme?.primary}>{hook}</div>
+            <div className={"flex h-full items-center justify-center border border-gray-400 " + (data?.viewport === "Mobile" ? " w-[350px] " : " w-[500px] ") + data?.theme?.tertiary}>{hook}</div>
           </div>
         </div>
       </main>

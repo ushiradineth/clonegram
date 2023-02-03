@@ -166,7 +166,7 @@ const Post = () => {
   const CommentBox = () => {
     return (
       <div className={"flex w-full items-center " + (data?.viewport === "Mobile" ? "" : " h-[7%] ")}>
-        <div className={data?.viewport === "Mobile" ? " z-10 w-[88%] " : " w-[86%] "}>
+        <div className={" " + data?.theme?.primary + (data?.viewport === "Mobile" ? " z-10 w-[88%] " : " w-[86%] ")}>
           <InputBox id="comment" maxlength={200} placeholder="Add a comment..." minlength={1} />
         </div>
         <button className="z-10 text-blue-500" onClick={() => (document.getElementById("comment") as HTMLInputElement).value.length > 0 && comment.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "", text: (document.getElementById("comment") as HTMLInputElement).value })}>
@@ -192,11 +192,11 @@ const Post = () => {
         </div>
         <div className="pb-3 pt-2">
           {(post.data?.likes.length || 0) > 0 && (
-            <div className="mt-1 cursor-pointer pl-3 text-xs text-zinc-300" onClick={() => setLikesMenu(true)}>
-              {(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}
+            <div className="mt-1 cursor-pointer pl-3 text-xs" onClick={() => setLikesMenu(true)}>
+              {(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "Likes" : "Like")}
             </div>
           )}
-          <p className="mt-2 pl-3 font-mono text-xs uppercase text-zinc-300">{moment(post.data?.createdAt).fromNow()}</p> <p className="pl-3 font-mono text-xs text-zinc-300">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
+          <p className="mt-2 pl-3 font-mono text-xs uppercase text-zinc-500">{moment(post.data?.createdAt).fromNow()}</p> <p className="pl-3 font-mono text-xs text-zinc-500">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
         </div>
       </>
     );
@@ -204,7 +204,7 @@ const Post = () => {
 
   const MobileHeader = () => {
     return (
-      <div className={"z-10 flex h-fit w-[90%] items-center justify-start rounded-t-2xl border-b border-zinc-600 p-4 sm:w-full " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.tertiary}>
+      <div className={"z-10 flex h-fit w-[90%] items-center justify-start rounded-t-2xl border-b border-zinc-600 p-4 sm:w-full " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.primary}>
         <ProfileView />
       </div>
     );
@@ -212,7 +212,7 @@ const Post = () => {
 
   const MobileFooter = () => {
     return (
-      <div className={"flex h-fit w-[90%] flex-col items-center justify-start rounded-b-2xl border-t border-zinc-600 sm:w-full " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.tertiary}>
+      <div className={"flex h-fit w-[90%] flex-col items-center justify-start rounded-b-2xl border-t border-zinc-600 sm:w-full " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.primary}>
         <div className={"mb-3 grid w-full border-zinc-600 " + (showComments ? " h-[90px]  border-b " : "  h-[80px] ")}>
           <InteractionBar />
         </div>
@@ -246,7 +246,7 @@ const Post = () => {
     };
 
     return (
-      <div className={"flex h-[700px] w-[350px] flex-col justify-start rounded-r-2xl border-l border-zinc-600 " + (data?.viewport === "Mobile" ? " hidden " : "") + data?.theme?.tertiary}>
+      <div className={"flex h-[700px] w-[350px] flex-col justify-start rounded-r-2xl border-l border-zinc-600 " + (data?.viewport === "Mobile" ? " hidden " : "") + data?.theme?.primary}>
         <Header />
         <Comments />
         <Interactions />
@@ -257,7 +257,7 @@ const Post = () => {
 
   const PostView = () => {
     return (
-      <div className={"grid transform place-items-center " + (data?.viewport === "Mobile" ? " h-fit w-[90%] sm:w-full " : " min-h-[700px] rounded-l-2xl ") + data?.theme?.tertiary}>
+      <div className={"grid transform place-items-center " + (data?.viewport === "Mobile" ? " h-fit w-[90%] sm:w-full " : " min-h-[700px] rounded-l-2xl ") + data?.theme?.primary}>
         <div className={"flex h-fit w-fit items-center justify-center transition-all duration-300"}>
           <BiChevronLeft onClick={() => imageIndex > 0 && setImageIndex(imageIndex - 1)} className={"fixed left-4 top-[50%] h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex > 0 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
           <BiChevronRight onClick={() => imageIndex < (post.data?.imageURLs.length || 0) - 1 && setImageIndex(imageIndex + 1)} className={"fixed top-[50%] right-4 h-4 w-4 scale-150 rounded-full bg-zinc-600 object-contain " + (imageIndex < (post.data?.imageURLs.length || 0) - 1 ? " cursor-pointer hover:bg-white hover:text-zinc-600 " : " opacity-0 ")} />
