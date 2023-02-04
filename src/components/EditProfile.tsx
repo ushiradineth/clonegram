@@ -126,7 +126,7 @@ const EditProfile = () => {
           <div className="w-54 mt-2 grid grid-flow-row gap-4 font-semibold text-black">
             <input type="file" accept=".png, .jpg, .jpeg" ref={imageRef} onChange={handleFileChange} style={{ display: "none" }} />
             <div className="mb-4 h-fit w-fit">
-              <div id="user-handle" className="text-white">
+              <div id="user-handle">
                 {data?.user?.data.handle}
               </div>
               <button className="cursor-pointer text-sm text-blue-400" onClick={handleUploadClick}>
