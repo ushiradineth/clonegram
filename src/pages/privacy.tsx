@@ -124,7 +124,6 @@ const privacy = () => {
           <ul className="ml-10 mt-2 mb-6 list-disc text-sm">
             <li className="text-lg">Google</li>
             <li className="text-lg">Facebook</li>
-            <li className="text-lg">Twitter</li>
             <li className="text-lg">LinkedIn</li>
           </ul>
           <p className="text-lg">If You decide to register through or otherwise grant us access to a Third-Party Social Media Service, We may collect Personal data that is already associated with Your Third-Party Social Media Service&lsquo;s account, such as Your name, Your email address, Your activities or Your contact list associated with that account.</p>
