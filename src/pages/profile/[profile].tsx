@@ -97,8 +97,8 @@ const Profile = () => {
   const ExternalMenus = () => {
     return (
       <>
-        {followersMenu && <ListOfUsers users={page?.data?.followers} onClickNegative={() => setFollowersMenu(false)} title="Followers" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page?.data?.id ? page?.data.id : "0"} />}
-        {followingMenu && <ListOfUsers users={page?.data?.following} onClickNegative={() => setFollowingMenu(false)} title="Following" userHandle={session?.user?.handle} userID={session?.user?.id} pageID={page?.data?.id ? page?.data.id : "0"} />}
+        {followersMenu && <ListOfUsers users={page?.data?.followers} onClickNegative={() => setFollowersMenu(false)} title="Followers" />}
+        {followingMenu && <ListOfUsers users={page?.data?.following} onClickNegative={() => setFollowingMenu(false)} title="Following" />}
         {unfollowMenu && <OptionMenu buttonPositive={"Unfollow"} buttonNegative={"Cancel"} buttonLoading={unfollow.isLoading} description={"Do you wish to unfollow this user?"} onClickPositive={() => unfollowFunc()} onClickNegative={() => setUnfollowMenu(false)} title="Unfollow" />}
         {options && <ProfileOptions onClickNegative={() => setOptions(false)} page={page as UserType} refetch={data?.user?.refetch} setIsBlocking={setIsBlocking} />}
         {!session && <UnAuthedAlert />}

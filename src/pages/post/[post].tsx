@@ -213,7 +213,7 @@ const Post = () => {
         <div className="my-3">
           {(post.data?.likes.length || 0) > 0 && (
             <div className="mt-1 cursor-pointer pl-3 text-xs" onClick={() => setLikesMenu(true)}>
-              {(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "Likes" : "Like")}
+              {(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "LIKES" : "LIKE")}
             </div>
           )}
           <p className="mt-2 pl-3 font-mono text-xs uppercase text-zinc-500">{moment(post.data?.createdAt).fromNow()}</p> <p className="pl-3 font-mono text-xs text-zinc-500">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
@@ -306,7 +306,7 @@ const Post = () => {
           <div className={"flex h-fit min-h-screen select-none items-center justify-center " + data?.theme?.secondary + (data?.viewport == "Web" && session && " pl-72 ") + (data?.viewport == "Tab" && session && " pl-16 ")}>
             <div className={"flex h-fit w-[90%] items-center justify-center sm:h-fit sm:w-fit " + (data?.viewport == "Mobile" && session && " flex-col ") + (showComments && " my-24 ")}>
               {deleteMenu && <OptionMenu buttonPositive="Delete" buttonNegative="Cancel" buttonLoading={deletePost.isLoading} description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ userid: post.data?.user.id || "", postid: post.data?.id || "", index: post.data?.index || 0 })} onClickNegative={() => setDeleteMenu(false)} />}
-              {likesMenu && <ListOfUsers users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" pageID={"0"} />}
+              {likesMenu && <ListOfUsers users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" />}
               <MobileHeader />
               <PostView />
               <WebSideView />

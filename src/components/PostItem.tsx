@@ -162,7 +162,7 @@ const PostItem = (props: { postID?: string; post?: any }) => {
           {status === "unauthenticated" && <UnAuthedAlert />}
           <div id="post" className={"flex h-[400px] w-screen select-none flex-col items-center justify-center rounded-2xl border-2 border-zinc-500 sm:w-[400px] md:h-[700px] md:w-[700px] " + (props.post ? " rounded-xl md:h-fit " : " h-screen ")}>
             {deleteMenu && <OptionMenu buttonPositive={"Delete"} buttonLoading={deletePost.isLoading} buttonNegative="Cancel" description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ userid: post.data.user.id, postid: post.data.id, index: post.data?.index })} onClickNegative={() => setDeleteMenu(false)} />}
-            {likesMenu && <ListOfUsers pageID={post.data.userid} userHandle={data?.user?.data.handle} userID={data?.user?.data.id} users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" />}
+            {likesMenu && <ListOfUsers users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" />}
             <Header />
             <PostView />
             <Footer />
