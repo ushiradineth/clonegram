@@ -3,7 +3,7 @@ import { BiUserPlus } from "react-icons/bi";
 import React, { useContext } from "react";
 import { useRouter } from "next/router";
 import ProfileLink from "./ProfileLink";
-import { User } from "@prisma/client";
+import { type User } from "@prisma/client";
 import { DataContext } from "../pages/_app";
 
 interface itemType {

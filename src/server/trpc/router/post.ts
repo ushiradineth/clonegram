@@ -255,34 +255,14 @@ export const postRouter = router({
     return { q1, q2 };
   }),
 
-  setcomment: protectedProcedure.input(z.object({ postid: z.string(), userid: z.string(), text: z.string(), parentReplyID: z.string().nullish() })).mutation(async ({ input, ctx }) => {
-    if (input.parentReplyID) {
-      const q1 = await ctx.prisma.comment.create({
-        data: {
-          text: input.text,
-          user: { connect: { id: input.userid } },
-          post: { connect: { id: input.postid } },
-          parentReply: { connect: { id: input.parentReplyID } },
-        },
-      });
-
-      const q2 = await ctx.prisma.comment.update({
-        where: { id: input.parentReplyID },
-        data: {
-          replies: { connect: { id: q1.id } },
-        },
-      });
-
-      return { q1, q2 };
-    } else {
-      return ctx.prisma.comment.create({
-        data: {
-          text: input.text,
-          user: { connect: { id: input.userid } },
-          post: { connect: { id: input.postid } },
-        },
-      });
-    }
+  setcomment: protectedProcedure.input(z.object({ postid: z.string(), userid: z.string(), text: z.string() })).mutation(async ({ input, ctx }) => {
+    return ctx.prisma.comment.create({
+      data: {
+        text: input.text,
+        user: { connect: { id: input.userid } },
+        post: { connect: { id: input.postid } },
+      },
+    });
   }),
 
   deleteComment: protectedProcedure.input(z.object({ commentid: z.string(), userid: z.string() })).mutation(({ input, ctx }) => {
