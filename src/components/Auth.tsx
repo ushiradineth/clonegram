@@ -2,7 +2,7 @@ import Head from "next/head";
 import { signIn, useSession } from "next-auth/react";
 import Spinner from "../components/Spinner";
 import { env } from "../env/client.mjs";
-import { AiFillGithub, AiFillGoogleCircle, AiOutlineTwitter } from "react-icons/ai";
+import { AiFillGithub, AiFillGoogleCircle } from "react-icons/ai";
 import Link from "next/link";
 import React, { useState } from "react";
 import { z } from "zod";
@@ -72,7 +72,6 @@ const Auth = () => {
         <section className="grid w-[350px] gap-2 rounded px-6 pb-6 pt-2">
           <Item icon={<AiFillGoogleCircle size={30} />} text={"Continue with Google"} provider={"google"} />
           <Item icon={<AiFillGithub size={30} />} text={"Continue with Github"} provider={"github"} />
-          <Item icon={<AiOutlineTwitter size={30} />} text={"Continue with Twitter"} provider={"twitter"} />
         </section>
       </>
     );
