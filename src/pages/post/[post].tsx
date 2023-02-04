@@ -79,7 +79,11 @@ const Post = () => {
     },
   });
 
-  const comment = trpc.post.setcomment.useMutation({});
+  const comment = trpc.post.setcomment.useMutation({
+    onSuccess: () => {
+      post.refetch();
+    },
+  });
 
   useEffect(() => {
     post.data?.likes.forEach((e) => e.id === data?.user?.data.id && setLike(true));
@@ -123,44 +127,41 @@ const Post = () => {
 
   const Comment = (props: { text: string; handle: string; image: string }) => {
     return (
-      <>
-        <Link passHref href={"/profile/" + props.handle} onClick={(e) => e.preventDefault()}>
-          <Image className={"h-fit w-12 cursor-pointer rounded-full"} onClick={() => router.push("/profile/" + props.handle)} src={props.image} height={160} width={160} alt="Profile Picture" priority />
-        </Link>
-        <div className="flex gap-2">
-          <span className="break-all">
-            <Link passHref href={"/profile/" + props.handle} onClick={(e) => e.preventDefault()} className="mr-2 h-fit w-fit truncate font-semibold">
-              {props.handle}
-            </Link>
-            {props.text}
-          </span>
+      <div className="flex flex-col justify-center gap-2 p-4" key={props.handle + props.text}>
+        <div className="flex items-center gap-2">
+          <Link passHref href={"/profile/" + props.handle} onClick={(e) => e.preventDefault()}>
+            <Image className={"h-fit w-12 cursor-pointer rounded-full"} onClick={() => router.push("/profile/" + props.handle)} src={props.image} height={160} width={160} alt="Profile Picture" priority />
+          </Link>
+          <Link passHref href={"/profile/" + props.handle} onClick={(e) => e.preventDefault()} className="mr-2 h-fit w-56 truncate font-semibold">
+            {props.handle}
+          </Link>
         </div>
-      </>
+        <div className="flex gap-2">
+          <span className="break-all">{props.text}</span>
+        </div>
+      </div>
     );
   };
 
   const Comments = () => {
     return (
-      <>
-        {post.data?.caption && (
-          <div className={"flex h-24 gap-4 overflow-y-auto pt-4 pl-6 pr-2 " + (data?.viewport === "Mobile" ? " hidden " : "")}>
-            <Comment key={"caption"} text={post.data.caption} handle={post.data.user.handle} image={post.data.user.image || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} />
-          </div>
-        )}
+      <div className={"flex w-full flex-col overflow-auto border-zinc-600 " + (data?.viewport === "Mobile" ? " h-fit border-t " : " h-[70%] border-b ")}>
+        {post.data?.caption && <div className={"flex h-fit w-full items-center justify-center gap-4 break-all border-b border-zinc-600 p-4 py-4"}>{post.data.caption}</div>}
         {post.data?.comments.length ? (
           post.data.comments
             .slice(0)
             .reverse()
             .map((element, index) => {
-              console.log(element);
-              return <Comment key={index} text={element.id || ""} handle={element.user.handle} image={element.user.image || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} />;
+              return (
+                <>
+                  <Comment key={index} text={element.text || ""} handle={element.user.handle} image={element.user.image || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} />
+                </>
+              );
             })
         ) : (
-          <div className={"grid h-[70%] w-full place-items-center border-zinc-600 " + (data?.viewport === "Mobile" ? " border-t p-4 " : " border-b ")}>
-            <p>No Comments Yet</p>
-          </div>
+          <p className="flex w-full items-center justify-center p-4">No Comments Yet</p>
         )}
-      </>
+      </div>
     );
   };
 
@@ -168,9 +169,15 @@ const Post = () => {
     return (
       <div className={"flex w-full items-center " + (data?.viewport === "Mobile" ? "" : " h-[7%] ")}>
         <div className={" " + data?.theme?.primary + (data?.viewport === "Mobile" ? " z-10 w-[88%] " : " w-[86%] ")}>
-          <InputBox id="comment" maxlength={200} placeholder="Add a comment..." minlength={1} />
+          <InputBox id="commentInput" maxlength={200} placeholder="Add a comment..." minlength={1} />
         </div>
-        <button className="z-10 text-blue-500" onClick={() => (document.getElementById("comment") as HTMLInputElement).value.length > 0 && comment.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "", text: (document.getElementById("comment") as HTMLInputElement).value })}>
+        <button
+          className="z-10 cursor-pointer text-blue-500"
+          onClick={() => {
+            console.log((document.getElementById("commentInput") as HTMLInputElement).value);
+            (document.getElementById("commentInput") as HTMLInputElement).value.length > 0 && comment.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "", text: (document.getElementById("commentInput") as HTMLInputElement).value });
+          }}
+        >
           Post
         </button>
       </div>
@@ -296,8 +303,8 @@ const Post = () => {
         </Head>
         <main>
           <SignInNotification />
-          <div className={"flex h-screen w-screen select-none items-center justify-center " + data?.theme?.secondary + (data?.viewport == "Web" && session && " pl-72 ") + (data?.viewport == "Tab" && session && " pl-16 ")}>
-            <div className={"flex h-[90%] w-[90%] items-center justify-center px-2 sm:h-fit sm:w-fit " + (data?.viewport == "Mobile" && session && " flex-col ")}>
+          <div className={"flex h-fit min-h-screen select-none items-center justify-center " + data?.theme?.secondary + (data?.viewport == "Web" && session && " pl-72 ") + (data?.viewport == "Tab" && session && " pl-16 ")}>
+            <div className={"flex h-fit w-[90%] items-center justify-center sm:h-fit sm:w-fit " + (data?.viewport == "Mobile" && session && " flex-col ") + (showComments && " my-24 ")}>
               {deleteMenu && <OptionMenu buttonPositive="Delete" buttonNegative="Cancel" buttonLoading={deletePost.isLoading} description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ userid: post.data?.user.id || "", postid: post.data?.id || "", index: post.data?.index || 0 })} onClickNegative={() => setDeleteMenu(false)} />}
               {likesMenu && <ListOfUsers users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" userHandle={data?.user?.data.handle} userID={data?.user?.data.id} pageID={"0"} />}
               <MobileHeader />
