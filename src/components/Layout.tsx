@@ -18,12 +18,15 @@ import MobileSearch from "./MobileSearch";
 import { DataContext } from "../pages/_app";
 import { useContext } from "react";
 import Notification from "./Notification";
+import MobileNotification from "./MobileNotification";
 
 interface itemType {
   create: boolean;
   setCreate: (params: any) => any;
   search: boolean;
   setSearch: (params: any) => any;
+  mobileNotification: boolean;
+  setMobileNotification: (params: any) => any;
   notification: boolean;
   setNotification: (params: any) => any;
   more: boolean;
@@ -88,13 +91,17 @@ const Layout = (props: itemType) => {
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} Text={"Create"} ID={"Create"} onClickHandler={() => props.setCreate(!props.create)} active={props.create} />
                 <NavBarItem Icon={data?.user?.data.image} Text={"Profile"} ID={"Profile"} onClickHandler={() => onClickHandler("/profile/" + data?.user?.data.handle)} active={Boolean(router.query.profile === data?.user?.data.handle && !props.create && !props.search && !props.more)} />
               </div>
-              <div id="Header-Mobile-View-Items" className={"top-0 absolute z-50 grid h-16 w-screen grid-flow-col place-items-center border-b border-zinc-600 " + data?.theme?.primary + (data?.viewport != "Mobile" && " hidden ") + (router.pathname !== "/" && " hidden ")}>
+              <div id="Header-Mobile-View-Items" className={"absolute top-0 z-50 grid h-16 w-screen grid-flow-col place-items-center border-b border-zinc-600 " + data?.theme?.primary + (data?.viewport != "Mobile" && " hidden ") + (router.pathname !== "/" && " hidden ")}>
                 <h1 className="ml-3 flex text-2xl font-normal">
                   C<span className="bg-gradient-to-br from-red-300 via-pink-300 to-orange-100 bg-clip-text text-transparent">G</span>
                 </h1>
-
                 <MobileSearch />
-                <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} />
+                <div id="Sidebar-More" className={" group " + (data?.viewport !== "Mobile" && " hidden ")}>
+                  <button type="button" aria-haspopup="true">
+                    <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} onClickHandler={() => props.setMobileNotification(true)} active={props.mobileNotification} />
+                  </button>
+                  {props.mobileNotification && <MobileNotification notification={props.mobileNotification} setNotification={props.setMobileNotification} />}
+                </div>
               </div>
               <div id="Footer-Mobile-View-Items" className={"fixed bottom-0 z-50 mt-[4px] grid h-12 w-screen grid-flow-col place-items-center border-t border-zinc-600 " + data?.theme?.primary + (data?.viewport != "Mobile" && " hidden ")}>
                 <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} ID={"M-Home"} onClickHandler={() => onClickHandler("/")} active={Boolean(router.pathname == "/" && !props.create && !props.search && !props.more)} />

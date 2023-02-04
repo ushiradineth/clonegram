@@ -9,13 +9,13 @@ interface itemType {
   setNotification: (params: any) => any;
 }
 
-const Notification = (props: itemType) => {
+const MobileNotification = (props: itemType) => {
   const router = useRouter();
   const data = useContext(DataContext);
 
   const NoNotifications = (props: { text: string }) => {
     return (
-      <div className={"flex flex-col items-center justify-center rounded-2xl w-full p-8 " + data?.theme?.secondary}>
+      <div className={"flex w-full flex-col items-center justify-center rounded-2xl p-8 " + data?.theme?.secondary}>
         <div className="flex flex-col items-center justify-center p-4">
           <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-4">
             <AiOutlineHeart className="scale-x-[-6] scale-y-[6] transform" />
@@ -45,28 +45,24 @@ const Notification = (props: itemType) => {
   };
 
   return (
-    <>
-      <div className={"fixed top-0 left-16 z-30 h-screen rounded-r-xl transition-all duration-1000 " + (data?.theme?.type === "dark" ? " shadow-[5px_0px_50px_rgba(255,255,255,0.1)] " : " shadow-[25px_0px_50px_rgba(0,0,0,0.2)] ") + (props.notification ? " z-10 w-[350px] border-l-2 " : " z-0 w-0 ") + (data?.viewport == "Mobile" && " hidden ") + data?.theme?.secondary}>
-        <div className={"rounded-r-xl transition-all " + (props.notification ? " opacity-100 " : " opacity-0 ") + data?.theme?.secondary}>
-          <div className={"h-screen transition-all duration-200"}>
-            <div className="grid w-full items-center border-b-[1px] font-semibold">
-              <p className="my-4 ml-4 text-xl">Notifications</p>
-            </div>
-            <div className="flex flex-col items-start justify-center">
-              {(data?.user?.data.notifications.length || 0) > 0 ? (
-                data?.user?.data.notifications
-                  .slice(0)
-                  .reverse()
-                  .map((element, index) => <NotificationContainer element={element} index={index} key={index} setNotification={props.setNotification} />)
-              ) : (
-                <NoNotifications text={"No notifications yet"} />
-              )}
-            </div>
-          </div>
+    <div className={"invisible fixed top-16 right-2 z-50 h-fit w-fit origin-top-right scale-95 transform rounded-lg py-1 text-sm opacity-0 transition-all duration-300 group-focus-within:visible group-focus-within:scale-100 group-focus-within:opacity-100 " + data?.theme?.primary}>
+      <div className={"rounded-r-xl transition-all " + (props.notification ? " opacity-100 " : " opacity-0 ")}>
+        <div className="grid w-full items-center border-b-[1px] font-semibold">
+          <p className="my-4 ml-4 text-xl">Notifications</p>
+        </div>
+        <div className="flex h-fit max-h-96 flex-col items-start justify-center overflow-auto">
+          {(data?.user?.data.notifications.length || 0) > 0 ? (
+            data?.user?.data.notifications
+              .slice(0)
+              .reverse()
+              .map((element, index) => <NotificationContainer element={element} index={index} key={index} setNotification={props.setNotification} />)
+          ) : (
+            <NoNotifications text={"No notifications yet"} />
+          )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default Notification;
+export default MobileNotification;

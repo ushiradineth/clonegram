@@ -23,6 +23,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
   const [user, setUser] = useState(null);
   const [search, setSearch] = useState(false);
   const [notification, setNotification] = useState(false);
+  const [mobileNotification, setMobileNotification] = useState(false);
   const [lsTheme, setlsTheme] = useState("");
   const [hideSideComponents, setHideSideComponents] = useState(false);
   const [theme, setTheme] = useState({ type: "", primary: "", secondary: "", tertiary: "" });
@@ -124,7 +125,7 @@ const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps: { s
           <>
             <GetUser user={user} setUser={setUser} theme={theme} status={status} setStatus={setStatus} enabled={false} />
             <DataContext.Provider value={value}>
-              <Layout create={create} setCreate={setCreate} search={search} setSearch={setSearch} notification={notification} setNotification={setNotification} more={more} setMore={setMore} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} hideSideComponents={hideSideComponents} setHideSideComponents={setHideSideComponents} />
+              <Layout create={create} setMobileNotification={setMobileNotification} mobileNotification={mobileNotification} setCreate={setCreate} search={search} setSearch={setSearch} notification={notification} setNotification={setNotification} more={more} setMore={setMore} setTheme={setTheme} lsTheme={lsTheme} setlsTheme={setlsTheme} hideSideComponents={hideSideComponents} setHideSideComponents={setHideSideComponents} />
               <Component {...pageProps} />
               <ToastContainer />
             </DataContext.Provider>
