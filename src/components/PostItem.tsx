@@ -18,6 +18,7 @@ import UnAuthedAlert from "./UnAuthedAlert";
 import moment from "moment";
 import { TbMessageCircle2 } from "react-icons/tb";
 import { IoPaperPlaneOutline } from "react-icons/io5";
+import { type Theme, toast } from "react-toastify";
 
 const PostItem = (props: { postID?: string; post?: any }) => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -85,7 +86,19 @@ const PostItem = (props: { postID?: string; post?: any }) => {
           <div className={"mt-4 ml-3 grid h-fit w-fit scale-[1.6] grid-flow-col gap-2 child-hover:text-zinc-600 " + (post.data?.user.handle === data?.user?.data.handle ? " pl-5 " : " pl-4 ")}>
             {likePost.isLoading || unlikePost.isLoading || post.isFetching ? <Spinner SpinnerOnly={true} size={4} /> : like ? <AiFillHeart className="cursor-pointer text-red-500" onClick={() => unlikePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <AiOutlineHeart className="cursor-pointer" onClick={() => likePost.mutate({ userid: data?.user?.data.id || "", postOwnerid: post.data?.userId || "", postid: post.data?.id || "" })} />}
             <TbMessageCircle2 className={"cursor-pointer"} onClick={() => router.push("/post/" + post.data.id)} />
-            <IoPaperPlaneOutline className="cursor-pointer" />
+            <IoPaperPlaneOutline
+              className="cursor-pointer"
+              onClick={() => {
+                navigator.clipboard
+                  .writeText(window.location.href + "post/" + post.data.id)
+                  .then(() => {
+                    toast("Link Copied", { hideProgressBar: true, autoClose: 2000, type: "success", theme: (data?.theme?.type as Theme) || ("dark" as Theme) });
+                  })
+                  .catch(() => {
+                    toast("Failed to copy the Link", { hideProgressBar: true, autoClose: 2000, type: "error", theme: (data?.theme?.type as Theme) || ("dark" as Theme) });
+                  });
+              }}
+            />
             {post.data?.user.handle === data?.user?.data.handle && <MdOutlineDeleteOutline className="cursor-pointer" onClick={() => setDeleteMenu(true)} />}
           </div>
         </div>
@@ -145,7 +158,7 @@ const PostItem = (props: { postID?: string; post?: any }) => {
             <link rel="icon" href="/favicon.ico" />
           </Head>
         )}
-        <main className={"flex items-center justify-center rounded-xl "  + data?.theme?.primary}>
+        <main className={"flex items-center justify-center rounded-xl " + data?.theme?.primary}>
           {status === "unauthenticated" && <UnAuthedAlert />}
           <div id="post" className={"flex h-[400px] w-screen select-none flex-col items-center justify-center rounded-2xl border-2 border-zinc-500 sm:w-[400px] md:h-[700px] md:w-[700px] " + (props.post ? " rounded-xl md:h-fit " : " h-screen ")}>
             {deleteMenu && <OptionMenu buttonPositive={"Delete"} buttonLoading={deletePost.isLoading} buttonNegative="Cancel" description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ userid: post.data.user.id, postid: post.data.id, index: post.data?.index })} onClickNegative={() => setDeleteMenu(false)} />}

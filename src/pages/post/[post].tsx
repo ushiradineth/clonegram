@@ -20,6 +20,7 @@ import OptionMenu from "../../components/OptionMenu";
 import ListOfUsers from "../../components/ListOfUsers";
 import UnAuthedAlert from "../../components/UnAuthedAlert";
 import moment from "moment";
+import { type Theme, toast } from "react-toastify";
 
 const Post = () => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -183,7 +184,19 @@ const Post = () => {
           <div className={"mt-4 grid h-fit w-fit scale-[1.6] grid-flow-col gap-2 child-hover:text-zinc-600 " + (post.data?.user.handle === data?.user?.data.handle ? (data?.viewport !== "Mobile" ? " pl-6 " : "  pl-7 ") : data?.viewport !== "Mobile" ? " pl-4 " : "  pl-6 ")}>
             {likePost.isLoading || unlikePost.isLoading || post.isFetching ? <Spinner SpinnerOnly={true} size={4} /> : like ? <AiFillHeart className="cursor-pointer text-red-500" onClick={() => unlikePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <AiOutlineHeart className="cursor-pointer" onClick={() => likePost.mutate({ userid: data?.user?.data.id || "", postOwnerid: post.data?.userId || "", postid: post.data?.id || "" })} />}
             <TbMessageCircle2 fill={showComments ? "white" : "none"} className={"cursor-pointer " + (data?.viewport !== "Mobile" ? " hidden " : "")} onClick={() => setShowComments(!showComments)} />
-            <IoPaperPlaneOutline className="cursor-pointer" />
+            <IoPaperPlaneOutline
+              className="cursor-pointer"
+              onClick={() => {
+                navigator.clipboard
+                  .writeText(window.location.href)
+                  .then(() => {
+                    toast("Link Copied", { hideProgressBar: true, autoClose: 2000, type: "success", theme: (data?.theme?.type as Theme) || ("dark" as Theme) });
+                  })
+                  .catch(() => {
+                    toast("Failed to copy the Link", { hideProgressBar: true, autoClose: 2000, type: "error", theme: (data?.theme?.type as Theme) || ("dark" as Theme) });
+                  });
+              }}
+            />
             {post.data?.user.handle === data?.user?.data.handle && <MdOutlineDeleteOutline onClick={() => setDeleteMenu(true)} />}
           </div>
           <div className="mt-4 flex h-fit w-full items-center justify-end ">
