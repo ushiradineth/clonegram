@@ -186,7 +186,7 @@ const Post = () => {
 
   const InteractionBar = () => {
     return (
-      <>
+      <div className="h-fit">
         <div className="grid grid-flow-col place-items-start">
           <div className={"mt-4 grid h-fit w-fit scale-[1.6] grid-flow-col gap-2 child-hover:text-zinc-600 " + (post.data?.user.handle === data?.user?.data.handle ? (data?.viewport !== "Mobile" ? " pl-6 " : "  pl-7 ") : data?.viewport !== "Mobile" ? " pl-4 " : "  pl-6 ")}>
             {likePost.isLoading || unlikePost.isLoading || post.isFetching ? <Spinner SpinnerOnly={true} size={4} /> : like ? <AiFillHeart className="cursor-pointer text-red-500" onClick={() => unlikePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <AiOutlineHeart className="cursor-pointer" onClick={() => likePost.mutate({ userid: data?.user?.data.id || "", postOwnerid: post.data?.userId || "", postid: post.data?.id || "" })} />}
@@ -210,7 +210,7 @@ const Post = () => {
             <div className={"mr-3 hover:text-zinc-600"}>{save ? <BsBookmarkFill fill="white" className="scale-[1.6] cursor-pointer " onClick={() => unsavePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <BsBookmark className="scale-[1.6] cursor-pointer " onClick={() => savePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} />}</div>
           </div>
         </div>
-        <div className="pb-3 pt-2">
+        <div className="my-3">
           {(post.data?.likes.length || 0) > 0 && (
             <div className="mt-1 cursor-pointer pl-3 text-xs" onClick={() => setLikesMenu(true)}>
               {(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "Likes" : "Like")}
@@ -218,7 +218,7 @@ const Post = () => {
           )}
           <p className="mt-2 pl-3 font-mono text-xs uppercase text-zinc-500">{moment(post.data?.createdAt).fromNow()}</p> <p className="pl-3 font-mono text-xs text-zinc-500">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
         </div>
-      </>
+      </div>
     );
   };
 
@@ -233,7 +233,7 @@ const Post = () => {
   const MobileFooter = () => {
     return (
       <div className={"flex h-fit w-[90%] flex-col items-center justify-start rounded-b-2xl border-t border-zinc-600 sm:w-full " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.primary}>
-        <div className={"mb-3 grid w-full border-zinc-600 " + (showComments ? " h-[90px]  border-b " : "  h-[80px] ")}>
+        <div className={"h-fit grid w-full border-zinc-600 " + (showComments && " border-b ")}>
           <InteractionBar />
         </div>
         {showComments && (
@@ -306,7 +306,7 @@ const Post = () => {
           <div className={"flex h-fit min-h-screen select-none items-center justify-center " + data?.theme?.secondary + (data?.viewport == "Web" && session && " pl-72 ") + (data?.viewport == "Tab" && session && " pl-16 ")}>
             <div className={"flex h-fit w-[90%] items-center justify-center sm:h-fit sm:w-fit " + (data?.viewport == "Mobile" && session && " flex-col ") + (showComments && " my-24 ")}>
               {deleteMenu && <OptionMenu buttonPositive="Delete" buttonNegative="Cancel" buttonLoading={deletePost.isLoading} description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ userid: post.data?.user.id || "", postid: post.data?.id || "", index: post.data?.index || 0 })} onClickNegative={() => setDeleteMenu(false)} />}
-              {likesMenu && <ListOfUsers users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" userHandle={data?.user?.data.handle} userID={data?.user?.data.id} pageID={"0"} />}
+              {likesMenu && <ListOfUsers users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" pageID={"0"} />}
               <MobileHeader />
               <PostView />
               <WebSideView />
