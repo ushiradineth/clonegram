@@ -28,8 +28,8 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={"flex min-h-screen flex-col items-center justify-center py-8 " + data?.theme?.primary + (data?.viewport == "Web" && session && " ml-72 ") + (data?.viewport == "Tab" && session && " ml-16 ")}>
-        <div className="mx-16 pt-12 pb-4">
+      <main className={"flex min-h-screen flex-col items-center justify-center py-8 " + data?.theme?.secondary + (data?.viewport == "Web" && session && " ml-72 ") + (data?.viewport == "Tab" && session && " ml-16 ")}>
+        <div className="mx-16 pt-12 pb-4 grid gap-4">
           {posts.data?.q1.map((post: Post, index: number) => {
             return (
               <div key={index}>
