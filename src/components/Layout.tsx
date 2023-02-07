@@ -85,13 +85,13 @@ const Layout = (props: itemType) => {
               <div id="Sidebar-Web-View-Items" className={"mt-5 ml-2 grid-flow-row place-items-start gap-5 " + (data?.viewport == "Mobile" ? " hidden " : " grid ")}>
                 <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} Text={"Home"} ID={"Home"} onClickHandler={() => onClickHandler("/")} active={Boolean(router.pathname == "/" && !props.create && !props.search && !props.more && !props.notification)} />
                 <NavBarItem Icon={<BiSearchAlt2 />} IconOnClick={<FaSearch />} Text={"Search"} ID={"Search"} onClickHandler={() => props.setSearch(!props.search)} active={props.search} />
-                <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} Text={"Explore"} ID={"Explore"} />
+                <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} Text={"Explore"} ID={"Explore"} onClickHandler={() => onClickHandler("/explore")} active={Boolean(router.pathname == "/explore" && !props.create && !props.search && !props.more && !props.notification)} />
                 <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} Text={"Messages"} ID={"Messages"} />
                 <NavBarItem Icon={<AiOutlineHeart />} IconOnClick={<AiFillHeart />} Text={"Notifications"} ID={"Notifications"} onClickHandler={() => props.setNotification(!props.notification)} active={props.notification} />
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} Text={"Create"} ID={"Create"} onClickHandler={() => props.setCreate(!props.create)} active={props.create} />
                 <NavBarItem Icon={data?.user?.data.image} Text={"Profile"} ID={"Profile"} onClickHandler={() => onClickHandler("/profile/" + data?.user?.data.handle)} active={Boolean(router.query.profile === data?.user?.data.handle && !props.create && !props.search && !props.more)} />
               </div>
-              <div id="Header-Mobile-View-Items" className={"absolute top-0 z-50 grid h-16 w-screen grid-flow-col place-items-center border-b border-zinc-600 " + data?.theme?.primary + (data?.viewport != "Mobile" && " hidden ") + (router.pathname !== "/" && " hidden ")}>
+              <div id="Header-Mobile-View-Items" className={"absolute top-0 z-50 grid h-16 w-screen grid-flow-col place-items-center border-b border-zinc-600 " + data?.theme?.primary + (data?.viewport != "Mobile" && " hidden ") + (!["/", "/explore"].includes(router.pathname) && " hidden ")}>
                 <h1 className="ml-3 flex text-2xl font-normal">
                   C<span className="bg-gradient-to-br from-red-300 via-pink-300 to-orange-100 bg-clip-text text-transparent">G</span>
                 </h1>
@@ -105,7 +105,7 @@ const Layout = (props: itemType) => {
               </div>
               <div id="Footer-Mobile-View-Items" className={"fixed bottom-0 z-50 mt-[4px] grid h-12 w-screen grid-flow-col place-items-center border-t border-zinc-600 " + data?.theme?.primary + (data?.viewport != "Mobile" && " hidden ")}>
                 <NavBarItem Icon={<AiOutlineHome />} IconOnClick={<AiFillHome />} ID={"M-Home"} onClickHandler={() => onClickHandler("/")} active={Boolean(router.pathname == "/" && !props.create && !props.search && !props.more)} />
-                <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} ID={"M-Explore"} />
+                <NavBarItem Icon={<MdOutlineExplore />} IconOnClick={<MdExplore />} ID={"M-Explore"} onClickHandler={() => onClickHandler("/explore")} active={Boolean(router.pathname == "/explore" && !props.create && !props.search && !props.more && !props.notification)} />
                 <NavBarItem Icon={<RiAddBoxLine />} IconOnClick={<RiAddBoxFill />} ID={"M-Create"} onClickHandler={() => props.setCreate(!props.create)} active={props.create} />
                 <NavBarItem Icon={<RiMessage3Line />} IconOnClick={<RiMessage3Fill />} ID={"M-Messages"} />
                 <NavBarItem Icon={data?.user?.data.image} ID={"M-Profile"} onClickHandler={() => onClickHandler("/profile/" + data?.user?.data.handle)} active={Boolean(router.query.profile === data?.user?.data.handle && !props.create && !props.search && !props.more)} />
