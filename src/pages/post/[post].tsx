@@ -21,7 +21,7 @@ import ListOfUsers from "../../components/ListOfUsers";
 import UnAuthedAlert from "../../components/UnAuthedAlert";
 import moment from "moment";
 import { type Theme, toast } from "react-toastify";
-import { Comment, User } from "@prisma/client";
+import { type Comment, type User } from "@prisma/client";
 
 const Post = () => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -32,7 +32,7 @@ const Post = () => {
   const [deleteCommentMenu, setDeleteCommentMenu] = useState(false);
   const [deleteCommentID, setDeleteCommentID] = useState("");
   const [likesMenu, setLikesMenu] = useState(false);
-  const [likeUsers, setLikeUsers] = useState();
+  const [likeUsers, setLikeUsers] = useState<User[]>();
 
   const router = useRouter();
   const postID = router.query.post as string;
@@ -150,7 +150,7 @@ const Post = () => {
     );
   };
 
-  const Comment = (props: { comment: Comment & { user: User } }) => {
+  const Comment = (props: { comment: Comment & { user: User } & { likes: User[] } }) => {
     return (
       <div className="flex flex-col justify-center gap-2 p-4" key={props.comment.user.handle + props.comment.text}>
         <div className="flex items-center gap-3">
@@ -163,7 +163,7 @@ const Post = () => {
         </div>
         <div className="flex flex-col gap-2">
           <span className="break-all">{props.comment.text}</span>
-          <div className="w-fit gap-2 grid-flow-col flex items-center font-mono text-xs text-zinc-500">
+          <div className="flex w-fit grid-flow-col items-center gap-2 font-mono text-xs text-zinc-500">
             {likeComment.isLoading || unlikeComment.isLoading || post.isFetching ? <Spinner SpinnerOnly={true} size={4} /> : props.comment.likes.find((e: { id: string }) => e.id === data?.user?.data.id) ? <AiFillHeart className="cursor-pointer text-xl text-red-500" onClick={() => unlikeComment.mutate({ userid: data?.user?.data.id || "", commentid: props.comment.id })} /> : <AiOutlineHeart className="cursor-pointer text-xl" onClick={() => likeComment.mutate({ userid: data?.user?.data.id || "", commentid: props.comment.id })} />}
             {props.comment.user.handle === data?.user?.data.handle && (
               <MdOutlineDeleteOutline

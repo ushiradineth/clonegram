@@ -9,7 +9,6 @@ import { z } from "zod";
 import { TbBrandNextjs, TbBrandTailwind } from "react-icons/tb";
 import { RxVercelLogo } from "react-icons/rx";
 import { IoPrismSharp } from "react-icons/io5";
-import { RiSingleQuotesL } from "react-icons/ri";
 import { BsLightningCharge } from "react-icons/bs";
 
 const Auth = () => {
@@ -91,19 +90,19 @@ const Auth = () => {
     );
   };
 
-  const Objects = () => {
-    return (
-      <div>
-        <div className="animate-float-fastest">
-          <div className="absolute inset-auto h-60 w-60 -translate-x-8 translate-y-16 scale-50 rounded-full bg-gradient-to-br from-red-300 via-pink-400 to-purple-200 sm:translate-x-20 sm:translate-y-28 sm:scale-100"></div>
-        </div>
+  // const Objects = () => {
+  //   return (
+  //     <div>
+  //       <div className="animate-float-fastest">
+  //         <div className="absolute inset-auto h-60 w-60 -translate-x-8 translate-y-16 scale-50 rounded-full bg-gradient-to-br from-red-300 via-pink-400 to-purple-200 sm:translate-x-20 sm:translate-y-28 sm:scale-100"></div>
+  //       </div>
 
-        <div className="scale-50 animate-float-fast sm:scale-100">
-          <div className="absolute inset-auto h-60 w-60 -translate-x-56 -translate-y-16 scale-50 rounded-full bg-gradient-to-tr from-red-300 via-pink-300 to-orange-100 sm:-translate-x-80 sm:-translate-y-28 sm:scale-100"></div>
-        </div>
-      </div>
-    );
-  };
+  //       <div className="scale-50 animate-float-fast sm:scale-100">
+  //         <div className="absolute inset-auto h-60 w-60 -translate-x-56 -translate-y-16 scale-50 rounded-full bg-gradient-to-tr from-red-300 via-pink-300 to-orange-100 sm:-translate-x-80 sm:-translate-y-28 sm:scale-100"></div>
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   return (
     <>
