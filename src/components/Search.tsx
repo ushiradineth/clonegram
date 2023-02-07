@@ -63,16 +63,22 @@ const Search = (props: itemType) => {
   }
 
   const removeRecentSearch = (user: { userID: string; userName: string; userImage: string; userHandle: any }) => {
-    const tempRecentSearches = recentSearches;
-
-    tempRecentSearches.forEach((element, index) => {
-      if (element.userID === user.userID) {
-        tempRecentSearches.splice(index, 1);
-      }
-    });
-
-    localStorage.setItem("clonegram.recentSearch", JSON.stringify(tempRecentSearches));
-    setRecentSearches(tempRecentSearches);
+    recentSearches.splice(recentSearches.findIndex(e => e.userID === user.userID), 1);
+    localStorage.setItem("clonegram.recentSearch", JSON.stringify(recentSearches));
+    setRecentSearches(recentSearches);
+  };
+  
+  const NoResults = (props: { text: string }) => {
+    return (
+      <div className={"flex w-full flex-col items-center justify-center rounded-2xl p-8 " + data?.theme?.secondary}>
+        <div className="flex flex-col items-center justify-center p-4">
+          <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-4">
+            <BiUserPlus className="scale-x-[-6] scale-y-[6] transform" />
+          </div>
+          <div className="text-sm">{props.text}</div>
+        </div>
+      </div>
+    );
   };
 
   useEffect(() => {
@@ -95,23 +101,10 @@ const Search = (props: itemType) => {
       oldRecentSearch.forEach((element: any) => {
         tempRecentSearches.push(element);
       });
-
-      setRecentSearches(tempRecentSearches);
     }
-  }, []);
 
-  const NoResults = (props: { text: string }) => {
-    return (
-      <div className={"flex w-full flex-col items-center justify-center rounded-2xl p-8 " + data?.theme?.secondary}>
-        <div className="flex flex-col items-center justify-center p-4">
-          <div className="mb-4 grid h-32 w-32 place-items-center rounded-full border-4">
-            <BiUserPlus className="scale-x-[-6] scale-y-[6] transform" />
-          </div>
-          <div className="text-sm">{props.text}</div>
-        </div>
-      </div>
-    );
-  };
+    setRecentSearches(tempRecentSearches);
+  }, []);
 
   return (
     <>
