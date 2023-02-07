@@ -97,6 +97,18 @@ const Post = () => {
     },
   });
 
+  const likeComment = trpc.post.likecomment.useMutation({
+    onSuccess: () => {
+      post.refetch();
+    },
+  });
+
+  const unlikeComment = trpc.post.unlikecomment.useMutation({
+    onSuccess: () => {
+      post.refetch();
+    },
+  });
+
   useEffect(() => {
     post.data?.likes.forEach((e) => e.id === data?.user?.data.id && setLike(true));
     post.data?.saved.forEach((e) => e.id === data?.user?.data.id && setSave(true));
@@ -151,6 +163,7 @@ const Post = () => {
         <div className="flex flex-col gap-2">
           <span className="break-all">{props.comment.text}</span>
           <div className="grid w-full grid-flow-col place-items-center font-mono text-xs text-zinc-500">
+            {likeComment.isLoading || unlikeComment.isLoading ? <Spinner SpinnerOnly={true} size={4} /> : props.comment. ? <AiFillHeart className="cursor-pointer text-red-500" onClick={() => unlikePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <AiOutlineHeart className="cursor-pointer" onClick={() => likePost.mutate({ userid: data?.user?.data.id || "", postOwnerid: post.data?.userId || "", postid: post.data?.id || "" })} />}
             {props.comment.user.handle === data?.user?.data.handle && (
               <MdOutlineDeleteOutline
                 className="cursor-pointer text-xl"
