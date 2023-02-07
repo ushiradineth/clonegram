@@ -21,6 +21,7 @@ import ListOfUsers from "../../components/ListOfUsers";
 import UnAuthedAlert from "../../components/UnAuthedAlert";
 import moment from "moment";
 import { type Theme, toast } from "react-toastify";
+import { Comment, User } from "@prisma/client";
 
 const Post = () => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -28,6 +29,7 @@ const Post = () => {
   const [like, setLike] = useState<boolean | null>(null);
   const [save, setSave] = useState<boolean | null>(null);
   const [deleteMenu, setDeleteMenu] = useState(false);
+  const [deleteCommentMenu, setDeleteCommentMenu] = useState(false);
   const [likesMenu, setLikesMenu] = useState(false);
 
   const router = useRouter();
@@ -85,6 +87,12 @@ const Post = () => {
     },
   });
 
+  const deleteComment = trpc.post.deleteComment.useMutation({
+    onSuccess: () => {
+      post.refetch();
+    },
+  });
+
   useEffect(() => {
     post.data?.likes.forEach((e) => e.id === data?.user?.data.id && setLike(true));
     post.data?.saved.forEach((e) => e.id === data?.user?.data.id && setSave(true));
@@ -125,19 +133,20 @@ const Post = () => {
     );
   };
 
-  const Comment = (props: { text: string; handle: string; image: string }) => {
+  const Comment = (props: { comment: Comment & { user: User } }) => {
     return (
-      <div className="flex flex-col justify-center gap-2 p-4" key={props.handle + props.text}>
+      <div className="flex flex-col justify-center gap-2 p-4" key={props.comment.user.handle + props.comment.text}>
         <div className="flex items-center gap-2">
-          <Link passHref href={"/profile/" + props.handle} onClick={(e) => e.preventDefault()}>
-            <Image className={"h-fit w-12 cursor-pointer rounded-full"} onClick={() => router.push("/profile/" + props.handle)} src={props.image} height={160} width={160} alt="Profile Picture" priority />
+          <Link passHref href={"/profile/" + props.comment.user.handle} onClick={(e) => e.preventDefault()}>
+            <Image className={"h-fit w-12 cursor-pointer rounded-full"} onClick={() => router.push("/profile/" + props.comment.user.handle)} src={props.comment.user.image || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} height={160} width={160} alt="Profile Picture" priority />
           </Link>
-          <Link passHref href={"/profile/" + props.handle} onClick={(e) => e.preventDefault()} className="mr-2 h-fit w-56 truncate font-semibold">
-            {props.handle}
+          <Link passHref href={"/profile/" + props.comment.user.handle} onClick={(e) => e.preventDefault()} className="mr-2 h-fit w-56 truncate font-semibold">
+            {props.comment.user.handle}
           </Link>
         </div>
-        <div className="flex gap-2">
-          <span className="break-all">{props.text}</span>
+        <div className="flex flex-col gap-2">
+          <span className="break-all">AasdasdasdasdasdAasdasdasdasdasdAasdasdasdasdasdAasdasdasdasdasdAasdasdasdasdasdAasdasdasdasdasdAasdasdasdasdasdAasdasdasdasdasdAasdasdasdasdasdAasdasdasdasdasdAasdasdasdasdasdAasdasdasdasdasdAasdasdasdasdasdAasdasdasdasdasd</span>
+          {props.comment.user.handle === data?.user?.data.handle && <MdOutlineDeleteOutline className="cursor-pointer" onClick={() => setDeleteMenu(true)} />}
         </div>
       </div>
     );
@@ -151,13 +160,7 @@ const Post = () => {
           post.data.comments
             .slice(0)
             .reverse()
-            .map((element, index) => {
-              return (
-                <>
-                  <Comment key={index} text={element.text || ""} handle={element.user.handle} image={element.user.image || "https://hmgdlvdpchcrxwiqomud.supabase.co/storage/v1/object/public/clonegram/Assets/image-placeholder.png"} />
-                </>
-              );
-            })
+            .map((element, index) => <Comment key={index} comment={element} />)
         ) : (
           <p className="flex w-full items-center justify-center p-4">No Comments Yet</p>
         )}
@@ -171,13 +174,7 @@ const Post = () => {
         <div className={" " + data?.theme?.primary + (data?.viewport === "Mobile" ? " z-10 w-[88%] " : " w-[86%] ")}>
           <InputBox id="commentInput" maxlength={200} placeholder="Add a comment..." minlength={1} />
         </div>
-        <button
-          className="z-10 cursor-pointer text-blue-500"
-          onClick={() => {
-            console.log((document.getElementById("commentInput") as HTMLInputElement).value);
-            (document.getElementById("commentInput") as HTMLInputElement).value.length > 0 && comment.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "", text: (document.getElementById("commentInput") as HTMLInputElement).value });
-          }}
-        >
+        <button className="z-10 cursor-pointer text-blue-500" onClick={() => (document.getElementById("commentInput") as HTMLInputElement).value.length > 0 && comment.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "", text: (document.getElementById("commentInput") as HTMLInputElement).value })}>
           Post
         </button>
       </div>
@@ -233,7 +230,7 @@ const Post = () => {
   const MobileFooter = () => {
     return (
       <div className={"flex h-fit w-[90%] flex-col items-center justify-start rounded-b-2xl border-t border-zinc-600 sm:w-full " + (data?.viewport !== "Mobile" ? " hidden " : "") + data?.theme?.primary}>
-        <div className={"h-fit grid w-full border-zinc-600 " + (showComments && " border-b ")}>
+        <div className={"grid h-fit w-full border-zinc-600 " + (showComments && " border-b ")}>
           <InteractionBar />
         </div>
         {showComments && (
@@ -306,6 +303,7 @@ const Post = () => {
           <div className={"flex h-fit min-h-screen select-none items-center justify-center " + data?.theme?.secondary + (data?.viewport == "Web" && session && " pl-72 ") + (data?.viewport == "Tab" && session && " pl-16 ")}>
             <div className={"flex h-fit w-[90%] items-center justify-center sm:h-fit sm:w-fit " + (data?.viewport == "Mobile" && session && " flex-col ") + (showComments && " my-24 ")}>
               {deleteMenu && <OptionMenu buttonPositive="Delete" buttonNegative="Cancel" buttonLoading={deletePost.isLoading} description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ userid: post.data?.user.id || "", postid: post.data?.id || "", index: post.data?.index || 0 })} onClickNegative={() => setDeleteMenu(false)} />}
+              {deleteCommentMenu && <OptionMenu buttonPositive="Delete" buttonNegative="Cancel" buttonLoading={deleteComment.isLoading} description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ userid: post.data?.user.id || "", postid: post.data?.id || "", index: post.data?.index || 0 })} onClickNegative={() => setDeleteMenu(false)} />}
               {likesMenu && <ListOfUsers users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" />}
               <MobileHeader />
               <PostView />
