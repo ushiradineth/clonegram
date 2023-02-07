@@ -162,6 +162,7 @@ export const postRouter = router({
         comments: {
           include: {
             user: true,
+            likes: true
           },
         },
         saved: true,
