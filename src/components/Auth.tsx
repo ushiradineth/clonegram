@@ -79,7 +79,7 @@ const Auth = () => {
 
   const Links = () => {
     return (
-      <div className="fixed bottom-0 grid h-fit w-fit grid-flow-col place-items-center gap-4 p-4 font-semibold text-white">
+      <div className="grid h-fit w-fit grid-flow-col place-items-center gap-4 p-4 font-semibold text-white">
         <Link href={"/about"}>About</Link>
         <Link href={"/privacy"}>Privacy</Link>
       </div>
@@ -109,11 +109,25 @@ const Auth = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className=" grid h-screen w-screen select-none bg-[#171717]">
-        <div className={"grid place-content-center place-items-center gap-4"}>
-          <Objects />
-          <div className="z-10 flex h-full w-full flex-col items-center justify-center rounded-lg shadow-2xl backdrop-blur-2xl">
-            <div className="grid h-fit w-fit grid-flow-col place-items-center gap-2 rounded-lg">
+      <main className="flex select-none flex-col sm:flex-row">
+        <div className="grid w-screen h-screen place-items-center bg-[#171717] gap-2">
+          <div className="p-5 text-white text-2xl">
+            <p className="text-4xl">
+              Welcome to Clone<span className="bg-gradient-to-br from-red-300 via-pink-300 to-orange-100 bg-clip-text text-transparent">gram</span>
+            </p>
+            <p>
+              An Instagram-like app made for learning purposes by{" "}
+              <Link className="font-semibold" href={"https://www.github.com/ushiradineth"}>
+                Ushira Dineth
+              </Link>
+            </p>
+            <p>Built using Next12</p>
+          </div>
+        </div>
+        <div className={"grid w-screen h-screen place-content-center place-items-center gap-4  bg-[#000000]"}>
+          {/* <Objects /> */}
+          <div className="z-10 flex h-full max-w-screen-sm flex-col items-center justify-center rounded-lg shadow-2xl backdrop-blur-2xl">
+            <div className="grid h-fit w-fit max-w-screen-sm grid-flow-col place-items-center gap-2 rounded-lg">
               <h1 className="p-8 text-5xl font-extrabold tracking-tight text-white">
                 Clone<span className="bg-gradient-to-br from-red-300 via-pink-300 to-orange-100 bg-clip-text text-transparent">gram</span>
               </h1>
