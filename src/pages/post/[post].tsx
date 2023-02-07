@@ -32,6 +32,7 @@ const Post = () => {
   const [deleteCommentMenu, setDeleteCommentMenu] = useState(false);
   const [deleteCommentID, setDeleteCommentID] = useState("");
   const [likesMenu, setLikesMenu] = useState(false);
+  const [likeUsers, setLikeUsers] = useState();
 
   const router = useRouter();
   const postID = router.query.post as string;
@@ -173,8 +174,14 @@ const Post = () => {
                 }}
               />
             )}
-            {(props.comment.likes.length || 0) > 0 && props.comment.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}
-            
+            <button
+              onClick={() => {
+                setLikeUsers(props.comment.likes);
+                setLikesMenu(true);
+              }}
+            >
+              {(props.comment.likes.length || 0) > 0 && props.comment.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}
+            </button>
             <p className="uppercase">{moment(props.comment.createdAt).fromNow()}</p>
           </div>
         </div>
@@ -239,7 +246,13 @@ const Post = () => {
         </div>
         <div className="my-3">
           {(post.data?.likes.length || 0) > 0 && (
-            <div className="mt-1 cursor-pointer pl-3 text-xs" onClick={() => setLikesMenu(true)}>
+            <div
+              className="mt-1 cursor-pointer pl-3 text-xs"
+              onClick={() => {
+                setLikeUsers(post.data?.likes);
+                setLikesMenu(true);
+              }}
+            >
               {(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}
             </div>
           )}
@@ -334,7 +347,7 @@ const Post = () => {
             <div className={"flex h-fit w-[90%] items-center justify-center sm:h-fit sm:w-fit " + (data?.viewport == "Mobile" && session && " flex-col ") + (showComments && " my-24 ")}>
               {deleteMenu && <OptionMenu buttonPositive="Delete" buttonNegative="Cancel" buttonLoading={deletePost.isLoading} description="Do you want to delete this post?" title="Delete post?" onClickPositive={() => deletePost.mutate({ userid: post.data?.user.id || "", postid: post.data?.id || "", index: post.data?.index || 0 })} onClickNegative={() => setDeleteMenu(false)} />}
               {deleteCommentMenu && <OptionMenu buttonPositive="Delete" buttonNegative="Cancel" buttonLoading={deleteComment.isLoading} description="Do you want to delete this comment?" title="Delete comment?" onClickPositive={() => deleteComment.mutate({ userid: post.data?.user.id || "", commentid: deleteCommentID })} onClickNegative={() => setDeleteCommentMenu(false)} />}
-              {likesMenu && <ListOfUsers users={post.data?.likes} onClickNegative={() => setLikesMenu(false)} title="Likes" />}
+              {likesMenu && <ListOfUsers users={likeUsers} onClickNegative={() => setLikesMenu(false)} title="Likes" />}
               <MobileHeader />
               <PostView />
               <WebSideView />
