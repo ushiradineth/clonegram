@@ -163,7 +163,7 @@ const Post = () => {
         <div className="flex flex-col gap-2">
           <span className="break-all">{props.comment.text}</span>
           <div className="grid w-full grid-flow-col place-items-center font-mono text-xs text-zinc-500">
-            {likeComment.isLoading || unlikeComment.isLoading ? <Spinner SpinnerOnly={true} size={4} /> : props.comment. ? <AiFillHeart className="cursor-pointer text-red-500" onClick={() => unlikePost.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "" })} /> : <AiOutlineHeart className="cursor-pointer" onClick={() => likePost.mutate({ userid: data?.user?.data.id || "", postOwnerid: post.data?.userId || "", postid: post.data?.id || "" })} />}
+            {likeComment.isLoading || unlikeComment.isLoading || post.isFetching ? <Spinner SpinnerOnly={true} size={4} /> : props.comment.likes.find((e: { id: string }) => e.id === data?.user?.data.id) ? <AiFillHeart className="cursor-pointer text-xl text-red-500" onClick={() => unlikeComment.mutate({ userid: data?.user?.data.id || "", commentid: props.comment.id })} /> : <AiOutlineHeart className="cursor-pointer text-xl" onClick={() => likeComment.mutate({ userid: data?.user?.data.id || "", commentid: props.comment.id })} />}
             {props.comment.user.handle === data?.user?.data.handle && (
               <MdOutlineDeleteOutline
                 className="cursor-pointer text-xl"
@@ -173,8 +173,9 @@ const Post = () => {
                 }}
               />
             )}
+            {(props.comment.likes.length || 0) > 0 && props.comment.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}
+            
             <p className="uppercase">{moment(props.comment.createdAt).fromNow()}</p>
-            <p className="text-zinc-500">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
           </div>
         </div>
       </div>
@@ -239,7 +240,7 @@ const Post = () => {
         <div className="my-3">
           {(post.data?.likes.length || 0) > 0 && (
             <div className="mt-1 cursor-pointer pl-3 text-xs" onClick={() => setLikesMenu(true)}>
-              {(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "LIKES" : "LIKE")}
+              {(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}
             </div>
           )}
           <p className="mt-2 pl-3 font-mono text-xs uppercase text-zinc-500">{moment(post.data?.createdAt).fromNow()}</p> <p className="pl-3 font-mono text-xs text-zinc-500">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
