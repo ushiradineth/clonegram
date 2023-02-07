@@ -151,6 +151,86 @@ export const postRouter = router({
     return { q1, q2 };
   }),
 
+  getExploreFeed: publicProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+    return await ctx.prisma.post.findMany({
+      where: {
+        AND: [
+          {
+            user: {
+              followers: {
+                none: {
+                  id: {
+                    contains: input.id,
+                  },
+                },
+              },
+            },
+          },
+          {
+            likes: {
+              every: {
+                id: {
+                  not: {
+                    equals: input.id,
+                  },
+                },
+              },
+            },
+          },
+          {
+            user: {
+              id: {
+                not: {
+                  equals: input.id,
+                },
+              },
+            },
+          },
+          {
+            user: {
+              blocking: {
+                every: {
+                  id: {
+                    not: {
+                      equals: input.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          {
+            user: {
+              blockedby: {
+                every: {
+                  id: {
+                    not: {
+                      equals: input.id,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+      include: {
+        user: true,
+        likes: true,
+      },
+      orderBy: [
+        {
+          likes: {
+            _count: "desc",
+          },
+        },
+        {
+          createdAt: "desc",
+        },
+      ],
+    });
+  }),
+
   getPost: publicProcedure.input(z.object({ id: z.string() })).query(({ input, ctx }) => {
     return ctx.prisma.post.findFirst({
       where: {
