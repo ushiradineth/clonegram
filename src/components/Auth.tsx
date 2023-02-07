@@ -6,6 +6,11 @@ import { AiFillGithub, AiFillGoogleCircle } from "react-icons/ai";
 import Link from "next/link";
 import React, { useState } from "react";
 import { z } from "zod";
+import { TbBrandNextjs, TbBrandTailwind } from "react-icons/tb";
+import { RxVercelLogo } from "react-icons/rx";
+import { IoPrismSharp } from "react-icons/io5";
+import { RiSingleQuotesL } from "react-icons/ri";
+import { BsLightningCharge } from "react-icons/bs";
 
 const Auth = () => {
   const { status } = useSession();
@@ -110,9 +115,9 @@ const Auth = () => {
       </Head>
 
       <main className="flex select-none flex-col sm:flex-row">
-        <div className="grid w-screen h-screen place-items-center bg-[#171717] gap-2">
-          <div className="p-5 text-white text-2xl">
-            <p className="text-4xl">
+        <div className="grid h-screen w-screen place-items-center gap-2 bg-[#171717]">
+          <div className="flex flex-col items-center p-5 text-center text-2xl text-white">
+            <p className="text-4xl mb-2">
               Welcome to Clone<span className="bg-gradient-to-br from-red-300 via-pink-300 to-orange-100 bg-clip-text text-transparent">gram</span>
             </p>
             <p>
@@ -121,10 +126,16 @@ const Auth = () => {
                 Ushira Dineth
               </Link>
             </p>
-            <p>Built using Next12</p>
+            <div className="my-8 grid w-full grid-flow-col place-items-center bg-gradient-to-br from-red-300 via-pink-300 to-orange-100 p-8">
+              <TbBrandNextjs />
+              <RxVercelLogo />
+              <TbBrandTailwind />
+              <IoPrismSharp />
+              <BsLightningCharge />
+            </div>
           </div>
         </div>
-        <div className={"grid w-screen h-screen place-content-center place-items-center gap-4  bg-[#000000]"}>
+        <div className={"grid h-screen w-screen place-content-center place-items-center gap-4  bg-[#000000]"}>
           {/* <Objects /> */}
           <div className="z-10 flex h-full max-w-screen-sm flex-col items-center justify-center rounded-lg shadow-2xl backdrop-blur-2xl">
             <div className="grid h-fit w-fit max-w-screen-sm grid-flow-col place-items-center gap-2 rounded-lg">
