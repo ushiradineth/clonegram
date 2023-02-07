@@ -198,11 +198,13 @@ export const userRouter = router({
               {
                 handle: {
                   contains: input.key,
+                  mode: 'insensitive'
                 },
               },
               {
                 name: {
                   contains: input.key,
+                  mode: 'insensitive'
                 },
               },
             ],
