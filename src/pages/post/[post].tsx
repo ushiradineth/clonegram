@@ -180,7 +180,7 @@ const Post = () => {
                 setLikesMenu(true);
               }}
             >
-              {(props.comment.likes.length || 0) > 0 && props.comment.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}
+              {(props.comment.likes.length || 0) > 0 && props.comment.likes.length + " " + ((props.comment.likes.length || 0) > 1 ? "likes" : "like")}
             </button>
             <p className="uppercase">{moment(props.comment.createdAt).fromNow()}</p>
           </div>
