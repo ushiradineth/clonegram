@@ -107,10 +107,8 @@ model Comment {
   userId      String
   replies     Comment[] @relation("replies")
   likes       User[]    @relation("CommentLikes")
-  parentReply Comment?  @relation("parentReply", fields: [id], references: [id], onDelete: Cascade)
 
   //relations for same table refs or cross table refs  
-  parentReplyRelation         Comment?       @relation("parentReply")
   repliesRelation             Comment[]      @relation("replies")
   NotificationCommentRelation Notification[]
 }

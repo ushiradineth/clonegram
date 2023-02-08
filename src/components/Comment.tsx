@@ -9,7 +9,6 @@ import { DataContext } from "../pages/_app";
 import { useContext } from "react";
 import moment from "moment";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { useEffect } from "react";
 
 const Comment = (props: { setDeleteCommentID(id: string): unknown; setDeleteCommentMenu(arg0: boolean): unknown; setLikeUsers(likes: User[]): unknown; setLikesMenu(arg0: boolean): unknown; comment: Comment & { user: User } & { likes: User[] }; post: any }) => {
   const router = useRouter();

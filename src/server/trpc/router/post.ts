@@ -337,13 +337,12 @@ export const postRouter = router({
     return { q1, q2 };
   }),
 
-  setcomment: protectedProcedure.input(z.object({ postid: z.string(), postOwnerid: z.string(), parentReplyId: z.string().nullish(), parentReplyUserId: z.string().nullish(), directedUser: z.string().nullish(), userid: z.string(), text: z.string() })).mutation(async ({ input, ctx }) => {
+  setcomment: protectedProcedure.input(z.object({ postid: z.string(), postOwnerid: z.string(), userid: z.string(), text: z.string() })).mutation(async ({ input, ctx }) => {
     const q1: Comment = await ctx.prisma.comment.create({
       data: {
         text: input.text,
         user: { connect: { id: input.userid } },
         post: { connect: { id: input.postid } },
-        parentReply: { connect: {id: input.parentReplyId || ""}}
       },
     });
 
@@ -372,68 +371,8 @@ export const postRouter = router({
         },
       },
     });
-
-    let q3 = {}
-
-    if(input.parentReplyId && input.parentReplyUserId){
-      q3 = await ctx.prisma.user.update({
-        where: { id: input.parentReplyUserId },
-        data: {
-          notifications: {
-            create: {
-              type: "CommentReply",
-              notificationCreator: {
-                connect: {
-                  id: input.userid,
-                },
-              },
-              post: {
-                connect: {
-                  id: input.postid,
-                },
-              },
-              comment: {
-                connect: {
-                  id: q1.id,
-                },
-              },
-            },
-          },
-        },
-      });
-    }
-
-    let q4 = {}
     
-    if(input.directedUser){
-      q4 = await ctx.prisma.user.update({
-        where: { id: input.directedUser },
-        data: {
-          notifications: {
-            create: {
-              type: "CommentReply",
-              notificationCreator: {
-                connect: {
-                  id: input.userid,
-                },
-              },
-              post: {
-                connect: {
-                  id: input.postid,
-                },
-              },
-              comment: {
-                connect: {
-                  id: q1.id,
-                },
-              },
-            },
-          },
-        },
-      });
-    }
-
-    return { q1, q2, q3, q4 };
+    return { q1, q2 };
   }),
 
   deleteComment: protectedProcedure.input(z.object({ commentid: z.string(), userid: z.string() })).mutation(({ input, ctx }) => {
