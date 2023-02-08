@@ -1,4 +1,4 @@
-import { Comment } from "@prisma/client";
+import { type Comment } from "@prisma/client";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { env } from "../../../env/client.mjs";
@@ -373,7 +373,7 @@ export const postRouter = router({
       },
     });
 
-    var q3 = {}
+    let q3 = {}
 
     if(input.parentReplyId && input.parentReplyUserId){
       q3 = await ctx.prisma.user.update({
@@ -403,7 +403,7 @@ export const postRouter = router({
       });
     }
 
-    var q4 = {}
+    let q4 = {}
     
     if(input.directedUser){
       q4 = await ctx.prisma.user.update({
@@ -433,7 +433,7 @@ export const postRouter = router({
       });
     }
 
-    return { q1, q2, q3 };
+    return { q1, q2, q3, q4 };
   }),
 
   deleteComment: protectedProcedure.input(z.object({ commentid: z.string(), userid: z.string() })).mutation(({ input, ctx }) => {
