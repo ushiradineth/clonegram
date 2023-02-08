@@ -164,7 +164,7 @@ const Post = () => {
         <div className="flex flex-col gap-2">
           <span className="break-all">{props.comment.text}</span>
           <div className="flex w-fit grid-flow-col items-center gap-2 font-mono text-xs text-zinc-500">
-            {likeComment.isLoading || unlikeComment.isLoading || post.isFetching ? <Spinner SpinnerOnly={true} size={4} /> : props.comment.likes.find((e: { id: string }) => e.id === data?.user?.data.id) ? <AiFillHeart className="cursor-pointer text-xl text-red-500" onClick={() => unlikeComment.mutate({ userid: data?.user?.data.id || "", commentid: props.comment.id })} /> : <AiOutlineHeart className="cursor-pointer text-xl" onClick={() => likeComment.mutate({ userid: data?.user?.data.id || "", commentid: props.comment.id })} />}
+            {likeComment.isLoading || unlikeComment.isLoading || post.isFetching ? <Spinner SpinnerOnly={true} size={4} /> : props.comment.likes.find((e: { id: string }) => e.id === data?.user?.data.id) ? <AiFillHeart className="cursor-pointer text-xl text-red-500" onClick={() => unlikeComment.mutate({ userid: data?.user?.data.id || "", commentid: props.comment.id })} /> : <AiOutlineHeart className="cursor-pointer text-xl" onClick={() => likeComment.mutate({ userid: data?.user?.data.id || "", commentid: props.comment.id, commentOwnerid: props.comment.user.id, postid: post.data?.id || "" })} />}
             {props.comment.user.handle === data?.user?.data.handle && (
               <MdOutlineDeleteOutline
                 className="cursor-pointer text-xl"
@@ -211,7 +211,7 @@ const Post = () => {
         <div className={" " + data?.theme?.primary + (data?.viewport === "Mobile" ? " z-10 w-[88%] " : " w-[86%] ")}>
           <InputBox id="commentInput" maxlength={200} placeholder="Add a comment..." minlength={1} />
         </div>
-        <button className="z-10 cursor-pointer text-blue-500" onClick={() => (document.getElementById("commentInput") as HTMLInputElement).value.length > 0 && comment.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "", text: (document.getElementById("commentInput") as HTMLInputElement).value })}>
+        <button className="z-10 cursor-pointer text-blue-500" onClick={() => (document.getElementById("commentInput") as HTMLInputElement).value.length > 0 && comment.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "", text: (document.getElementById("commentInput") as HTMLInputElement).value, postOwnerid: post.data?.user.id || "" })}>
           Post
         </button>
       </div>
