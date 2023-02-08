@@ -23,6 +23,7 @@ import moment from "moment";
 import { type Theme, toast } from "react-toastify";
 import { type User } from "@prisma/client";
 import Comment from "../../components/Comment";
+import { useRef } from "react";
 
 const Post = () => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -34,6 +35,7 @@ const Post = () => {
   const [deleteCommentID, setDeleteCommentID] = useState("");
   const [likesMenu, setLikesMenu] = useState(false);
   const [likeUsers, setLikeUsers] = useState<User[]>();
+  const commentRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
   const postID = router.query.post as string;
@@ -179,10 +181,10 @@ const Post = () => {
   const CommentBox = () => {
     return (
       <div className={"flex w-full items-center " + (data?.viewport === "Mobile" ? "" : " h-[7%] ")}>
-        <div className={" " + data?.theme?.primary + (data?.viewport === "Mobile" ? " z-10 w-[88%] " : " w-[86%] ")}>
-          <InputBox id="commentInput" maxlength={200} placeholder="Add a comment..." minlength={1} />
+        <div className={" " + data?.theme?.primary + (data?.viewport === "Mobile" ? " z-10 w-[88%] " : " z-10 w-[86%] ")}>
+          <InputBox InputRef={commentRef} id="commentInput" maxlength={200} placeholder="Add a comment..." minlength={1} />
         </div>
-        <button className="z-10 cursor-pointer text-blue-500" onClick={() => (document.getElementById("commentInput") as HTMLInputElement).value.length > 0 && comment.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "", text: (document.getElementById("commentInput") as HTMLInputElement).value, postOwnerid: post.data?.user.id || "" })}>
+        <button className="z-10 cursor-pointer text-blue-500" onClick={() => ((data?.viewport == "Mobile" ? commentRef.current?.value.length : (document.getElementById("commentInput") as HTMLInputElement).value.length) || 0) > 0 && comment.mutate({ userid: data?.user?.data.id || "", postid: post.data?.id || "", text: data?.viewport === "Mobile" ? (commentRef.current?.value || "") : ((document.getElementById("commentInput") as HTMLInputElement).value), postOwnerid: post.data?.user.id || "" })}>
           Post
         </button>
       </div>
