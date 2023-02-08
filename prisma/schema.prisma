@@ -127,5 +127,5 @@ model Notification {
   post                Post?    @relation(fields: [postId], references: [id])
   postId              String?
   comment             Comment? @relation(fields: [commentId], references: [id])
-  commentId           String
+  commentId           String?
 }
