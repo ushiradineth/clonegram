@@ -1,3 +1,4 @@
+import { Comment } from "@prisma/client";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { env } from "../../../env/client.mjs";
@@ -242,7 +243,7 @@ export const postRouter = router({
         comments: {
           include: {
             user: true,
-            likes: true
+            likes: true,
           },
         },
         saved: true,
@@ -278,7 +279,7 @@ export const postRouter = router({
       data: {
         notifications: {
           create: {
-            type: "Like",
+            type: "PostLike",
             notificationCreator: {
               connect: {
                 id: input.userid,
@@ -336,14 +337,103 @@ export const postRouter = router({
     return { q1, q2 };
   }),
 
-  setcomment: protectedProcedure.input(z.object({ postid: z.string(), userid: z.string(), text: z.string() })).mutation(async ({ input, ctx }) => {
-    return ctx.prisma.comment.create({
+  setcomment: protectedProcedure.input(z.object({ postid: z.string(), postOwnerid: z.string(), parentReplyId: z.string().nullish(), parentReplyUserId: z.string().nullish(), directedUser: z.string().nullish(), userid: z.string(), text: z.string() })).mutation(async ({ input, ctx }) => {
+    const q1: Comment = await ctx.prisma.comment.create({
       data: {
         text: input.text,
         user: { connect: { id: input.userid } },
         post: { connect: { id: input.postid } },
+        parentReply: { connect: {id: input.parentReplyId || ""}}
       },
     });
+
+    const q2 = await ctx.prisma.user.update({
+      where: { id: input.postOwnerid },
+      data: {
+        notifications: {
+          create: {
+            type: "PostComment",
+            notificationCreator: {
+              connect: {
+                id: input.userid,
+              },
+            },
+            post: {
+              connect: {
+                id: input.postid,
+              },
+            },
+            comment: {
+              connect: {
+                id: q1.id,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    var q3 = {}
+
+    if(input.parentReplyId && input.parentReplyUserId){
+      q3 = await ctx.prisma.user.update({
+        where: { id: input.parentReplyUserId },
+        data: {
+          notifications: {
+            create: {
+              type: "CommentReply",
+              notificationCreator: {
+                connect: {
+                  id: input.userid,
+                },
+              },
+              post: {
+                connect: {
+                  id: input.postid,
+                },
+              },
+              comment: {
+                connect: {
+                  id: q1.id,
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+
+    var q4 = {}
+    
+    if(input.directedUser){
+      q4 = await ctx.prisma.user.update({
+        where: { id: input.directedUser },
+        data: {
+          notifications: {
+            create: {
+              type: "CommentReply",
+              notificationCreator: {
+                connect: {
+                  id: input.userid,
+                },
+              },
+              post: {
+                connect: {
+                  id: input.postid,
+                },
+              },
+              comment: {
+                connect: {
+                  id: q1.id,
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+
+    return { q1, q2, q3 };
   }),
 
   deleteComment: protectedProcedure.input(z.object({ commentid: z.string(), userid: z.string() })).mutation(({ input, ctx }) => {
@@ -352,11 +442,39 @@ export const postRouter = router({
     });
   }),
 
-  likecomment: protectedProcedure.input(z.object({ commentid: z.string(), userid: z.string() })).mutation(({ input, ctx }) => {
-    return ctx.prisma.comment.update({
+  likecomment: protectedProcedure.input(z.object({ commentid: z.string(), userid: z.string(), commentOwnerid: z.string(), postid: z.string() })).mutation(async ({ input, ctx }) => {
+    const q1 = await ctx.prisma.comment.update({
       where: { id: input.commentid },
       data: { likes: { connect: { id: input.userid } } },
     });
+
+    const q2 = await ctx.prisma.user.update({
+      where: { id: input.commentOwnerid },
+      data: {
+        notifications: {
+          create: {
+            type: "CommentLike",
+            notificationCreator: {
+              connect: {
+                id: input.userid,
+              },
+            },
+            post: {
+              connect: {
+                id: input.postid,
+              },
+            },
+            comment: {
+              connect: {
+                id: input.commentid,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return { q1, q2 };
   }),
 
   unlikecomment: protectedProcedure.input(z.object({ commentid: z.string(), userid: z.string() })).mutation(({ input, ctx }) => {
