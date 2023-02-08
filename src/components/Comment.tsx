@@ -54,7 +54,7 @@ const Comment = (props: { setDeleteCommentID(id: string): unknown; setDeleteComm
           </p>
           {props.comment.user.handle === data?.user?.data.handle && (
             <MdOutlineDeleteOutline
-              className="ml-2 cursor-pointer text-xl"
+              className="ml-2 cursor-pointer text-xl z-10"
               onClick={() => {
                 props.setDeleteCommentID(props.comment.id);
                 props.setDeleteCommentMenu(true);
