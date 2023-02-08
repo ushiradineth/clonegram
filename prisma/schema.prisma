@@ -107,9 +107,12 @@ model Comment {
   userId      String
   replies     Comment[] @relation("replies")
   likes       User[]    @relation("CommentLikes")
+  parentReply Comment?  @relation("parentReply", fields: [id], references: [id], onDelete: Cascade)
 
-  //relations for same table refs or cross table refs
-  repliesRelation     Comment[] @relation("replies")
+  //relations for same table refs or cross table refs  
+  parentReplyRelation         Comment?       @relation("parentReply")
+  repliesRelation             Comment[]      @relation("replies")
+  // NotificationCommentRelation Notification[]
 }
 
 model Notification {
@@ -123,4 +126,6 @@ model Notification {
   userRefId           String?
   post                Post?    @relation(fields: [postId], references: [id])
   postId              String?
+  // comment             Comment? @relation(fields: [commentId], references: [id])
+  // commentId           String
 }
