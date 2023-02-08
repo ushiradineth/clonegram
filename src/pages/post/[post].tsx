@@ -104,6 +104,27 @@ const Post = () => {
     post.data?.saved.forEach((e) => e.id === data?.user?.data.id && setSave(true));
   }, [post]);
 
+  useEffect(() => {
+    moment.updateLocale("en", {
+      relativeTime: {
+        future: "in %s",
+        past: "%s ago",
+        s: "%ds",
+        ss: "%ds",
+        m: "%dm",
+        mm: "%dm",
+        h: "%dh",
+        hh: "%dh",
+        d: "%dd",
+        dd: "%dd",
+        M: "%dm",
+        MM: "%dm",
+        y: "%dy",
+        yy: "%dy",
+      },
+    });
+  }, []);
+
   if (!post.data && !post.isLoading) return <Error session={Boolean(session)} error="Post not found" />;
   if (post.isLoading) return <Spinner />;
 
@@ -206,7 +227,7 @@ const Post = () => {
               {(post.data?.likes.length || 0) > 0 && post.data?.likes.length + " " + ((post.data?.likes.length || 0) > 1 ? "likes" : "like")}
             </div>
           )}
-          <p className="mt-2 pl-3 font-mono text-xs uppercase text-zinc-500">{moment(post.data?.createdAt).fromNow()}</p> <p className="pl-3 font-mono text-xs text-zinc-500">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
+          <p className="mt-2 pl-3 font-mono text-xs uppercase text-zinc-500">{moment(post.data?.createdAt).fromNow(true)}</p> <p className="pl-3 font-mono text-xs text-zinc-500">{new Intl.DateTimeFormat("en-US", { month: "long" }).format(post.data?.createdAt.getMonth()).toUpperCase() + " " + post.data?.createdAt.getDate() + ", " + post.data?.createdAt.getFullYear()} </p>
         </div>
       </div>
     );
