@@ -112,7 +112,7 @@ model Comment {
   //relations for same table refs or cross table refs  
   parentReplyRelation         Comment?       @relation("parentReply")
   repliesRelation             Comment[]      @relation("replies")
-  // NotificationCommentRelation Notification[]
+  NotificationCommentRelation Notification[]
 }
 
 model Notification {
@@ -126,6 +126,6 @@ model Notification {
   userRefId           String?
   post                Post?    @relation(fields: [postId], references: [id])
   postId              String?
-  // comment             Comment? @relation(fields: [commentId], references: [id])
-  // commentId           String
+  comment             Comment? @relation(fields: [commentId], references: [id])
+  commentId           String
 }
