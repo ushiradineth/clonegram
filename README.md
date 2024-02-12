@@ -1,4 +1,4 @@
-# 💵 Clonegram
+# 📸 Clonegram
 
 An Instagram clone made to learn Next.js.
 
