@@ -2,7 +2,7 @@
 
 An Instagram clone made to learn Next.js.
 
-## 📦 Technologies
+## Technologies
 
 - `Next.js`
 - `TypeScript`
@@ -15,7 +15,7 @@ An Instagram clone made to learn Next.js.
 - `Vercel`
 - `Supabase`
 
-## 📚 Features
+## Features
 
 Here's what you can do with Clonegram:
 
@@ -29,7 +29,7 @@ Here's what you can do with Clonegram:
 
 - **SSO**: Users can use passwordless login using Email, Google or Github.
 
-## 👩🏽‍🍳 The Process
+## The Process
 
 I started this project as a way to learn everything, literally.
 
@@ -37,11 +37,11 @@ I realised that I learn when I create and work instead of trying to just learn a
 
 I spent three months of nonstop development for this application, in the end I was able to use this project to get an internship :]
 
-## 📚 What I Learned
+## What I Learned
 
 During this project, I got my entry into a lot of concepts when it comes with software engineers, frontend and backend concepts. It was my first time using all the technologies mentioned above.
 
-## 💭 How can it be improved?
+## How can it be improved?
 
 - Refactoring a lot of code and issues, especially user context management.
 - Add pagination for home and explore pages.
@@ -50,7 +50,7 @@ During this project, I got my entry into a lot of concepts when it comes with so
 - Refactoring the UI with newer components.
 - Fixing a bunch of issues that are seen in the mobile view related to z-index.
 
-## 🚦 Running the Project
+## Running the Project
 
 To run the project in your local environment, follow these steps:
 
